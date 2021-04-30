@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             x:Class="MedicationMngApp.Views.LoginPage"
+             Shell.NavBarIsVisible="False">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <StackLayout Padding="10,0,10,0" VerticalOptions="CenterAndExpand">
+                <Label Text="Username" FontSize="Small" />
+                <Entry Text="{Binding Username, Mode=TwoWay}" Placeholder="Username" FontSize="Medium" />
+                <Label Text="Password" FontSize="Small" />
+                <Entry Text="{Binding Password, Mode=TwoWay}" Placeholder="Password" FontSize="Medium" IsPassword="True"/>
+                <Button VerticalOptions="Center" Text="Login" Command="{Binding LoginCommand}"/>
+
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="10,0,10,50" HorizontalOptions="CenterAndExpand">
+                <Label Text="Not yet registered?" />
+                <Label Text="Click Here" 
+                       TextColor="{StaticResource Primary}"
+                       TextDecorations="Underline" >
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer 
+                            NumberOfTapsRequired="1"
+                            Tapped="TapGestureRecognizer_Tapped" />
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
