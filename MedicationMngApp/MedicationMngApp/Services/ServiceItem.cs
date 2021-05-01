@@ -1,4 +1,4 @@
-﻿using MedicationMngApp.Models;
+﻿using MedicationMng.Shared.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -105,9 +105,9 @@ namespace MedicationMngApp.ViewModels
         private async void OnRegisterClicked(object obj)
         {
             if (ValidateRegistration(obj))
-                Application.Current.MainPage.DisplayAlert("Date of Birth", birthday.Date.ToShortDateString(), "OK PO");
+                await Application.Current.MainPage.DisplayAlert("Date of Birth", birthday.Date.ToShortDateString(), "OK PO");
             else
-                Application.Current.MainPage.DisplayAlert("Error", "Message Error", "OK");
+                await Application.Current.MainPage.DisplayAlert("Error", "Message Error", "OK");
         }
     }
 }
