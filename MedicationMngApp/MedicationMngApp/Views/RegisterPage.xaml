@@ -5,12 +5,7 @@
              xmlns:vm="clr-namespace:MedicationMngApp.ViewModels"
              xmlns:local="clr-namespace:MedicationMngApp.Renderer" 
              Title="Register"
-             Shell.NavBarIsVisible="False">
-
-    <ContentPage.BindingContext>
-        <vm:RegisterViewModel />
-    </ContentPage.BindingContext>
-    
+             Shell.NavBarIsVisible="False">    
     <ContentPage.Content>
         <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <StackLayout Padding="10,20,10,0" VerticalOptions="StartAndExpand">
@@ -28,8 +23,7 @@
                 <Entry Text="{Binding Password, Mode=TwoWay}" Placeholder="Password" FontSize="Medium" IsPassword="True" MaxLength="99"/>
                 <Entry Text="{Binding ConfirmPassword, Mode=TwoWay}" Placeholder="Confirm Password" FontSize="Medium" IsPassword="True" MaxLength="99"/>
 
-                <Button VerticalOptions="Center" Text="Register" 
-                        IsEnabled="{Binding ValidateRegistration}"
+                <Button VerticalOptions="Center" Text="Register"
                         Command="{Binding RegisterCommand}" />
 
             </StackLayout>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MedicationMngApp.Models;
+using MedicationMngApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,11 +17,12 @@ namespace MedicationMngApp.Views
         public RegisterPage()
         {
             InitializeComponent();
+            this.BindingContext = new RegisterViewModel();
         }
 
-        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
-            Application.Current.MainPage = new LoginPage();
+            await Common.NavigateBack();
         }
     }
 }

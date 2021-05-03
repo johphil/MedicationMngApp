@@ -14,7 +14,18 @@ public interface IService
         BodyStyle = WebMessageBodyStyle.Wrapped,
         ResponseFormat = WebMessageFormat.Json,
         RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "GetAccountsResult")]
     List<Account> GetAccounts();
+
+    // GET Method
+    [OperationContract]
+    [WebInvoke(Method = "GET",
+        UriTemplate = "/LoginAccount/{username}/{password}",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "LoginAccountResult")]
+    int LoginAccount(string username, string password);
 
     // POST Method // Create New Records
     [OperationContract]
@@ -23,6 +34,7 @@ public interface IService
         BodyStyle = WebMessageBodyStyle.Wrapped,
         ResponseFormat = WebMessageFormat.Json,
         RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "AddAccountResult")]
     int AddAccount(Account account);
 
     // PUT Method // Updating Records
@@ -32,6 +44,7 @@ public interface IService
         BodyStyle = WebMessageBodyStyle.Wrapped, 
         RequestFormat = WebMessageFormat.Json, 
         ResponseFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "UpdateAccountDetailsResult")]
     int UpdateAccountDetails(Account account);
 
     [OperationContract]
@@ -40,6 +53,7 @@ public interface IService
         BodyStyle = WebMessageBodyStyle.Wrapped,
         RequestFormat = WebMessageFormat.Json,
         ResponseFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "UpdateAccountPasswordResult")]
     int UpdateAccountPassword(int account_id, string new_password);
 
     // DELETE Method // Deleting Records

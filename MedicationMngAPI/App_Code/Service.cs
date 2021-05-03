@@ -129,5 +129,28 @@ public class Service : IService
         {
             return -1;
         }
-    }   
+    }
+
+    public int LoginAccount(string username, string password)
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                using (SqlCommand command = new SqlCommand("spLoginAccount", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("username", SqlDbType.VarChar, 99).Value = DBConvert.From(username);
+                    command.Parameters.Add("password", SqlDbType.VarChar, 99).Value = DBConvert.From(PassHash.MD5Hash(password));
+                    connection.Open();
+
+                    return (int)command.ExecuteScalar(); //returns id of user
+                }
+            }
+        }
+        catch
+        {
+            return -1;
+        }
+    }
 }

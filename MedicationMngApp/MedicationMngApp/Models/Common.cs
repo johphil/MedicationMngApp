@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using Xamarin.Forms;
+
+namespace MedicationMngApp.Models
+{
+    public static class Common
+    {
+        #region Json URIs
+        public static string SERVICE_IP = "192.168.88.250";
+        public static string POST_ADD_ACCOUNT = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddAccount";
+        public static string GET_GET_ACCOUNTS = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/GetAccounts";
+        #endregion
+
+        #region Asynchronous Tasks Message Popup & Navigation
+        public static async Task ShowMessageAsync(string title, string msgBody, string buttonText)
+        {
+            await Application.Current.MainPage.DisplayAlert(title, msgBody, buttonText);
+        }
+
+        public static async Task NavigatePage(Page page)
+        {
+            await Application.Current.MainPage.Navigation.PushAsync(page);
+        }
+
+        public static async Task NavigateBack()
+        {
+            await Application.Current.MainPage.Navigation.PopAsync();
+        }
+        #endregion
+    }
+}

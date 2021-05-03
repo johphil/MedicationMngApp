@@ -1,4 +1,5 @@
-﻿using MedicationMngApp.ViewModels;
+﻿using MedicationMngApp.Models;
+using MedicationMngApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,9 +19,9 @@ namespace MedicationMngApp.Views
             this.BindingContext = new LoginViewModel();
         }
 
-        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
-            Application.Current.MainPage = new RegisterPage();
+            await Common.NavigatePage(new RegisterPage());
         }
     }
 }

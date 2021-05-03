@@ -7,27 +7,38 @@ namespace MedicationMngApp.Models
 {
     public class Account
     {
-        [JsonProperty]
+        [JsonProperty(PropertyName = "Account_ID")]
         public int Account_ID { get; set; }
-        [JsonProperty]
+        [JsonProperty(PropertyName = "FirstName")]
         public string FirstName { get; set; }
-        [JsonProperty]
+        [JsonProperty(PropertyName = "LastName")]
         public string LastName { get; set; }
-        [JsonProperty]
+        [JsonProperty(PropertyName = "Birthday")]
         public DateTime Birthday { get; set; }
-        [JsonProperty]
+        [JsonProperty(PropertyName = "Email")]
         public string Email { get; set; }
-        [JsonProperty]
+        [JsonProperty(PropertyName = "Username")]
         public string Username { get; set; }
-        [JsonProperty]
+        [JsonProperty(PropertyName = "Password")]
         public string Password { get; set; }
-        [JsonProperty]
+        [JsonProperty(PropertyName = "Date_Registered")]
         public DateTime Date_Registered { get; set; }
     }
-    
-    public class AccountWrapper
+
+    public class AddAccountObject
     {
         [JsonProperty(PropertyName = "account")]
         public Account account { get; set; }
+    }
+    public class AddAccountResult
+    {
+        [JsonProperty(PropertyName = "AddAccountResult")]
+        public int result { get; set; }
+    }
+
+    public class GetAccountsResult
+    {
+        [JsonProperty(PropertyName = "GetAccountsResult")]
+        public List<Account> accounts { get; set; }
     }
 }

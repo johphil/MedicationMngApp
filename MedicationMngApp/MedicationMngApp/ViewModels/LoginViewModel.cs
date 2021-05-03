@@ -2,6 +2,7 @@
 using MedicationMngApp.Models;
 using MedicationMngApp.Views;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -22,24 +23,18 @@ namespace MedicationMngApp.ViewModels
 
         private async void OnLoginClicked(object obj)
         {
-            // Prefixing with `//` switches to a different navigation stack instead of pushing to the active one
-            //await Shell.Current.GoToAsync($"//{nameof(AboutPage)}");
-
-            //Check network status   
             if (NetworkStatus.IsInternet())
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    using (HttpResponseMessage response = await client.GetAsync("http://10.0.2.2/MedicationMngWebAppServices/Service.svc/GetAccounts"))
+                    using (HttpResponseMessage response = await client.GetAsync(Common.GET_GET_ACCOUNTS))
                     {
                         if (response.IsSuccessStatusCode)
                         {
-                            string accountsJson = await response.Content.ReadAsStringAsync();
-                            if (!string.IsNullOrWhiteSpace(accountsJson))
+                            var jData = await response.Content.ReadAsStringAsync();
+                            if (!string.IsNullOrWhiteSpace(jData))
                             {
-                                List<Account> accounts = new List<Account>();
-                                //Converting JSON Array Objects into generic list  
-                                JsonConvert.PopulateObject(accountsJson, accounts);
+                                GetAccountsResult accounts = JsonConvert.DeserializeObject<GetAccountsResult>(jData);
                             }
                         }
                     }
@@ -47,7 +42,7 @@ namespace MedicationMngApp.ViewModels
             }
             else
             {
-                await Application.Current.MainPage.DisplayAlert("Network Error", "Internet is unavailable. Please try again.", "OK");
+                await Common.ShowMessageAsync("Network Error", "Internet is unavailable. Please try again.", "OK");
             }
         }
     }
