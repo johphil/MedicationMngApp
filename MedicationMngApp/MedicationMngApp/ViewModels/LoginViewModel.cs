@@ -1,4 +1,4 @@
-﻿using MedicationMng.Shared.Model;
+﻿using MedicationMngApp.Models;
 using MedicationMngApp.Models;
 using MedicationMngApp.Views;
 using Newtonsoft.Json;
@@ -35,7 +35,7 @@ namespace MedicationMngApp.ViewModels
                         if (response.IsSuccessStatusCode)
                         {
                             string accountsJson = await response.Content.ReadAsStringAsync();
-                            if (accountsJson != "")
+                            if (!string.IsNullOrWhiteSpace(accountsJson))
                             {
                                 List<Account> accounts = new List<Account>();
                                 //Converting JSON Array Objects into generic list  
@@ -47,7 +47,7 @@ namespace MedicationMngApp.ViewModels
             }
             else
             {
-                await Application.Current.MainPage.DisplayAlert("JSONParsing", "No network is available.", "Ok");
+                await Application.Current.MainPage.DisplayAlert("Network Error", "Internet is unavailable. Please try again.", "OK");
             }
         }
     }

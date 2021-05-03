@@ -1,4 +1,4 @@
-﻿using MedicationMng.Shared.Model;
+﻿using MedicationMngApp.Models;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MedicationMng.Shared.Model
+namespace MedicationMngApp.Models
 {
     public class Item
     {

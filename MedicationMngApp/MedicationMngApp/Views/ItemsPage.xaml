@@ -4,7 +4,7 @@
              x:Class="MedicationMngApp.Views.ItemsPage"
              Title="{Binding Title}"
              xmlns:local="clr-namespace:MedicationMngApp.ViewModels"  
-             xmlns:model="clr-namespace:MedicationMng.Shared.Model"  
+             xmlns:model="clr-namespace:MedicationMngApp.Models"  
              x:Name="BrowseItemsPage">
 
     <ContentPage.ToolbarItems>

@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicationMngApp.iOS", "Med
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedicationMngApp", "MedicationMngApp\MedicationMngApp\MedicationMngApp.csproj", "{94F9ABD8-E2F9-449A-A767-1C9A509FEFD3}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "MedicationMng.Shared", "MedicationMng.Shared\MedicationMng.Shared.shproj", "{8B255792-15E5-43A8-8A1F-1293A9A281F2}"
-EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "MedicationMngAPI", "MedicationMngAPI\", "{1601D437-194B-4567-A2BC-7955E13C3C24}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
@@ -34,10 +32,6 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "MedicationMngAPI", "Medicat
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		MedicationMng.Shared\MedicationMng.Shared.projitems*{8b255792-15e5-43a8-8a1f-1293a9a281f2}*SharedItemsImports = 13
-		MedicationMng.Shared\MedicationMng.Shared.projitems*{94f9abd8-e2f9-449a-a767-1c9a509fefd3}*SharedItemsImports = 5
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|iPhone = Debug|iPhone

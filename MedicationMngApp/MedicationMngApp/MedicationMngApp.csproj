@@ -17,6 +17,4 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
   </ItemGroup>
-
-  <Import Project="..\..\MedicationMng.Shared\MedicationMng.Shared.projitems" Label="Shared" />
 </Project>

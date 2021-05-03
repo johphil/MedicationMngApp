@@ -1,6 +1,11 @@
-﻿using System;
+﻿using MedicationMngApp.Models;
+using MedicationMngApp.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
@@ -105,7 +110,45 @@ namespace MedicationMngApp.ViewModels
         private async void OnRegisterClicked(object obj)
         {
             if (ValidateRegistration(obj))
-                await Application.Current.MainPage.DisplayAlert("Date of Birth", birthday.Date.ToShortDateString(), "OK PO");
+            {
+                if (NetworkStatus.IsInternet())
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        Account account = new Account
+                        {
+                            FirstName = firstname,
+                            LastName = lastname,
+                            Birthday = birthday,
+                            Email = email,
+                            Username = username,
+                            Password = confirmpassword
+                        };
+                        AccountWrapper accountWrapper = new AccountWrapper { account = account };
+                        string serializedObject = JsonConvert.SerializeObject(accountWrapper, Formatting.Indented);
+                        using (HttpContent contentPost = new StringContent(serializedObject, Encoding.UTF8, "application/json"))
+                        {
+                            using (HttpResponseMessage response = await client.PostAsync("http://10.0.2.2/MedicationMngWebAppServices/Service.svc/AddAccount", contentPost))
+                            {
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    string jData = await response.Content.ReadAsStringAsync();
+                                    JObject jObj = (JObject)JsonConvert.DeserializeObject(jData);
+                                    int result = jObj["AddAccountResult"].Value<int>();
+                                    if (result > 0)
+                                    {
+                                        await Application.Current.MainPage.DisplayAlert("Registration Success", "You have successfully registered.", "OK");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Network Error", "Internet is unavailable. Please try again.", "OK");
+                }
+            }
             else
                 await Application.Current.MainPage.DisplayAlert("Error", "Message Error", "OK");
         }
