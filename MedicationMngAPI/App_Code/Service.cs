@@ -16,44 +16,44 @@ public class Service : IService
 {
     private string conStr = ConfigurationManager.ConnectionStrings["MEDMNG_DBF"].ConnectionString;
 
-    public List<Account> GetAccounts()
-    {
-        try
-        {
-            List<Account> collection = new List<Account>();
-            using (SqlConnection connection = new SqlConnection(conStr))
-            {
-                using (SqlCommand command = new SqlCommand("spGetAccounts", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    connection.Open();
+    //public List<Account> GetAccounts()
+    //{
+    //    try
+    //    {
+    //        List<Account> collection = new List<Account>();
+    //        using (SqlConnection connection = new SqlConnection(conStr))
+    //        {
+    //            using (SqlCommand command = new SqlCommand("spGetAccounts", connection))
+    //            {
+    //                command.CommandType = CommandType.StoredProcedure;
+    //                connection.Open();
 
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            collection.Add(new Account
-                            {
-                                Account_ID = DBConvert.To<int>(reader[0]),
-                                FirstName = DBConvert.To<string>(reader[1]),
-                                LastName = DBConvert.To<string>(reader[2]),
-                                Birthday = DBConvert.To<string>(reader[3]),
-                                Email = DBConvert.To<string>(reader[4]),
-                                Username = DBConvert.To<string>(reader[5]),
-                                Password = DBConvert.To<string>(reader[6]),
-                                Date_Registered = DBConvert.To<string>(reader[7])
-                            });
-                        }
-                    }
-                }
-            }
-            return collection;
-        }
-        catch
-        {
-            return null;
-        }
-    }
+    //                using (SqlDataReader reader = command.ExecuteReader())
+    //                {
+    //                    while (reader.Read())
+    //                    {
+    //                        collection.Add(new Account
+    //                        {
+    //                            Account_ID = DBConvert.To<int>(reader[0]),
+    //                            FirstName = DBConvert.To<string>(reader[1]),
+    //                            LastName = DBConvert.To<string>(reader[2]),
+    //                            Birthday = DBConvert.To<string>(reader[3]),
+    //                            Email = DBConvert.To<string>(reader[4]),
+    //                            Username = DBConvert.To<string>(reader[5]),
+    //                            Password = DBConvert.To<string>(reader[6]),
+    //                            Date_Registered = DBConvert.To<string>(reader[7])
+    //                        });
+    //                    }
+    //                }
+    //            }
+    //        }
+    //        return collection;
+    //    }
+    //    catch
+    //    {
+    //        return null;
+    //    }
+    //}
 
     public int AddAccount(Account account)
     {

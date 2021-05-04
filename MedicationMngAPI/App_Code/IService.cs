@@ -8,14 +8,14 @@ using System.ServiceModel.Web;
 public interface IService
 {
     // GET Method // Get Records
-    [OperationContract]
-    [WebInvoke(Method = "GET",
-        UriTemplate = "/GetAccounts",
-        BodyStyle = WebMessageBodyStyle.Wrapped,
-        ResponseFormat = WebMessageFormat.Json,
-        RequestFormat = WebMessageFormat.Json)]
-    [return: MessageParameter(Name = "GetAccountsResult")]
-    List<Account> GetAccounts();
+    //[OperationContract]
+    //[WebInvoke(Method = "GET",
+    //    UriTemplate = "/GetAccounts",
+    //    BodyStyle = WebMessageBodyStyle.Wrapped,
+    //    ResponseFormat = WebMessageFormat.Json,
+    //    RequestFormat = WebMessageFormat.Json)]
+    //[return: MessageParameter(Name = "GetAccountsResult")]
+    //List<Account> GetAccounts();
 
     // GET Method
     [OperationContract]

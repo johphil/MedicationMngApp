@@ -13,15 +13,15 @@
                 <Label Text="Username" FontSize="Small" />
                 <Entry Text="{Binding Username, Mode=TwoWay}" Placeholder="Username" FontSize="Medium" />
                 <Label Text="Password" FontSize="Small" />
-                <Entry Text="{Binding Password, Mode=TwoWay}" Placeholder="Password" FontSize="Medium" IsPassword="True"/>
-                <Button VerticalOptions="Center" Text="Login" Command="{Binding LoginCommand}"/>
-
+                <Entry Text="{Binding Password, Mode=TwoWay}" Placeholder="Password" FontSize="Medium" IsPassword="True" />
+                <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+                <Button VerticalOptions="Center" Text="Login" IsEnabled="{Binding ButtonDisabler}" Command="{Binding LoginCommand}" />
             </StackLayout>
             <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="10,0,10,50" HorizontalOptions="CenterAndExpand">
                 <Label Text="Not yet registered?" />
                 <Label Text="Click Here" 
                        TextColor="{StaticResource Primary}"
-                       TextDecorations="Underline" >
+                       TextDecorations="Underline">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer 
                             NumberOfTapsRequired="1"

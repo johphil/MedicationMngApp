@@ -13,10 +13,16 @@ namespace MedicationMngApp.ViewModels
         public IServiceItem<Item> DataStore => DependencyService.Get<IServiceItem<Item>>();
 
         bool isBusy = false;
+
         public bool IsBusy
         {
             get { return isBusy; }
             set { SetProperty(ref isBusy, value); }
+        }
+
+        public bool ButtonDisabler
+        {
+            get { return !isBusy; }
         }
 
         string title = string.Empty;

@@ -22,6 +22,7 @@ namespace MedicationMngApp.ViewModels
         public LoginViewModel()
         {
             LoginCommand = new Command(OnLoginClicked);
+            InitLogin();
         }
 
         public string Username
@@ -36,13 +37,14 @@ namespace MedicationMngApp.ViewModels
             set => SetProperty(ref password, value);
         }
 
-        private async void OnLoginClicked(object obj)
+        private async void ProceedLogin(string uname, string pword)
         {
             if (NetworkStatus.IsInternet())
             {
+                IsBusy = true;
                 using (HttpClient client = new HttpClient())
                 {
-                    using (HttpResponseMessage response = await client.GetAsync(Common.GET_LOGIN_ACCOUNT(username, password)))
+                    using (HttpResponseMessage response = await client.GetAsync(Common.GET_LOGIN_ACCOUNT(uname, pword)))
                     {
                         if (response.IsSuccessStatusCode)
                         {
@@ -52,8 +54,9 @@ namespace MedicationMngApp.ViewModels
                                 LoginAccountResult result = JsonConvert.DeserializeObject<LoginAccountResult>(jData);
                                 if (result.result == 2)
                                 {
-                                    await Common.ShowMessageAsync("Welcome!", "You will be logged in now.", "OK");
-                                    Application.Current.MainPage = new NavigationPage(new AboutPage());
+                                    PersistentSettings.UserName = uname;
+                                    PersistentSettings.PassWord = pword;
+                                    Application.Current.MainPage = new AppShell();
                                 }
                                 else
                                     await Common.ShowMessageAsync("Invalid Login", "Invalid username or password.", "OK");
@@ -61,10 +64,25 @@ namespace MedicationMngApp.ViewModels
                         }
                     }
                 }
+                IsBusy = false;
             }
             else
             {
                 await Common.ShowMessageAsync("Network Error", "Internet is unavailable. Please try again.", "OK");
+            }
+        }
+
+        private void OnLoginClicked(object obj)
+        {
+            ProceedLogin(Username, password);
+        }
+
+        private void InitLogin()
+        {
+            if (!string.IsNullOrWhiteSpace(PersistentSettings.UserName) &&
+                !string.IsNullOrWhiteSpace(PersistentSettings.PassWord))
+            {
+                ProceedLogin(PersistentSettings.UserName, PersistentSettings.PassWord);
             }
         }
     }
