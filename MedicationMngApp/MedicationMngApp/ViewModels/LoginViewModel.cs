@@ -14,11 +14,26 @@ namespace MedicationMngApp.ViewModels
 {
     public class LoginViewModel : BaseViewModel
     {
+        private string username = string.Empty;
+        private string password = string.Empty;
+
         public Command LoginCommand { get; }
         
         public LoginViewModel()
         {
             LoginCommand = new Command(OnLoginClicked);
+        }
+
+        public string Username
+        {
+            get => username;
+            set => SetProperty(ref username, value);
+        }
+
+        public string Password
+        {
+            get => password;
+            set => SetProperty(ref password, value);
         }
 
         private async void OnLoginClicked(object obj)
@@ -27,14 +42,21 @@ namespace MedicationMngApp.ViewModels
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    using (HttpResponseMessage response = await client.GetAsync(Common.GET_GET_ACCOUNTS))
+                    using (HttpResponseMessage response = await client.GetAsync(Common.GET_LOGIN_ACCOUNT(username, password)))
                     {
                         if (response.IsSuccessStatusCode)
                         {
                             var jData = await response.Content.ReadAsStringAsync();
                             if (!string.IsNullOrWhiteSpace(jData))
                             {
-                                GetAccountsResult accounts = JsonConvert.DeserializeObject<GetAccountsResult>(jData);
+                                LoginAccountResult result = JsonConvert.DeserializeObject<LoginAccountResult>(jData);
+                                if (result.result == 2)
+                                {
+                                    await Common.ShowMessageAsync("Welcome!", "You will be logged in now.", "OK");
+                                    Application.Current.MainPage = new NavigationPage(new AboutPage());
+                                }
+                                else
+                                    await Common.ShowMessageAsync("Invalid Login", "Invalid username or password.", "OK");
                             }
                         }
                     }
