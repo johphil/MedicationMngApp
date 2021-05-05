@@ -6,10 +6,11 @@ namespace MedicationMngApp.Views
 {
     public partial class ItemDetailPage : ContentPage
     {
-        public ItemDetailPage()
+        public ItemDetailPage(string ItemId)
         {
             InitializeComponent();
-            BindingContext = new ItemDetailViewModel();
+            ItemDetailViewModel idViewModel = new ItemDetailViewModel(ItemId);
+            BindingContext = idViewModel;
         }
     }
 }

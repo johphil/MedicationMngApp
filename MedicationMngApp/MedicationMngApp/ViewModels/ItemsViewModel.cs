@@ -35,7 +35,7 @@ namespace MedicationMngApp.ViewModels
             try
             {
                 Items.Clear();
-                var items = await DataStore.GetItemsAsync(true);
+                var items = await DataItem.GetItemsAsync(true);
                 foreach (var item in items)
                 {
                     Items.Add(item);
@@ -78,7 +78,8 @@ namespace MedicationMngApp.ViewModels
                 return;
 
             // This will push the ItemDetailPage onto the navigation stack
-            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
+            //await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
+            await Common.NavigatePage(new ItemDetailPage(item.Id));
         }
     }
 }

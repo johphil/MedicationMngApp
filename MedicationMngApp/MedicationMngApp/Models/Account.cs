@@ -25,20 +25,20 @@ namespace MedicationMngApp.Models
         public DateTime Date_Registered { get; set; }
     }
 
-    public class AddAccountObject
+    public class AddAccountRequestObject
     {
         [JsonProperty(PropertyName = "account")]
         public Account account { get; set; }
     }
     public class AddAccountResult
     {
-        [JsonProperty(PropertyName = "AddAccountResult")]
+        [JsonProperty(PropertyName = nameof(AddAccountResult))]
         public int result { get; set; }
     }
 
-    public class GetAccountsResult
+    public class GetAccountDetailsResult
     {
-        [JsonProperty(PropertyName = "GetAccountsResult")]
-        public List<Account> accounts { get; set; }
+        [JsonProperty(PropertyName = nameof(GetAccountDetailsResult))]
+        public Account account { get; set; }
     }
 }

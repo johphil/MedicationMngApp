@@ -10,7 +10,7 @@ namespace MedicationMngApp.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IServiceItem<Item> DataStore => DependencyService.Get<IServiceItem<Item>>();
+        public IServiceItem<Item> DataItem => DependencyService.Get<IServiceItem<Item>>();
 
         bool isBusy = false;
 
@@ -18,11 +18,6 @@ namespace MedicationMngApp.ViewModels
         {
             get { return isBusy; }
             set { SetProperty(ref isBusy, value); }
-        }
-
-        public bool ButtonDisabler
-        {
-            get { return !isBusy; }
         }
 
         string title = string.Empty;

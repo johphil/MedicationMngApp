@@ -135,7 +135,7 @@ namespace MedicationMngApp.ViewModels
                 {
                     using (HttpClient client = new HttpClient())
                     {
-                        AddAccountObject accountWrapper = new AddAccountObject 
+                        AddAccountRequestObject accountWrapper = new AddAccountRequestObject 
                         { 
                             account = new Account
                             {

@@ -21,8 +21,13 @@ namespace MedicationMngApp.ViewModels
         
         public LoginViewModel()
         {
+            //Login if username & password is not null
+            if (!string.IsNullOrWhiteSpace(PersistentSettings.UserName) && !string.IsNullOrWhiteSpace(PersistentSettings.PassWord))
+            {
+                ProceedLogin(PersistentSettings.UserName, PersistentSettings.PassWord);
+            }
+
             LoginCommand = new Command(OnLoginClicked);
-            InitLogin();
         }
 
         public string Username
@@ -39,51 +44,53 @@ namespace MedicationMngApp.ViewModels
 
         private async void ProceedLogin(string uname, string pword)
         {
-            if (NetworkStatus.IsInternet())
+            IsBusy = true;
+            try
             {
-                IsBusy = true;
-                using (HttpClient client = new HttpClient())
+                if (NetworkStatus.IsInternet())
                 {
-                    using (HttpResponseMessage response = await client.GetAsync(Common.GET_LOGIN_ACCOUNT(uname, pword)))
+                    using (HttpClient client = new HttpClient())
                     {
-                        if (response.IsSuccessStatusCode)
+                        using (HttpResponseMessage response = await client.GetAsync(Common.GET_LOGIN_ACCOUNT(uname, pword)))
                         {
-                            var jData = await response.Content.ReadAsStringAsync();
-                            if (!string.IsNullOrWhiteSpace(jData))
+                            if (response.IsSuccessStatusCode)
                             {
-                                LoginAccountResult result = JsonConvert.DeserializeObject<LoginAccountResult>(jData);
-                                if (result.result == 2)
+                                var jData = await response.Content.ReadAsStringAsync();
+                                if (!string.IsNullOrWhiteSpace(jData))
                                 {
-                                    PersistentSettings.UserName = uname;
-                                    PersistentSettings.PassWord = pword;
-                                    Application.Current.MainPage = new AppShell();
+                                    LoginAccountResult result = JsonConvert.DeserializeObject<LoginAccountResult>(jData);
+                                    if (result.result > 0)
+                                    {
+                                        PersistentSettings.UserName = uname;
+                                        PersistentSettings.PassWord = pword;
+                                        PersistentSettings.AccountID = result.result;
+                                        Common.NavigateNewPage(new MainPage());
+                                    }
+                                    else
+                                        await Common.ShowMessageAsync("Invalid Login", "Invalid username or password.", "OK");
                                 }
-                                else
-                                    await Common.ShowMessageAsync("Invalid Login", "Invalid username or password.", "OK");
                             }
                         }
                     }
                 }
-                IsBusy = false;
+                else
+                {
+                    await Common.ShowMessageAsyncNetworkError();
+                }
             }
-            else
+            catch (Exception error)
             {
-                await Common.ShowMessageAsync("Network Error", "Internet is unavailable. Please try again.", "OK");
+                await Common.ShowMessageAsyncApplicationError(error.Message);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
 
         private void OnLoginClicked(object obj)
         {
             ProceedLogin(Username, password);
-        }
-
-        private void InitLogin()
-        {
-            if (!string.IsNullOrWhiteSpace(PersistentSettings.UserName) &&
-                !string.IsNullOrWhiteSpace(PersistentSettings.PassWord))
-            {
-                ProceedLogin(PersistentSettings.UserName, PersistentSettings.PassWord);
-            }
         }
     }
 }

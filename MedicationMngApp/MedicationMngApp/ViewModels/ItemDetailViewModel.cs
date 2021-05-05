@@ -6,13 +6,17 @@ using Xamarin.Forms;
 
 namespace MedicationMngApp.ViewModels
 {
-    [QueryProperty(nameof(ItemId), nameof(ItemId))]
     public class ItemDetailViewModel : BaseViewModel
     {
         private string itemId;
         private string text;
         private string description;
         public string Id { get; set; }
+
+        public ItemDetailViewModel(string ItemId)
+        {
+            this.ItemId = ItemId;
+        }
 
         public string Text
         {
@@ -43,7 +47,7 @@ namespace MedicationMngApp.ViewModels
         {
             try
             {
-                var item = await DataStore.GetItemAsync(itemId);
+                var item = await DataItem.GetItemAsync(itemId);
                 Id = item.Id;
                 Text = item.Text;
                 Description = item.Description;

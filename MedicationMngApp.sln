@@ -12,6 +12,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "MedicationMngAPI", "MedicationMngAPI\", "{1601D437-194B-4567-A2BC-7955E13C3C24}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		ProjectReferences = ""
 		Debug.AspNetCompiler.VirtualPath = "/localhost_60492"
 		Debug.AspNetCompiler.PhysicalPath = "MedicationMngAPI\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_60492\"

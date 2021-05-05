@@ -10,6 +10,11 @@ namespace MedicationMngApp.Models
     {
         private static ISettings AppSettings => CrossSettings.Current;
 
+        public static int AccountID
+        {
+            get => AppSettings.GetValueOrDefault(nameof(AccountID), 0);
+            set => AppSettings.AddOrUpdateValue(nameof(AccountID), value);
+        }
         public static string UserName
         {
             get => AppSettings.GetValueOrDefault(nameof(UserName), string.Empty);

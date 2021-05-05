@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:MedicationMngApp.ViewModels"  
+             xmlns:model="clr-namespace:MedicationMngApp.Models"  
+             x:Class="MedicationMngApp.Views.ProfilePage">
+    <ScrollView>
+        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand" Padding="10">
+            <Label Text="Account Information" FontSize="Title" Margin="0,10,0,0"/>
+            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
+                <Label Text="Username" FontSize="Small" />
+                <Entry Text="{Binding Username, Mode=OneWay}" Placeholder="Username" FontSize="Medium" IsReadOnly="True"/>
+
+                <Label Text="Email" FontSize="Small" />
+                <Entry Text="{Binding Email, Mode=OneWay}" Placeholder="Email" FontSize="Medium" IsReadOnly="True"/>
+            </StackLayout>
+            
+            <Button Text="Change Password" Command="{Binding ChangePasswordCommand}" Style="{StaticResource btnChangePassword}"/>
+
+            <Label Text="Personal Information" FontSize="Title" />
+            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
+                <Label Text="First Name" FontSize="Small" />
+                <Entry Text="{Binding FirstName, Mode=TwoWay}" Placeholder="First Name" FontSize="Medium" />
+
+                <Label Text="Last Name" FontSize="Small" />
+                <Entry Text="{Binding LastName, Mode=TwoWay}" Placeholder="Last Name" FontSize="Medium" />
+
+                <Label Text="Birthday" FontSize="Small" />
+                <Entry Text="{Binding Birthday, Mode=TwoWay}" Placeholder="Birthday" FontSize="Medium" />
+            </StackLayout>
+
+            <Label Text="Other Information" FontSize="Title" Margin="0,10,0,0"/>
+            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand">
+                <Label Text="Date Registered" FontSize="Small" />
+                <Entry Text="{Binding Date_Registered, Mode=OneWay}" Placeholder="Date Registered" FontSize="Medium" IsReadOnly="True"/>
+            </StackLayout>
+            
+            <Button Text="Logout" Command="{Binding LogoutCommand}" Style="{StaticResource btnLogout}"/>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>
