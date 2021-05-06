@@ -8,8 +8,10 @@ namespace MedicationMngApp.Models
 {
     public static class Common
     {
-        #region Json URIs
-        public static string SERVICE_IP = "192.168.88.250";// "192.168.222.105";//
+
+        #region Json URIs & Settings
+        public static string HEADER_CONTENT_TYPE = "application/json";
+        public static string SERVICE_IP = "192.168.222.111";//"192.168.88.250";// 
         public static string POST_ADD_ACCOUNT = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddAccount";
         public static string GET_LOGIN_ACCOUNT(string username, string password)
         {
@@ -19,6 +21,8 @@ namespace MedicationMngApp.Models
         {
             return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/GetAccountDetails/{id}";
         }
+        public static string PUT_UPDATE_ACCOUNT_PASSWORD = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/UpdateAccountPassword";
+        
         #endregion
 
         #region Asynchronous Tasks Message Popup & Navigation

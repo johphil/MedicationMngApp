@@ -112,9 +112,9 @@ namespace MedicationMngApp.ViewModels
             Common.NavigateNewPage(new LoginPage());
         }
 
-        private void OnChangePasswordClicked(object obj)
+        private async void OnChangePasswordClicked(object obj)
         {
-            throw new NotImplementedException();
+            await Common.NavigatePage(new ChangePasswordPage());
         }
     }
 }

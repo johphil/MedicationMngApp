@@ -148,7 +148,7 @@ namespace MedicationMngApp.ViewModels
                             }
                         };
                         string serializedObject = JsonConvert.SerializeObject(accountWrapper, Formatting.Indented);
-                        using (HttpContent contentPost = new StringContent(serializedObject, Encoding.UTF8, "application/json"))
+                        using (HttpContent contentPost = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
                         {
                             using (HttpResponseMessage response = await client.PostAsync(Common.POST_ADD_ACCOUNT, contentPost))
                             {

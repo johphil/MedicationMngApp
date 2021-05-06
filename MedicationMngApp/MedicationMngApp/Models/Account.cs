@@ -41,4 +41,19 @@ namespace MedicationMngApp.Models
         [JsonProperty(PropertyName = nameof(GetAccountDetailsResult))]
         public Account account { get; set; }
     }
+
+    public class UpdateAccountPasswordRequestObject
+    {
+        [JsonProperty(PropertyName = nameof(account_id))]
+        public int account_id { get; set; }
+        [JsonProperty(PropertyName = nameof(new_password))]
+        public string new_password { get; set; }
+    }
+
+    public class UpdateAccountPasswordResult
+    {
+        [JsonProperty(PropertyName = nameof(UpdateAccountPasswordResult))]
+        public int result { get; set; }
+    }
+
 }
