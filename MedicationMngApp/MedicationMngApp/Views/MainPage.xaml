@@ -2,10 +2,12 @@
 <TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MedicationMngApp.Views"
+             xmlns:android="clr-namespace:Xamarin.Forms.PlatformConfiguration.AndroidSpecific;assembly=Xamarin.Forms.Core"
              x:Class="MedicationMngApp.Views.MainPage"
              NavigationPage.HasNavigationBar="False"
+             android:TabbedPage.ToolbarPlacement="Bottom"
              Title="Medication Manager">
     <local:ProfilePage Title="Profile" IconImageSource="icon_profile.png"/>
     <local:HomePage Title="Home" IconImageSource="icon_home.png"/>
-    <local:AlertPage Title="Medication" IconImageSource="icon_medicbag.png"/>
+    <local:MedicationPage Title="Medication" IconImageSource="icon_medicbag.png"/>
 </TabbedPage>

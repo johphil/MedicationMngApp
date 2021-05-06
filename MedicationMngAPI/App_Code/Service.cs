@@ -71,7 +71,7 @@ public class Service : IService
                     command.Parameters.Add("password", SqlDbType.VarChar, 99).Value = DBConvert.From(PassHash.MD5Hash(account.Password));
                     connection.Open();
 
-                    return command.ExecuteNonQuery();
+                    return (int)command.ExecuteScalar();
                 }
             }
         }
@@ -93,8 +93,6 @@ public class Service : IService
                     command.Parameters.Add("account_id", SqlDbType.Int).Value = DBConvert.From(account.Account_ID);
                     command.Parameters.Add("firstname", SqlDbType.VarChar, 99).Value = DBConvert.From(account.FirstName);
                     command.Parameters.Add("lastname", SqlDbType.VarChar, 99).Value = DBConvert.From(account.LastName);
-                    command.Parameters.Add("birthday", SqlDbType.Date).Value = DBConvert.From(account.Birthday);
-                    command.Parameters.Add("email", SqlDbType.VarChar, 99).Value = DBConvert.From(account.Email);
                     connection.Open();
 
                     return command.ExecuteNonQuery();
@@ -153,4 +151,16 @@ public class Service : IService
             return -1;
         }
     }
+
+    public int AddRatingsRecommendation(Ratings_Recommendation ratingsRecommendation) { return -1; }
+
+    public Ratings_Recommendation GetRatingsRecommendation(string account_id) { return null; }
+
+    public int AddMedTake(MedTake medtake) { return -1; }
+
+    public List<MedTake> GetMedTakes(string account_id) { return null; }
+
+    public int UpdateMedTake(MedTake medtake) { return -1; }
+
+    public int DeleteMedTake(MedTake medtake) { return -1; }
 }

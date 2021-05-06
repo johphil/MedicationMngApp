@@ -52,7 +52,7 @@ namespace MedicationMngApp.ViewModels
             else if (newpassword != newpasswordconfirm)
                 ErrorMessage = "New Password and Confirm Password do not match.";
             else
-                await Common.ShowMessageAsync("Something went wrong", "Error.", "Dismiss");
+                await Common.ShowMessageAsyncUnknownError();
         }
 
 
@@ -74,9 +74,9 @@ namespace MedicationMngApp.ViewModels
                                 new_password = newpasswordconfirm
                             };
                             string serializedObject = JsonConvert.SerializeObject(updatePasswordObj, Formatting.Indented);
-                            using (HttpContent contentPost = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
+                            using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
                             {
-                                using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_ACCOUNT_PASSWORD, contentPost))
+                                using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_ACCOUNT_PASSWORD, content))
                                 {
                                     if (response.IsSuccessStatusCode)
                                     {
@@ -84,18 +84,25 @@ namespace MedicationMngApp.ViewModels
                                         if (!string.IsNullOrWhiteSpace(jData))
                                         {
                                             UpdateAccountPasswordResult result = JsonConvert.DeserializeObject<UpdateAccountPasswordResult>(jData);
-                                            if (result.result > 0)
+                                            switch (result.result)
                                             {
-                                                await Common.ShowMessageAsync("Change Password Success", "You have successfully changed your password.", "OK");
-                                                await Common.NavigateBack();
-                                            }
-                                            else if (result.result == -69) //sql return value -69
-                                            {
-                                                ErrorMessage = "Old password do not match with the old one.";
-                                            }
-                                            else
-                                            {
-                                                ErrorMessage = "Unknown error.";
+                                                case -69: //sql return value -69
+                                                    {
+                                                        ErrorMessage = "Old password do not match with the old one.";
+                                                        break;
+                                                    }
+                                                case 1: //sql return value 1
+                                                    {
+                                                        await Common.ShowMessageAsync("Change Password Success", "You have successfully changed your password.", "OK");
+                                                        await Common.NavigateBack();
+                                                        break;
+                                                    }
+                                                default:
+                                                    {
+                                                        await Common.ShowMessageAsyncUnknownError();
+                                                        break;
+                                                    }
+
                                             }
                                         }
                                     }

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MedicationMngApp.Views.MedicationPage">
+    <ContentPage.Content>
+        <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="StartAndExpand" Padding="10">
+            <Label Text="Medication" Style="{StaticResource labelTitle}"/>
+            <BoxView VerticalOptions="Center" HorizontalOptions="Center" HeightRequest="1" WidthRequest="100" Color="{StaticResource Accent}"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

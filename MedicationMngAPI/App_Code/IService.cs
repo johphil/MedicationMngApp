@@ -56,14 +56,64 @@ public interface IService
     [return: MessageParameter(Name = "UpdateAccountPasswordResult")]
     int UpdateAccountPassword(int account_id, string old_password, string new_password);
 
-    // DELETE Method // Deleting Records
-    //[OperationContract]
-    //[WebInvoke(Method = "DELETE",
-    //    UriTemplate = "/DeleteAccount",
-    //    BodyStyle = WebMessageBodyStyle.Wrapped, 
-    //    RequestFormat = WebMessageFormat.Json, 
-    //    ResponseFormat = WebMessageFormat.Json)]
-    //void DeleteAccount(int account_id);
+    // POST Method // Create New Records
+    [OperationContract]
+    [WebInvoke(Method = "POST",
+        UriTemplate = "/AddRatingsRecommendation",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "AddRatingsRecommendationResult")]
+    int AddRatingsRecommendation(Ratings_Recommendation ratingsRecommendation);
+
+    // GET Method
+    [OperationContract]
+    [WebInvoke(Method = "GET",
+        UriTemplate = "/GetRatingsRecommendation/{account_id}",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "GetRatingsRecommendationResult")]
+    Ratings_Recommendation GetRatingsRecommendation(string account_id);
+
+    // POST Method // Create New Records
+    [OperationContract]
+    [WebInvoke(Method = "POST",
+        UriTemplate = "/AddMedTake",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "AddMedTakeResult")]
+    int AddMedTake(MedTake medtake);
+
+    // GET Method
+    [OperationContract]
+    [WebInvoke(Method = "GET",
+        UriTemplate = "/GetMedTakes/{account_id}",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "GetMedTakesResult")]
+    List<MedTake> GetMedTakes(string account_id);
+
+    [OperationContract]
+    [WebInvoke(Method = "PUT",
+        UriTemplate = "/UpdateMedTake",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "UpdateMedTakeResult")]
+    int UpdateMedTake(MedTake medtake);
+
+    //DELETE Method // Deleting Records
+    [OperationContract]
+    [WebInvoke(Method = "DELETE",
+        UriTemplate = "/DeleteMedTake",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "DeleteMedTakeResult")]
+    int DeleteMedTake(MedTake medtake);
 }
 
 [DataContract]
@@ -132,5 +182,80 @@ public class Account
     {
         get { return date_registered.ToDateWithTime(); }
         set { date_registered = value.ToDateTime(); }
+    }
+}
+
+[DataContract]
+public class MedTake : Account
+{
+    private int med_take_id = -1;
+    private string med_name = string.Empty;
+    private int med_count = 0;
+    private DateTime med_take_time = DateTime.MinValue;
+
+    [DataMember]
+    public int Med_Take_ID
+    {
+        get { return med_take_id; }
+        set { med_take_id = value; }
+    }
+
+    [DataMember]
+    public string Med_Name
+    {
+        get { return med_name; }
+        set { med_name = value; }
+    }
+
+    [DataMember]
+    public int Med_Count
+    {
+        get { return med_count; }
+        set { med_count = value; }
+    }
+
+    [DataMember]
+    public string Med_Take_Time
+    {
+        get { return med_take_time.ToTimeOnly(); }
+        set { med_take_time = value.ToDateTime(); }
+    }
+}
+
+[DataContract]
+public class Ratings_Recommendation : Account
+{
+    private int ratings_recommendation_id = -1;
+    private int ratings = 0;
+    private string recommendations = string.Empty;
+    private DateTime date = DateTime.MinValue;
+
+    [DataMember]
+    public int Ratings_Recommendation_ID
+    {
+        get { return ratings_recommendation_id; }
+        set { ratings_recommendation_id = value; }
+    }
+
+    [DataMember]
+    public int Ratings
+    {
+        get { return ratings; }
+        set { ratings = value; }
+    }
+
+    [DataMember]
+    public string Recommendations
+    {
+        get { return recommendations; }
+        set { recommendations = value; }
+    }
+
+
+    [DataMember]
+    public string Date
+    {
+        get { return date.ToDateWithTime(); }
+        set { date = value.ToDateTime(); }
     }
 }

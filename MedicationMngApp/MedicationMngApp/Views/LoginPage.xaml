@@ -14,7 +14,9 @@
                 <Entry Text="{Binding Username, Mode=TwoWay}" Placeholder="Username" FontSize="Medium" />
                 <Label Text="Password" FontSize="Small" />
                 <Entry Text="{Binding Password, Mode=TwoWay}" Placeholder="Password" FontSize="Medium" IsPassword="True" />
-                <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+                <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" HorizontalOptions="CenterAndExpand"/>
+                
+                <Label Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}"/>
                 <Button VerticalOptions="Center" Text="Login" Command="{Binding LoginCommand}" />
             </StackLayout>
             <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="10,0,10,50" HorizontalOptions="CenterAndExpand">

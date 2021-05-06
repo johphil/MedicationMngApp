@@ -30,10 +30,17 @@ namespace MedicationMngApp.Models
         [JsonProperty(PropertyName = "account")]
         public Account account { get; set; }
     }
+
     public class AddAccountResult
     {
         [JsonProperty(PropertyName = nameof(AddAccountResult))]
         public int result { get; set; }
+    }
+
+    public class UpdateAccountDetailsRequstObject
+    {
+        [JsonProperty(PropertyName = "account")]
+        public Account account { get; set; }
     }
 
     public class GetAccountDetailsResult

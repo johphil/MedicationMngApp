@@ -67,7 +67,7 @@ namespace MedicationMngApp.ViewModels
                                         Common.NavigateNewPage(new MainPage());
                                     }
                                     else
-                                        await Common.ShowMessageAsync("Invalid Login", "Invalid username or password.", "OK");
+                                        ErrorMessage = "Invalid username or password.";
                                 }
                             }
                         }
