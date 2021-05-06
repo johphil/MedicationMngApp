@@ -76,7 +76,6 @@
                 <Setter Property="FontAttributes" Value="Bold"/>
                 <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
             </Style>
-
             <Style x:Key="labelSubTitle" TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource Accent}"/>
                 <Setter Property="FontSize" Value="Subtitle"/>
@@ -85,19 +84,25 @@
                 <Setter Property="Margin" Value="0,30,0,0"/>
                 <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
             </Style>
-
             <Style x:Key="labelName" TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource Accent}"/>
                 <Setter Property="FontSize" Value="Caption"/>
                 <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
             </Style>
-
             <Style x:Key="labelValue" TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource Primary}"/>
                 <Setter Property="FontSize" Value="Medium"/>
                 <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
             </Style>
-            
+
+            <Style x:Key="boxViewSeparator" TargetType="BoxView">
+                <Setter Property="HeightRequest" Value="1"/>
+                <Setter Property="WidthRequest" Value="100"/>
+                <Setter Property="Color" Value="{StaticResource Accent}"/>
+                <Setter Property="VerticalOptions" Value="Center"/>
+                <Setter Property="HorizontalOptions" Value="Center"/>
+                <Setter Property="Margin" Value="0,0,0,30"/>
+            </Style>
         </ResourceDictionary>        
     </Application.Resources>
 </Application>

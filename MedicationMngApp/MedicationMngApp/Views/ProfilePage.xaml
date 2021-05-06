@@ -7,9 +7,9 @@
     <ScrollView>
         <StackLayout HorizontalOptions="FillAndExpand" Padding="10">
             <Label Text="Profile" Style="{StaticResource labelTitle}"/>
-            <BoxView VerticalOptions="Center" HorizontalOptions="Center" HeightRequest="1" WidthRequest="100" Color="{StaticResource Accent}"/>
+            <BoxView Style="{StaticResource boxViewSeparator}"/>
 
-            <StackLayout Margin="0,30,0,30">
+            <StackLayout Margin="0,0,0,30">
                 <StackLayout Margin="0,10,0,10">
                     <Label Text="{Binding Username}" Style="{StaticResource labelValue}"/>
                     <Label Text="Username" Style="{StaticResource labelName}"/>

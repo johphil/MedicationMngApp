@@ -44,9 +44,6 @@ namespace MedicationMngApp.ViewModels
         private void OnSaveClicked()
         {
             SaveProfile();
-            EditButtonVisibility = true;
-            SaveButtonVisibility = false;
-            IsReadOnlyField = true;
         }
 
         private void OnEditClicked()
@@ -197,6 +194,13 @@ namespace MedicationMngApp.ViewModels
                                             UpdateAccountPasswordResult result = JsonConvert.DeserializeObject<UpdateAccountPasswordResult>(jData);
                                             if (result.result < 0)
                                                 await Common.ShowMessageAsyncUnknownError();
+                                            else
+                                            {
+                                                EditButtonVisibility = true;
+                                                SaveButtonVisibility = false;
+                                                IsReadOnlyField = true;
+                                                ErrorMessage = string.Empty;
+                                            }
                                         }
                                     }
                                 }
