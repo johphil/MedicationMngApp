@@ -54,7 +54,7 @@ public interface IService
         RequestFormat = WebMessageFormat.Json,
         ResponseFormat = WebMessageFormat.Json)]
     [return: MessageParameter(Name = "UpdateAccountPasswordResult")]
-    int UpdateAccountPassword(int account_id, string new_password);
+    int UpdateAccountPassword(int account_id, string old_password, string new_password);
 
     // DELETE Method // Deleting Records
     //[OperationContract]

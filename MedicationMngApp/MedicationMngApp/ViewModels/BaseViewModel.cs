@@ -12,7 +12,29 @@ namespace MedicationMngApp.ViewModels
     {
         public IServiceItem<Item> DataItem => DependencyService.Get<IServiceItem<Item>>();
 
+        string errormessage = string.Empty;
         bool isBusy = false;
+        bool errorvisibility = false;
+
+        public string ErrorMessage
+        {
+            get { return errormessage; }
+            set
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                    ErrorVisibility = true;
+                else
+                    ErrorVisibility = false;
+
+                SetProperty(ref errormessage, value);
+            }
+        }
+
+        public bool ErrorVisibility
+        {
+            get { return errorvisibility; }
+            set { SetProperty(ref errorvisibility, value); }
+        }
 
         public bool IsBusy
         {

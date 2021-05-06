@@ -48,9 +48,9 @@ namespace MedicationMngApp.ViewModels
         private async void ValidateMessage()
         {
             if (string.IsNullOrWhiteSpace(oldpassword) || string.IsNullOrWhiteSpace(newpassword) || string.IsNullOrWhiteSpace(newpasswordconfirm))
-                await Common.ShowMessageAsync("Invalid Password", "Please fill up all fields.", "OK");
+                ErrorMessage = "Please fill up all fields.";
             else if (newpassword != newpasswordconfirm)
-                await Common.ShowMessageAsync("Invalid Password", "New Password and Confirm Password do not match.", "OK");
+                ErrorMessage = "New Password and Confirm Password do not match.";
             else
                 await Common.ShowMessageAsync("Something went wrong", "Error.", "Dismiss");
         }
@@ -58,47 +58,68 @@ namespace MedicationMngApp.ViewModels
 
         private async void OnChangePasswordClicked()
         {
-            if (Validate())
+            IsBusy = true;
+            try
             {
-                if (NetworkStatus.IsInternet())
+                if (Validate())
                 {
-                    using (HttpClient client = new HttpClient())
+                    if (NetworkStatus.IsInternet())
                     {
-                        UpdateAccountPasswordRequestObject updatePasswordObj = new UpdateAccountPasswordRequestObject
+                        using (HttpClient client = new HttpClient())
                         {
-                            account_id = PersistentSettings.AccountID,
-                            new_password = newpasswordconfirm
-                        };
-                        string serializedObject = JsonConvert.SerializeObject(updatePasswordObj, Formatting.Indented);
-                        using (HttpContent contentPost = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
-                        {
-                            using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_ACCOUNT_PASSWORD, contentPost))
+                            UpdateAccountPasswordRequestObject updatePasswordObj = new UpdateAccountPasswordRequestObject
                             {
-                                if (response.IsSuccessStatusCode)
+                                account_id = PersistentSettings.AccountID,
+                                old_password = oldpassword,
+                                new_password = newpasswordconfirm
+                            };
+                            string serializedObject = JsonConvert.SerializeObject(updatePasswordObj, Formatting.Indented);
+                            using (HttpContent contentPost = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
+                            {
+                                using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_ACCOUNT_PASSWORD, contentPost))
                                 {
-                                    string jData = await response.Content.ReadAsStringAsync();
-                                    if (!string.IsNullOrWhiteSpace(jData))
+                                    if (response.IsSuccessStatusCode)
                                     {
-                                        UpdateAccountPasswordResult result = JsonConvert.DeserializeObject<UpdateAccountPasswordResult>(jData);
-                                        if (result.result > 0)
+                                        string jData = await response.Content.ReadAsStringAsync();
+                                        if (!string.IsNullOrWhiteSpace(jData))
                                         {
-                                            await Common.ShowMessageAsync("Change Password Success", "You have successfully changed your password.", "OK");
-                                            await Common.NavigateBack();
+                                            UpdateAccountPasswordResult result = JsonConvert.DeserializeObject<UpdateAccountPasswordResult>(jData);
+                                            if (result.result > 0)
+                                            {
+                                                await Common.ShowMessageAsync("Change Password Success", "You have successfully changed your password.", "OK");
+                                                await Common.NavigateBack();
+                                            }
+                                            else if (result.result == -69) //sql return value -69
+                                            {
+                                                ErrorMessage = "Old password do not match with the old one.";
+                                            }
+                                            else
+                                            {
+                                                ErrorMessage = "Unknown error.";
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
                     }
+                    else
+                    {
+                        await Common.ShowMessageAsyncNetworkError();
+                    }
                 }
                 else
                 {
-                    await Common.ShowMessageAsync("Network Error", "Internet is unavailable. Please try again.", "OK");
+                    ValidateMessage();
                 }
             }
-            else
+            catch (Exception error)
             {
-                ValidateMessage();
+                await Common.ShowMessageAsyncApplicationError(error.Message);
+            }
+            finally
+            {
+                IsBusy = false;
             }
         }
     }

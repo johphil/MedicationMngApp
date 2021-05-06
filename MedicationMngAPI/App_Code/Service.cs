@@ -107,7 +107,7 @@ public class Service : IService
         }
     }
 
-    public int UpdateAccountPassword(int account_id, string new_password)
+    public int UpdateAccountPassword(int account_id, string old_password, string new_password)
     {
         try
         {
@@ -117,10 +117,11 @@ public class Service : IService
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("account_id", SqlDbType.Int).Value = DBConvert.From(account_id);
+                    command.Parameters.Add("oldPw", SqlDbType.VarChar, 99).Value = DBConvert.From(PassHash.MD5Hash(old_password));
                     command.Parameters.Add("newPw", SqlDbType.VarChar, 99).Value = DBConvert.From(PassHash.MD5Hash(new_password));
                     connection.Open();
 
-                    return command.ExecuteNonQuery();
+                    return (int)command.ExecuteScalar();
                 }
             }
         }
