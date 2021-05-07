@@ -156,11 +156,100 @@ public class Service : IService
 
     public Ratings_Recommendation GetRatingsRecommendation(string account_id) { return null; }
 
-    public int AddMedTake(MedTake medtake) { return -1; }
+    public int AddMedTake(MedTake medtake, List<MedTakeSchedule> medtakeschedules)
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        using (SqlCommand command = new SqlCommand("spAddMedTake", connection, transaction))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+
+                            command.Parameters.Add("account_id", SqlDbType.Int).Value = DBConvert.From(medtake.Account_ID);
+                            command.Parameters.Add("med_name", SqlDbType.VarChar, 50).Value = DBConvert.From(medtake.Med_Name);
+                            command.Parameters.Add("med_count", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Count);
+                            command.Parameters.Add("med_type_id", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Type_ID);
+
+                            medtake.Med_Take_ID = (int)command.ExecuteScalar();
+
+                            if (medtake.Med_Take_ID > 0)
+                            {
+                                command.Parameters.Clear();
+                                command.CommandText = "spAddMedTakeSchedule";
+
+                                foreach (var schedule in medtakeschedules)
+                                {
+                                    command.Parameters.Add("med_take_id", SqlDbType.Int).Value = DBConvert.From(schedule.Med_Take_ID);
+                                    command.Parameters.Add("day_of_week", SqlDbType.Int).Value = DBConvert.From(schedule.Day_Of_Week);
+                                    command.Parameters.Add("dosage_count", SqlDbType.Int).Value = DBConvert.From(schedule.Dosage_Count);
+                                    command.Parameters.Add("time", SqlDbType.Time, 7).Value = DBConvert.From(schedule.Time);
+
+                                    command.ExecuteNonQuery();
+                                    command.Parameters.Clear();
+                                }
+                            }
+                        }
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        return -1;
+                    }
+                }
+            }
+            return 1;
+        }
+        catch
+        {
+            return -1;
+        }
+    }
 
     public List<MedTake> GetMedTakes(string account_id) { return null; }
 
     public int UpdateMedTake(MedTake medtake) { return -1; }
 
     public int DeleteMedTake(MedTake medtake) { return -1; }
+
+    public List<MedType> GetMedTypes()
+    {
+        try
+        {
+            List<MedType> collection = new List<MedType>();
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                using (SqlCommand command = new SqlCommand("spGetMedTypes", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            collection.Add(new MedType
+                            {
+                                Med_Type_ID = DBConvert.To<int>(reader[0]),
+                                Med_Type_Name = DBConvert.To<string>(reader[1]),
+                                IsCount = DBConvert.To<bool>(reader[2]),
+                                Image = DBConvert.To<string>(reader[3])
+                            });
+                        }
+                    }
+                }
+            }
+            return collection;
+        }
+        catch
+        {
+            return null;
+        }
+    }
 }

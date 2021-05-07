@@ -11,8 +11,9 @@ namespace MedicationMngApp.Models
 
         #region Json URIs & Settings
         public static string HEADER_CONTENT_TYPE = "application/json";
-        public static string SERVICE_IP = "192.168.88.246";// "192.168.222.111";//
+        public static string SERVICE_IP = "192.168.88.253";// "192.168.222.111";//
         public static string POST_ADD_ACCOUNT = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddAccount";
+        public static string POST_ADD_MED_TAKE = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddMedTake";
         public static string GET_LOGIN_ACCOUNT(string username, string password)
         {
             return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/LoginAccount/{username}/{password}";
@@ -21,6 +22,7 @@ namespace MedicationMngApp.Models
         {
             return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/GetAccountDetails/{id}";
         }
+        public static string GET_GET_MED_TYPES = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/GetMedTypes";
         public static string PUT_UPDATE_ACCOUNT_PASSWORD = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/UpdateAccountPassword";
         public static string PUT_UPDATE_ACCOUNT_DETAILS = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/UpdateAccountDetails"; 
         #endregion

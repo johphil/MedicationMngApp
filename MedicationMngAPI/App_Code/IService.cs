@@ -7,7 +7,7 @@ using System.ServiceModel.Web;
 [ServiceContract]
 public interface IService
 {
-    // GET Method // Get Records
+    #region METHOD: GET
     [OperationContract]
     [WebInvoke(Method = "GET",
         UriTemplate = "/GetAccountDetails/{id}",
@@ -17,7 +17,6 @@ public interface IService
     [return: MessageParameter(Name = "GetAccountDetailsResult")]
     Account GetAccountDetails(string id);
 
-    // GET Method
     [OperationContract]
     [WebInvoke(Method = "GET",
         UriTemplate = "/LoginAccount/{username}/{password}",
@@ -27,7 +26,35 @@ public interface IService
     [return: MessageParameter(Name = "LoginAccountResult")]
     int LoginAccount(string username, string password);
 
-    // POST Method // Create New Records
+    [OperationContract]
+    [WebInvoke(Method = "GET",
+        UriTemplate = "/GetMedTypes",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "GetMedTypesResult")]
+    List<MedType> GetMedTypes();
+
+    [OperationContract]
+    [WebInvoke(Method = "GET",
+        UriTemplate = "/GetRatingsRecommendation/{account_id}",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "GetRatingsRecommendationResult")]
+    Ratings_Recommendation GetRatingsRecommendation(string account_id);
+
+    [OperationContract]
+    [WebInvoke(Method = "GET",
+        UriTemplate = "/GetMedTakes/{account_id}",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "GetMedTakesResult")]
+    List<MedTake> GetMedTakes(string account_id);
+    #endregion //METHOD: GET
+
+    #region METHOD: POST
     [OperationContract]
     [WebInvoke(Method = "POST",
         UriTemplate = "/AddAccount",
@@ -37,12 +64,31 @@ public interface IService
     [return: MessageParameter(Name = "AddAccountResult")]
     int AddAccount(Account account);
 
-    // PUT Method // Updating Records
+    [OperationContract]
+    [WebInvoke(Method = "POST",
+        UriTemplate = "/AddMedTake",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "AddMedTakeResult")]
+    int AddMedTake(MedTake medtake, List<MedTakeSchedule> medtakeschedules);
+
+    [OperationContract]
+    [WebInvoke(Method = "POST",
+        UriTemplate = "/AddRatingsRecommendation",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "AddRatingsRecommendationResult")]
+    int AddRatingsRecommendation(Ratings_Recommendation ratingsRecommendation);
+    #endregion //METHOD: POST
+
+    #region METHOD: PUT
     [OperationContract]
     [WebInvoke(Method = "PUT",
         UriTemplate = "/UpdateAccountDetails",
-        BodyStyle = WebMessageBodyStyle.Wrapped, 
-        RequestFormat = WebMessageFormat.Json, 
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        RequestFormat = WebMessageFormat.Json,
         ResponseFormat = WebMessageFormat.Json)]
     [return: MessageParameter(Name = "UpdateAccountDetailsResult")]
     int UpdateAccountDetails(Account account);
@@ -56,46 +102,6 @@ public interface IService
     [return: MessageParameter(Name = "UpdateAccountPasswordResult")]
     int UpdateAccountPassword(int account_id, string old_password, string new_password);
 
-    // POST Method // Create New Records
-    [OperationContract]
-    [WebInvoke(Method = "POST",
-        UriTemplate = "/AddRatingsRecommendation",
-        BodyStyle = WebMessageBodyStyle.Wrapped,
-        ResponseFormat = WebMessageFormat.Json,
-        RequestFormat = WebMessageFormat.Json)]
-    [return: MessageParameter(Name = "AddRatingsRecommendationResult")]
-    int AddRatingsRecommendation(Ratings_Recommendation ratingsRecommendation);
-
-    // GET Method
-    [OperationContract]
-    [WebInvoke(Method = "GET",
-        UriTemplate = "/GetRatingsRecommendation/{account_id}",
-        BodyStyle = WebMessageBodyStyle.Wrapped,
-        ResponseFormat = WebMessageFormat.Json,
-        RequestFormat = WebMessageFormat.Json)]
-    [return: MessageParameter(Name = "GetRatingsRecommendationResult")]
-    Ratings_Recommendation GetRatingsRecommendation(string account_id);
-
-    // POST Method // Create New Records
-    [OperationContract]
-    [WebInvoke(Method = "POST",
-        UriTemplate = "/AddMedTake",
-        BodyStyle = WebMessageBodyStyle.Wrapped,
-        ResponseFormat = WebMessageFormat.Json,
-        RequestFormat = WebMessageFormat.Json)]
-    [return: MessageParameter(Name = "AddMedTakeResult")]
-    int AddMedTake(MedTake medtake);
-
-    // GET Method
-    [OperationContract]
-    [WebInvoke(Method = "GET",
-        UriTemplate = "/GetMedTakes/{account_id}",
-        BodyStyle = WebMessageBodyStyle.Wrapped,
-        ResponseFormat = WebMessageFormat.Json,
-        RequestFormat = WebMessageFormat.Json)]
-    [return: MessageParameter(Name = "GetMedTakesResult")]
-    List<MedTake> GetMedTakes(string account_id);
-
     [OperationContract]
     [WebInvoke(Method = "PUT",
         UriTemplate = "/UpdateMedTake",
@@ -104,8 +110,9 @@ public interface IService
         ResponseFormat = WebMessageFormat.Json)]
     [return: MessageParameter(Name = "UpdateMedTakeResult")]
     int UpdateMedTake(MedTake medtake);
+    #endregion //METHOD: PUT
 
-    //DELETE Method // Deleting Records
+    #region METHOD: DELETE
     [OperationContract]
     [WebInvoke(Method = "DELETE",
         UriTemplate = "/DeleteMedTake",
@@ -114,6 +121,7 @@ public interface IService
         ResponseFormat = WebMessageFormat.Json)]
     [return: MessageParameter(Name = "DeleteMedTakeResult")]
     int DeleteMedTake(MedTake medtake);
+    #endregion //METHOD: DELETE
 }
 
 [DataContract]
@@ -186,18 +194,26 @@ public class Account
 }
 
 [DataContract]
-public class MedTake : Account
+public class MedTake
 {
     private int med_take_id = -1;
     private string med_name = string.Empty;
-    private int med_count = 0;
-    private DateTime med_take_time = DateTime.MinValue;
+    private int? med_count = null;
+    private int account_id = -1;
+    private int med_type_id = -1;
 
     [DataMember]
     public int Med_Take_ID
     {
         get { return med_take_id; }
         set { med_take_id = value; }
+    }
+
+    [DataMember]
+    public int Account_ID
+    {
+        get { return account_id; }
+        set { account_id = value; }
     }
 
     [DataMember]
@@ -208,22 +224,104 @@ public class MedTake : Account
     }
 
     [DataMember]
-    public int Med_Count
+    public int? Med_Count
     {
         get { return med_count; }
         set { med_count = value; }
     }
 
     [DataMember]
-    public string Med_Take_Time
+    public int Med_Type_ID
     {
-        get { return med_take_time.ToTimeOnly(); }
-        set { med_take_time = value.ToDateTime(); }
+        get { return med_type_id; }
+        set { med_type_id = value; }
     }
 }
 
 [DataContract]
-public class Ratings_Recommendation : Account
+public class MedType
+{
+    private int med_type_id = -1;
+    private string med_type_name = string.Empty;
+    private bool iscount = false;
+    private string image = string.Empty;
+
+    [DataMember]
+    public int Med_Type_ID
+    {
+        get { return med_type_id; }
+        set { med_type_id = value; }
+    }
+
+    [DataMember]
+    public string Med_Type_Name
+    {
+        get { return med_type_name; }
+        set { med_type_name = value; }
+    }
+
+    [DataMember]
+    public bool IsCount
+    {
+        get { return iscount; }
+        set { iscount = value; }
+    }
+
+    [DataMember]
+    public string Image
+    {
+        get { return image; }
+        set { image = value; }
+    }
+}
+
+[DataContract]
+public class MedTakeSchedule
+{
+    private int med_take_schedule_id = -1;
+    private int day_of_week = 0;
+    private int dosage_count = 0;
+    private int med_take_id = -1;
+    private TimeSpan time = TimeSpan.Zero;
+
+    [DataMember]
+    public int Med_Take_Schedule_ID 
+    {
+        get { return med_take_schedule_id; }
+        set { med_take_schedule_id = value; }
+    }
+
+    [DataMember]
+    public int Med_Take_ID
+    {
+        get { return med_take_id; }
+        set { med_take_id = value; }
+    }
+
+    [DataMember]
+    public int Day_Of_Week
+    {
+        get { return day_of_week; }
+        set { day_of_week = value; }
+    }
+
+    [DataMember]
+    public int Dosage_Count
+    {
+        get { return dosage_count; }
+        set { dosage_count = value; }
+    }
+
+    [DataMember]
+    public TimeSpan Time
+    {
+        get { return time; }
+        set { time = value; }
+    }
+}
+
+[DataContract]
+public class Ratings_Recommendation: Account
 {
     private int ratings_recommendation_id = -1;
     private int ratings = 0;

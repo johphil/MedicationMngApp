@@ -67,13 +67,13 @@ namespace MedicationMngApp.ViewModels
                     {
                         using (HttpClient client = new HttpClient())
                         {
-                            UpdateAccountPasswordRequestObject updatePasswordObj = new UpdateAccountPasswordRequestObject
+                            UpdateAccountPasswordRequestObject obj = new UpdateAccountPasswordRequestObject
                             {
                                 account_id = PersistentSettings.AccountID,
                                 old_password = oldpassword,
                                 new_password = newpasswordconfirm
                             };
-                            string serializedObject = JsonConvert.SerializeObject(updatePasswordObj, Formatting.Indented);
+                            string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
                             using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
                             {
                                 using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_ACCOUNT_PASSWORD, content))

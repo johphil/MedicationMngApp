@@ -130,7 +130,6 @@ namespace MedicationMngApp.ViewModels
         private async void OnRegisterClicked()
         {
             IsBusy = true;
-
             try
             {
                 if (Validate())

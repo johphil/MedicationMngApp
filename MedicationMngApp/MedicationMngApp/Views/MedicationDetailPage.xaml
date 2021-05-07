@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:model="clr-namespace:MedicationMngApp.Models"
+             x:Class="MedicationMngApp.Views.MedicationDetailPage"
+             Title="{Binding Title}" x:Name="pageMedicationDetails">
+        <StackLayout>
+            <ScrollView VerticalOptions="CenterAndExpand">
+                <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Padding="20">
+                    <Frame>
+                        <StackLayout>
+                            <Label Text="Medication Details" FontSize="Small"/>
+                            <Entry Text="{Binding MedName}" Placeholder="Medicine Name" FontSize="Medium" />
+
+                            <Label Text="Select Type of Medicine" FontSize="Small"/>
+                            <ListView HeightRequest="150" ItemsSource="{Binding MedTypes}" IsVisible="{Binding ListViewVisibility}" SelectedItem="{Binding SelectedMedType}">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <ViewCell>
+                                            <StackLayout x:DataType="model:Med_Type" Orientation="Horizontal" Padding="5">
+                                                <Image Source="{Binding Image}" />
+                                                <Label Text="{Binding Med_Type_Name}" VerticalOptions="CenterAndExpand"/>
+                                            </StackLayout>
+                                        </ViewCell>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        <Entry Text="{Binding MedCount}" Placeholder="{Binding MedCountPlaceholder}" Keyboard="Numeric" IsEnabled="{Binding MedCountEnabled}"/>
+                        </StackLayout>
+                    </Frame>
+                    <Frame>
+                        <StackLayout>
+                            <Label Text="Dosage and Schedule" FontSize="Small"/>
+                            <StackLayout BindableLayout.ItemsSource="{Binding MedTakeSchedules}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <Frame Margin="0" Padding="10" HasShadow="False" BackgroundColor="{StaticResource Secondary}">
+                                            <StackLayout x:DataType="model:Med_Take_Schedule" Orientation="Horizontal">
+                                            <Picker Title="Select Day" HorizontalTextAlignment="Center" FontSize="Small" SelectedIndex="{Binding Day_Of_Week}">
+                                                <Picker.Items>
+                                                    <x:String>Monday</x:String>
+                                                    <x:String>Tuesday</x:String>
+                                                    <x:String>Wednesday</x:String>
+                                                    <x:String>Thursday</x:String>
+                                                    <x:String>Friday</x:String>
+                                                    <x:String>Saturday</x:String>
+                                                    <x:String>Sunday</x:String>
+                                                </Picker.Items>
+                                            </Picker>
+                                            <TimePicker Time="{Binding Time}" HorizontalOptions="CenterAndExpand" FontSize="Small"/>
+                                            <Entry Placeholder="Dosage" Keyboard="Numeric" FontSize="Small" Text="{Binding Dosage_Count}" HorizontalTextAlignment="Center"/>
+                                            <Button BackgroundColor="{StaticResource Danger}" WidthRequest="40" HeightRequest="40" Text="x" HorizontalOptions="EndAndExpand" 
+                                                    VerticalOptions="Center" Command="{Binding BindingContext.RemoveScheduleCommand, Source={Reference Name=pageMedicationDetails}}"
+                                                    CommandParameter="{Binding}"/>
+                                        </StackLayout>
+                                        </Frame>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+                            <Button Text="Add Schedule" Command="{Binding AddScheduleCommand}" BackgroundColor="{StaticResource Secondary}" TextColor="Black"/>
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+        </ScrollView>
+        <Label Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}"/>
+        <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+        <Button Text="Save Schedule" Command="{Binding SaveScheduleCommand}"/>
+        </StackLayout>
+</ContentPage>

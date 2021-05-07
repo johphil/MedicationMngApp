@@ -5,7 +5,7 @@
              xmlns:vm="clr-namespace:MedicationMngApp.ViewModels"
              xmlns:local="clr-namespace:MedicationMngApp.Renderer" 
              Title="Register"
-             Shell.NavBarIsVisible="False">    
+             NavigationPage.HasNavigationBar="False">    
     <ContentPage.Content>
         <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
             <StackLayout Padding="10,20,10,0" VerticalOptions="StartAndExpand">

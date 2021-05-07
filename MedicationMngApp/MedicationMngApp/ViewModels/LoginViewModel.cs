@@ -1,5 +1,4 @@
 ﻿using MedicationMngApp.Models;
-using MedicationMngApp.Models;
 using MedicationMngApp.Views;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

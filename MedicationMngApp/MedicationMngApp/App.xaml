@@ -8,9 +8,11 @@
     <Application.Resources>
         <ResourceDictionary>
             <Color x:Key="Danger">#fc3e28</Color>
+            <Color x:Key="Active">#083e96</Color>
             <Color x:Key="Secondary">#f5da11</Color>
             <Color x:Key="Primary">#2196F3</Color>
             <Color x:Key="Accent">#96d1ff</Color>
+            <Color x:Key="Success">#34d952</Color>
             <Color x:Key="Disabled">#999999</Color>
             <Style TargetType="Button">
                 <Setter Property="TextColor" Value="White"></Setter>
@@ -31,7 +33,7 @@
                     </VisualStateGroupList>
                 </Setter>
             </Style>
-            <Style x:Key="btnChangePassword" TargetType="Button">
+            <Style x:Key="BtnChangePassword" TargetType="Button">
                 <Setter Property="TextColor" Value="Black"></Setter>
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
@@ -50,7 +52,7 @@
                     </VisualStateGroupList>
                 </Setter>
             </Style>
-            <Style x:Key="btnLogout" TargetType="Button">
+            <Style x:Key="BtnLogout" TargetType="Button">
                 <Setter Property="TextColor" Value="White"></Setter>
                 <Setter Property="VisualStateManager.VisualStateGroups">
                     <VisualStateGroupList>
@@ -69,14 +71,14 @@
                     </VisualStateGroupList>
                 </Setter>
             </Style>
-
-            <Style x:Key="labelTitle" TargetType="Label">
+            
+            <Style x:Key="LabelTitle" TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource Primary}"/>
                 <Setter Property="FontSize" Value="Title"/>
                 <Setter Property="FontAttributes" Value="Bold"/>
                 <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
             </Style>
-            <Style x:Key="labelSubTitle" TargetType="Label">
+            <Style x:Key="LabelSubTitle" TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource Accent}"/>
                 <Setter Property="FontSize" Value="Subtitle"/>
                 <Setter Property="TextDecorations" Value="Underline"/>
@@ -84,18 +86,18 @@
                 <Setter Property="Margin" Value="0,30,0,0"/>
                 <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
             </Style>
-            <Style x:Key="labelName" TargetType="Label">
+            <Style x:Key="LabelName" TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource Accent}"/>
                 <Setter Property="FontSize" Value="Caption"/>
                 <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
             </Style>
-            <Style x:Key="labelValue" TargetType="Label">
+            <Style x:Key="LabelValue" TargetType="Label">
                 <Setter Property="TextColor" Value="{StaticResource Primary}"/>
                 <Setter Property="FontSize" Value="Medium"/>
                 <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
             </Style>
 
-            <Style x:Key="boxViewSeparator" TargetType="BoxView">
+            <Style x:Key="BoxViewSeparator" TargetType="BoxView">
                 <Setter Property="HeightRequest" Value="1"/>
                 <Setter Property="WidthRequest" Value="100"/>
                 <Setter Property="Color" Value="{StaticResource Accent}"/>

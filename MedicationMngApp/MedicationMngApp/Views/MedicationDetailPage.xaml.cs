@@ -11,12 +11,12 @@ using Xamarin.Forms.Xaml;
 namespace MedicationMngApp.Views
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class MedicationPage : ContentPage
+	public partial class MedicationDetailPage : ContentPage
 	{
-		public MedicationPage ()
+		public MedicationDetailPage ()
 		{
 			InitializeComponent ();
-			BindingContext = new MedicationViewModel();
+			BindingContext = new MedicationDetailViewModel();
 		}
 	}
 }
