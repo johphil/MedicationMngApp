@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using MedicationMngApp.Utils;
-using Rg.Plugins.Popup.Services;
 
 namespace MedicationMngApp.ViewModels
 {

@@ -1,4 +1,5 @@
-﻿using MedicationMngApp.Services;
+﻿using MedicationMngApp.Models;
+using MedicationMngApp.Services;
 using MedicationMngApp.Views;
 using System;
 using Xamarin.Forms;
@@ -14,15 +15,7 @@ namespace MedicationMngApp
             InitializeComponent();
 
             DependencyService.Register<ServiceItem>();
-            var isLogged = Xamarin.Essentials.SecureStorage.GetAsync("isLogged").Result;
-            if (isLogged == "1")
-            {
-                MainPage = new NavigationPage(new AppShell());
-            }
-            else
-            {
-                MainPage = new NavigationPage(new LoginPage());
-            }
+            Common.NavigateNewPage(new LoginPage());
         }
 
         protected override void OnStart()

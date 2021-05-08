@@ -195,13 +195,12 @@ public class Account
 }
 
 [DataContract]
-public class MedTake
+public class MedTake: MedType
 {
     private int med_take_id = -1;
     private string med_name = string.Empty;
     private int? med_count = null;
     private int account_id = -1;
-    private int med_type_id = -1;
 
     [DataMember]
     public int Med_Take_ID
@@ -229,13 +228,6 @@ public class MedTake
     {
         get { return med_count; }
         set { med_count = value; }
-    }
-
-    [DataMember]
-    public int Med_Type_ID
-    {
-        get { return med_type_id; }
-        set { med_type_id = value; }
     }
 }
 

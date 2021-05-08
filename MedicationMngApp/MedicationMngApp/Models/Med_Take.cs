@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MedicationMngApp.Models
 {
-    public class Med_Take
+    public class Med_Take : Med_Type
     {
         [JsonProperty(PropertyName = "Med_Take_ID")]
         public int Med_Take_ID { get; set; }
@@ -19,9 +19,6 @@ namespace MedicationMngApp.Models
 
         [JsonProperty(PropertyName = "Med_Count")]
         public int? Med_Count { get; set; }
-
-        [JsonProperty(PropertyName = "Med_Type_ID")]
-        public int Med_Type_ID { get; set; }
 
         [JsonProperty(PropertyName = "Med_Description")]
         public string Med_Description
@@ -48,12 +45,9 @@ namespace MedicationMngApp.Models
         public int result { get; set; }
     }
 
-    public class GetMedTakeResult
+    public class GetMedTakesResult
     {
-        [JsonProperty(PropertyName = nameof(medtake))]
-        public Med_Take medtake { get; set; }
-
-        [JsonProperty(PropertyName = nameof(medtakeschedules))]
-        public List<Med_Take_Schedule> medtakeschedules { get; set; }
+        [JsonProperty(PropertyName = nameof(GetMedTakesResult))]
+        public List<Med_Take> results { get; set; }
     }
 }

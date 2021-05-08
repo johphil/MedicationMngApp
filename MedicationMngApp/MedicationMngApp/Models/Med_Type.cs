@@ -5,7 +5,7 @@ using System.Text;
 
 namespace MedicationMngApp.Models
 {
-    public class Med_Type : Med_Take
+    public class Med_Type
     {
         [JsonProperty(PropertyName = "Med_Type_ID")]
         public int Med_Type_ID { get; set; }

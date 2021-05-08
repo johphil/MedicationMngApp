@@ -40,7 +40,7 @@
                     <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}"/>
                     <Label Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}"/>
                     <Button Text="Edit" Command="{Binding EditCommand}" IsVisible="{Binding EditButtonVisibility}"/>
-                    <Button Text="Save" Command="{Binding SaveCommand}" IsVisible="{Binding SaveButtonVisibility}"/>
+                    <Button Text="Save" Command="{Binding SaveCommand}" IsVisible="{Binding SaveButtonVisibility}" Style="{StaticResource BtnSubmit}"/>
                 </StackLayout>
             </StackLayout>
 

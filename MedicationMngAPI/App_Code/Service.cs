@@ -212,7 +212,45 @@ public class Service : IService
         }
     }
 
-    public List<MedTake> GetMedTakes(string account_id) { return null; }
+    public List<MedTake> GetMedTakes(string account_id)
+    {
+        List<MedTake> collection = new List<MedTake>();
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                using (SqlCommand command = new SqlCommand("spGetMedTakes", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("account_id", SqlDbType.Int).Value = DBConvert.From(int.Parse(account_id));
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            collection.Add(new MedTake
+                            {
+                                Med_Take_ID = DBConvert.To<int>(reader[0]),
+                                Account_ID = DBConvert.To<int>(reader[1]),
+                                Med_Name = DBConvert.To<string>(reader[2]),
+                                Med_Count = DBConvert.To<int>(reader[3]),
+                                Med_Type_ID = DBConvert.To<int>(reader[4]),
+                                Med_Type_Name = DBConvert.To<string>(reader[5]),
+                                IsCount = DBConvert.To<bool>(reader[6]),
+                                Image = DBConvert.To<string>(reader[7]),
+                            });
+                        }
+                    }
+                }
+            }
+            return collection;
+        }
+        catch
+        {
+            return null;
+        }
+    }
 
     public int UpdateMedTake(MedTake medtake) { return -1; }
 

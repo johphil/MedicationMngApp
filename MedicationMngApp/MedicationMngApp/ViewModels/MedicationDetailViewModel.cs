@@ -31,7 +31,7 @@ namespace MedicationMngApp.ViewModels
 
         public MedicationDetailViewModel() //new med take
         {
-            Title = "Add New Medication Reminder";
+            Title = "Add New Medication";
             medcount = null;
             medcountplaceholder = "# Count On Hand";
             AddScheduleCommand = new Command(OnAddScheduleClicked);
@@ -231,7 +231,6 @@ namespace MedicationMngApp.ViewModels
                                 };
 
                                 string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
-
                                 using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
                                 {
                                     using (HttpResponseMessage response = await client.PostAsync(Common.POST_ADD_MED_TAKE, content))

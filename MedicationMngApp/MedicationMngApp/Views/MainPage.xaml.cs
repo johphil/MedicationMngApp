@@ -15,6 +15,7 @@ namespace MedicationMngApp.Views
         public MainPage()
         {
             InitializeComponent();
+            CurrentPage = Children[1];
         }
     }
 }

@@ -10,7 +10,7 @@
                     <Frame>
                         <StackLayout>
                             <Label Text="Medication Details" FontSize="Small"/>
-                            <Entry Text="{Binding MedName}" Placeholder="Medicine Name" FontSize="Medium" />
+                            <Entry Text="{Binding MedName}" Placeholder="Medicine Name" FontSize="Medium" MaxLength="20"/>
 
                             <Label Text="Select Type of Medicine" FontSize="Small"/>
                             <ListView HeightRequest="150" ItemsSource="{Binding MedTypes}" IsVisible="{Binding ListViewVisibility}" SelectedItem="{Binding SelectedMedType}">
@@ -25,7 +25,7 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                        <Entry Text="{Binding MedCount}" Placeholder="{Binding MedCountPlaceholder}" Keyboard="Numeric" IsEnabled="{Binding MedCountEnabled}"/>
+                            <Entry Text="{Binding MedCount}" Placeholder="{Binding MedCountPlaceholder}" Keyboard="Numeric" IsEnabled="{Binding MedCountEnabled}"/>
                         </StackLayout>
                     </Frame>
                     <Frame>
@@ -64,6 +64,6 @@
         </ScrollView>
         <Label Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}" HorizontalOptions="CenterAndExpand"/>
         <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}"/>
-        <Button Text="Save Schedule" Command="{Binding SaveScheduleCommand}"/>
+        <Button Text="Save Schedule" Command="{Binding SaveScheduleCommand}" Style="{StaticResource BtnSubmit}"/>
         </StackLayout>
 </ContentPage>

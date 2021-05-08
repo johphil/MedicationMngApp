@@ -7,19 +7,55 @@
         <StackLayout HorizontalOptions="FillAndExpand" Padding="10">
             <Label Text="Medication" Style="{StaticResource LabelTitle}"/>
             <BoxView Style="{StaticResource BoxViewSeparator}"/>
-            <RefreshView Command="{Binding LoadMedTakesCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+            <RefreshView x:DataType="local:MedicationViewModel" Command="{Binding LoadMedTakesCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
                 <CollectionView ItemsSource="{Binding MedTakes}" SelectionMode="None">
                     <CollectionView.ItemTemplate>
                         <DataTemplate>
-                            <StackLayout Padding="10" x:DataType="model:Med_Take">
-                                <Label Text="{Binding Med_Name}" 
-                                LineBreakMode="NoWrap" 
-                                Style="{DynamicResource ListItemTextStyle}" 
-                                FontSize="16" />
-                                <Label Text="{Binding Med_Description}" 
-                                LineBreakMode="NoWrap"
-                                Style="{DynamicResource ListItemDetailTextStyle}"
-                                FontSize="13" />
+                            <StackLayout x:DataType="model:Med_Take">
+                                <Frame Padding="10" HasShadow="True" Margin="5">
+                                    <StackLayout>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Image Source="{Binding Image}" Margin="0,0,10,0"/>
+                                            <StackLayout>
+                                                <Label Text="{Binding Med_Name}" LineBreakMode="NoWrap" FontSize="16" />
+                                                <StackLayout Orientation="Horizontal">
+                                                    <Label Text="{Binding Med_Count}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemDetailTextStyle}" FontSize="13" />
+                                                    <Image Source="{Binding Image}" WidthRequest="20" HeightRequest="20"/>
+                                                </StackLayout>
+                                                <StackLayout Orientation="Horizontal">
+                                                    <Frame Style="{StaticResource FramePill}" HasShadow="False">
+                                                        <Label Text="M" Style="{StaticResource LabelPill}"/>
+                                                    </Frame>
+                                                    <Frame Style="{StaticResource FramePill}">
+                                                        <Label Text="T" Style="{StaticResource LabelPill}"/>
+                                                    </Frame>
+                                                    <Frame Style="{StaticResource FramePill}">
+                                                        <Label Text="W" Style="{StaticResource LabelPill}"/>
+                                                    </Frame>
+                                                    <Frame Style="{StaticResource FramePill}">
+                                                        <Label Text="T" Style="{StaticResource LabelPill}"/>
+                                                    </Frame>
+                                                    <Frame Style="{StaticResource FramePill}">
+                                                        <Label Text="F" Style="{StaticResource LabelPill}"/>
+                                                    </Frame>
+                                                    <Frame Style="{StaticResource FramePill}">
+                                                        <Label Text="S" Style="{StaticResource LabelPill}"/>
+                                                    </Frame>
+                                                    <Frame Style="{StaticResource FramePill}">
+                                                        <Label Text="S" Style="{StaticResource LabelPill}"/>
+                                                    </Frame>
+                                                </StackLayout>
+                                            </StackLayout>
+                                        </StackLayout>
+                                        <StackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                                NumberOfTapsRequired="1"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:MedicationViewModel}}, Path=MedTakeTapped}"		
+                                                CommandParameter="{Binding }"> 
+                                            </TapGestureRecognizer>
+                                        </StackLayout.GestureRecognizers>
+                                    </StackLayout>
+                                </Frame>
                                 <StackLayout.GestureRecognizers>
                                     <TapGestureRecognizer 
                                     NumberOfTapsRequired="1"
