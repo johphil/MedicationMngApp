@@ -62,8 +62,8 @@
                     </Frame>
                 </StackLayout>
         </ScrollView>
-        <Label Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}"/>
-        <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+        <Label Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}" HorizontalOptions="CenterAndExpand"/>
+        <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}"/>
         <Button Text="Save Schedule" Command="{Binding SaveScheduleCommand}"/>
         </StackLayout>
 </ContentPage>

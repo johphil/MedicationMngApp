@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MedicationMngApp.Views;
+using Rg.Plugins.Popup.Services;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,7 +13,7 @@ namespace MedicationMngApp.Models
 
         #region Json URIs & Settings
         public static string HEADER_CONTENT_TYPE = "application/json";
-        public static string SERVICE_IP = "192.168.88.253";// "192.168.222.111";//
+        public static string SERVICE_IP = "192.168.1.40";//"192.168.88.253";// 
         public static string POST_ADD_ACCOUNT = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddAccount";
         public static string POST_ADD_MED_TAKE = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddMedTake";
         public static string GET_LOGIN_ACCOUNT(string username, string password)

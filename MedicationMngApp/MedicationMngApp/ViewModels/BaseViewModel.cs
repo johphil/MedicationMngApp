@@ -42,6 +42,11 @@ namespace MedicationMngApp.ViewModels
             set { SetProperty(ref isBusy, value); }
         }
 
+        public bool CanSubmit
+        {
+            get { return !isBusy; }
+        }
+
         string title = string.Empty;
         public string Title
         {

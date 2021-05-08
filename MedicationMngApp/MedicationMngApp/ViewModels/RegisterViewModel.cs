@@ -129,85 +129,88 @@ namespace MedicationMngApp.ViewModels
 
         private async void OnRegisterClicked()
         {
-            IsBusy = true;
-            try
+            if (CanSubmit)
             {
-                if (Validate())
+                IsBusy = true;
+                try
                 {
-                    if (NetworkStatus.IsInternet())
+                    if (Validate())
                     {
-                        using (HttpClient client = new HttpClient())
+                        if (NetworkStatus.IsInternet())
                         {
-                            AddAccountRequestObject accountObj = new AddAccountRequestObject
+                            using (HttpClient client = new HttpClient())
                             {
-                                account = new Account
+                                AddAccountRequestObject accountObj = new AddAccountRequestObject
                                 {
-                                    FirstName = firstname,
-                                    LastName = lastname,
-                                    Birthday = birthday,
-                                    Email = email,
-                                    Username = username,
-                                    Password = confirmpassword
-                                }
-                            };
-                            string serializedObject = JsonConvert.SerializeObject(accountObj, Formatting.Indented);
-                            using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
-                            {
-                                using (HttpResponseMessage response = await client.PostAsync(Common.POST_ADD_ACCOUNT, content))
-                                {
-                                    if (response.IsSuccessStatusCode)
+                                    account = new Account
                                     {
-                                        string jData = await response.Content.ReadAsStringAsync();
-                                        if (!string.IsNullOrWhiteSpace(jData))
+                                        FirstName = firstname,
+                                        LastName = lastname,
+                                        Birthday = birthday,
+                                        Email = email,
+                                        Username = username,
+                                        Password = confirmpassword
+                                    }
+                                };
+                                string serializedObject = JsonConvert.SerializeObject(accountObj, Formatting.Indented);
+                                using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
+                                {
+                                    using (HttpResponseMessage response = await client.PostAsync(Common.POST_ADD_ACCOUNT, content))
+                                    {
+                                        if (response.IsSuccessStatusCode)
                                         {
-                                            AddAccountResult result = JsonConvert.DeserializeObject<AddAccountResult>(jData);
-                                            switch (result.result)
+                                            string jData = await response.Content.ReadAsStringAsync();
+                                            if (!string.IsNullOrWhiteSpace(jData))
                                             {
-                                                case -69://sql return value -69
-                                                    {
-                                                        ErrorMessage = "Username already exists!";
-                                                        break;
-                                                    }
-                                                case -70://sql return value -70
-                                                    {
-                                                        ErrorMessage = "Email already exists!";
-                                                        break;
-                                                    }
-                                                case 1://sql return value 1
-                                                    {
-                                                        await Common.ShowMessageAsync("Registration Success", "You have successfully registered.", "OK");
-                                                        await Common.NavigateBack();
-                                                        break;
-                                                    }
-                                                default:
-                                                    {
-                                                        await Common.ShowMessageAsyncUnknownError();
-                                                        break;
-                                                    }
+                                                AddAccountResult result = JsonConvert.DeserializeObject<AddAccountResult>(jData);
+                                                switch (result.result)
+                                                {
+                                                    case -69://sql return value -69
+                                                        {
+                                                            ErrorMessage = "Username already exists!";
+                                                            break;
+                                                        }
+                                                    case -70://sql return value -70
+                                                        {
+                                                            ErrorMessage = "Email already exists!";
+                                                            break;
+                                                        }
+                                                    case 1://sql return value 1
+                                                        {
+                                                            await Common.ShowMessageAsync("Registration Success", "You have successfully registered.", "OK");
+                                                            await Common.NavigateBack();
+                                                            break;
+                                                        }
+                                                    default:
+                                                        {
+                                                            await Common.ShowMessageAsyncUnknownError();
+                                                            break;
+                                                        }
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
                         }
+                        else
+                        {
+                            await Common.ShowMessageAsyncNetworkError();
+                        }
                     }
                     else
                     {
-                        await Common.ShowMessageAsyncNetworkError();
+                        ValidateMessage();
                     }
                 }
-                else
+                catch (Exception error)
                 {
-                    ValidateMessage();
+                    await Common.ShowMessageAsyncApplicationError(error.Message);
                 }
-            }
-            catch (Exception error)
-            {
-                await Common.ShowMessageAsyncApplicationError(error.Message);
-            }
-            finally
-            {
-                IsBusy = false;
+                finally
+                {
+                    IsBusy = false;
+                }
             }
         }
     }

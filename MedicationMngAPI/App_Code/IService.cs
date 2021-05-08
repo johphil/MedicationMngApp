@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -282,7 +283,7 @@ public class MedTakeSchedule
     private int day_of_week = 0;
     private int dosage_count = 0;
     private int med_take_id = -1;
-    private TimeSpan time = TimeSpan.Zero;
+    private string time = string.Empty;
 
     [DataMember]
     public int Med_Take_Schedule_ID 
@@ -313,7 +314,7 @@ public class MedTakeSchedule
     }
 
     [DataMember]
-    public TimeSpan Time
+    public string Time
     {
         get { return time; }
         set { time = value; }

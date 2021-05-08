@@ -18,7 +18,7 @@ namespace MedicationMngApp.Models
 
         [JsonProperty(PropertyName = "Dosage_Count")]
         public int Dosage_Count { get; set; }
-
+        
         [JsonProperty(PropertyName = "Time")]
         public TimeSpan Time { get; set; }
     }

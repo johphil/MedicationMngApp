@@ -43,47 +43,50 @@ namespace MedicationMngApp.ViewModels
 
         private async void ProceedLogin(string uname, string pword)
         {
-            IsBusy = true;
-            try
+            if (CanSubmit)
             {
-                if (NetworkStatus.IsInternet())
+                IsBusy = true;
+                try
                 {
-                    using (HttpClient client = new HttpClient())
+                    if (NetworkStatus.IsInternet())
                     {
-                        using (HttpResponseMessage response = await client.GetAsync(Common.GET_LOGIN_ACCOUNT(uname, pword)))
+                        using (HttpClient client = new HttpClient())
                         {
-                            if (response.IsSuccessStatusCode)
+                            using (HttpResponseMessage response = await client.GetAsync(Common.GET_LOGIN_ACCOUNT(uname, pword)))
                             {
-                                var jData = await response.Content.ReadAsStringAsync();
-                                if (!string.IsNullOrWhiteSpace(jData))
+                                if (response.IsSuccessStatusCode)
                                 {
-                                    LoginAccountResult result = JsonConvert.DeserializeObject<LoginAccountResult>(jData);
-                                    if (result.result > 0)
+                                    var jData = await response.Content.ReadAsStringAsync();
+                                    if (!string.IsNullOrWhiteSpace(jData))
                                     {
-                                        PersistentSettings.UserName = uname;
-                                        PersistentSettings.PassWord = pword;
-                                        PersistentSettings.AccountID = result.result;
-                                        Common.NavigateNewPage(new MainPage());
+                                        LoginAccountResult result = JsonConvert.DeserializeObject<LoginAccountResult>(jData);
+                                        if (result.result > 0)
+                                        {
+                                            PersistentSettings.UserName = uname;
+                                            PersistentSettings.PassWord = pword;
+                                            PersistentSettings.AccountID = result.result;
+                                            Common.NavigateNewPage(new MainPage());
+                                        }
+                                        else
+                                            ErrorMessage = "Invalid username or password.";
                                     }
-                                    else
-                                        ErrorMessage = "Invalid username or password.";
                                 }
                             }
                         }
                     }
+                    else
+                    {
+                        await Common.ShowMessageAsyncNetworkError();
+                    }
                 }
-                else
+                catch (Exception error)
                 {
-                    await Common.ShowMessageAsyncNetworkError();
+                    await Common.ShowMessageAsyncApplicationError(error.Message);
                 }
-            }
-            catch (Exception error)
-            {
-                await Common.ShowMessageAsyncApplicationError(error.Message);
-            }
-            finally
-            {
-                IsBusy = false;
+                finally
+                {
+                    IsBusy = false;
+                }
             }
         }
 

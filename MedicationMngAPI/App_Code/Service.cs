@@ -185,7 +185,7 @@ public class Service : IService
 
                                 foreach (var schedule in medtakeschedules)
                                 {
-                                    command.Parameters.Add("med_take_id", SqlDbType.Int).Value = DBConvert.From(schedule.Med_Take_ID);
+                                    command.Parameters.Add("med_take_id", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Take_ID);
                                     command.Parameters.Add("day_of_week", SqlDbType.Int).Value = DBConvert.From(schedule.Day_Of_Week);
                                     command.Parameters.Add("dosage_count", SqlDbType.Int).Value = DBConvert.From(schedule.Dosage_Count);
                                     command.Parameters.Add("time", SqlDbType.Time, 7).Value = DBConvert.From(schedule.Time);

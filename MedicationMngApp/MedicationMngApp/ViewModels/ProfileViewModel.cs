@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using MedicationMngApp.Utils;
+using Rg.Plugins.Popup.Services;
 
 namespace MedicationMngApp.ViewModels
 {
@@ -163,67 +164,70 @@ namespace MedicationMngApp.ViewModels
 
         public async void SaveProfile()
         {
-            IsBusy = true;
-            try
+            if (CanSubmit)
             {
-                if (Validate())
+                IsBusy = true;
+                try
                 {
-                    if (NetworkStatus.IsInternet())
+                    if (Validate())
                     {
-                        using (HttpClient client = new HttpClient())
+                        if (NetworkStatus.IsInternet())
                         {
-                            UpdateAccountDetailsRequstObject accountObj = new UpdateAccountDetailsRequstObject
+                            using (HttpClient client = new HttpClient())
                             {
-                                account = new Account
+                                UpdateAccountDetailsRequstObject obj = new UpdateAccountDetailsRequstObject
                                 {
-                                    Account_ID = PersistentSettings.AccountID,
-                                    FirstName = firstname,
-                                    LastName = lastname
-                                }
-                            };
-                            string serializedObject = JsonConvert.SerializeObject(accountObj, Formatting.Indented);
-                            using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
-                            {
-                                using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_ACCOUNT_DETAILS, content))
-                                {
-                                    if (response.IsSuccessStatusCode)
+                                    account = new Account
                                     {
-                                        string jData = await response.Content.ReadAsStringAsync();
-                                        if (!string.IsNullOrWhiteSpace(jData))
+                                        Account_ID = PersistentSettings.AccountID,
+                                        FirstName = firstname,
+                                        LastName = lastname
+                                    }
+                                };
+                                string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
+                                using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
+                                {
+                                    using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_ACCOUNT_DETAILS, content))
+                                    {
+                                        if (response.IsSuccessStatusCode)
                                         {
-                                            UpdateAccountPasswordResult result = JsonConvert.DeserializeObject<UpdateAccountPasswordResult>(jData);
-                                            if (result.result < 0)
-                                                await Common.ShowMessageAsyncUnknownError();
-                                            else
+                                            string jData = await response.Content.ReadAsStringAsync();
+                                            if (!string.IsNullOrWhiteSpace(jData))
                                             {
-                                                EditButtonVisibility = true;
-                                                SaveButtonVisibility = false;
-                                                IsReadOnlyField = true;
-                                                ErrorMessage = string.Empty;
+                                                UpdateAccountPasswordResult result = JsonConvert.DeserializeObject<UpdateAccountPasswordResult>(jData);
+                                                if (result.result < 0)
+                                                    await Common.ShowMessageAsyncUnknownError();
+                                                else
+                                                {
+                                                    EditButtonVisibility = true;
+                                                    SaveButtonVisibility = false;
+                                                    IsReadOnlyField = true;
+                                                    ErrorMessage = string.Empty;
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
                         }
+                        else
+                        {
+                            await Common.ShowMessageAsyncNetworkError();
+                        }
                     }
                     else
                     {
-                        await Common.ShowMessageAsyncNetworkError();
+                        ValidateMessage();
                     }
                 }
-                else
+                catch (Exception error)
                 {
-                    ValidateMessage();
+                    await Common.ShowMessageAsyncApplicationError(error.Message);
                 }
-            }
-            catch (Exception error)
-            {
-                await Common.ShowMessageAsyncApplicationError(error.Message);
-            }
-            finally
-            {
-                IsBusy = false;
+                finally
+                {
+                    IsBusy = false;
+                }
             }
         }
 

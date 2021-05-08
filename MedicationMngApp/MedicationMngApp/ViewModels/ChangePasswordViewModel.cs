@@ -58,75 +58,78 @@ namespace MedicationMngApp.ViewModels
 
         private async void OnChangePasswordClicked()
         {
-            IsBusy = true;
-            try
+            if (CanSubmit)
             {
-                if (Validate())
+                IsBusy = true;
+                try
                 {
-                    if (NetworkStatus.IsInternet())
+                    if (Validate())
                     {
-                        using (HttpClient client = new HttpClient())
+                        if (NetworkStatus.IsInternet())
                         {
-                            UpdateAccountPasswordRequestObject obj = new UpdateAccountPasswordRequestObject
+                            using (HttpClient client = new HttpClient())
                             {
-                                account_id = PersistentSettings.AccountID,
-                                old_password = oldpassword,
-                                new_password = newpasswordconfirm
-                            };
-                            string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
-                            using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
-                            {
-                                using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_ACCOUNT_PASSWORD, content))
+                                UpdateAccountPasswordRequestObject obj = new UpdateAccountPasswordRequestObject
                                 {
-                                    if (response.IsSuccessStatusCode)
+                                    account_id = PersistentSettings.AccountID,
+                                    old_password = oldpassword,
+                                    new_password = newpasswordconfirm
+                                };
+                                string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
+                                using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
+                                {
+                                    using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_ACCOUNT_PASSWORD, content))
                                     {
-                                        string jData = await response.Content.ReadAsStringAsync();
-                                        if (!string.IsNullOrWhiteSpace(jData))
+                                        if (response.IsSuccessStatusCode)
                                         {
-                                            UpdateAccountPasswordResult result = JsonConvert.DeserializeObject<UpdateAccountPasswordResult>(jData);
-                                            switch (result.result)
+                                            string jData = await response.Content.ReadAsStringAsync();
+                                            if (!string.IsNullOrWhiteSpace(jData))
                                             {
-                                                case -69: //sql return value -69
-                                                    {
-                                                        ErrorMessage = "Old password do not match with the old one.";
-                                                        break;
-                                                    }
-                                                case 1: //sql return value 1
-                                                    {
-                                                        await Common.ShowMessageAsync("Change Password Success", "You have successfully changed your password.", "OK");
-                                                        await Common.NavigateBack();
-                                                        break;
-                                                    }
-                                                default:
-                                                    {
-                                                        await Common.ShowMessageAsyncUnknownError();
-                                                        break;
-                                                    }
+                                                UpdateAccountPasswordResult result = JsonConvert.DeserializeObject<UpdateAccountPasswordResult>(jData);
+                                                switch (result.result)
+                                                {
+                                                    case -69: //sql return value -69
+                                                        {
+                                                            ErrorMessage = "Old password do not match with the old one.";
+                                                            break;
+                                                        }
+                                                    case 1: //sql return value 1
+                                                        {
+                                                            await Common.ShowMessageAsync("Change Password Success", "You have successfully changed your password.", "OK");
+                                                            await Common.NavigateBack();
+                                                            break;
+                                                        }
+                                                    default:
+                                                        {
+                                                            await Common.ShowMessageAsyncUnknownError();
+                                                            break;
+                                                        }
 
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
                         }
+                        else
+                        {
+                            await Common.ShowMessageAsyncNetworkError();
+                        }
                     }
                     else
                     {
-                        await Common.ShowMessageAsyncNetworkError();
+                        ValidateMessage();
                     }
                 }
-                else
+                catch (Exception error)
                 {
-                    ValidateMessage();
+                    await Common.ShowMessageAsyncApplicationError(error.Message);
                 }
-            }
-            catch (Exception error)
-            {
-                await Common.ShowMessageAsyncApplicationError(error.Message);
-            }
-            finally
-            {
-                IsBusy = false;
+                finally
+                {
+                    IsBusy = false;
+                }
             }
         }
     }

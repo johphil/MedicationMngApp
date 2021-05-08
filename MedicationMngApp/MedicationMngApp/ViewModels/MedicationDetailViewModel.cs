@@ -177,7 +177,9 @@ namespace MedicationMngApp.ViewModels
         {
             return !string.IsNullOrWhiteSpace(medname)
                 && selectedMedType != null
-                && MedTakeSchedules.Count > 0;
+                && MedTakeSchedules.Count > 0
+                && ((selectedMedType != null && selectedMedType.IsCount && medcount != null && medcount.HasValue) 
+                    || (selectedMedType != null && !selectedMedType.IsCount && medcount == null));
         }
 
         private void ValidateMessage()
@@ -188,6 +190,8 @@ namespace MedicationMngApp.ViewModels
                 ErrorMessage = "Please select the type of medicine.";
             else if (MedTakeSchedules.Count == 0)
                 ErrorMessage = "Please add a schedule.";
+            else if (selectedMedType.IsCount && medcount == null)
+                ErrorMessage = "Please enter # count on hand.";
         }
 
         private void OnMedTypeSelected(Med_Type value)
@@ -203,66 +207,71 @@ namespace MedicationMngApp.ViewModels
 
         private async void OnSaveScheduleClicked()
         {
-            IsBusy = true;
-            try
+            if (CanSubmit)
             {
-                if (Validate())
+                IsBusy = true;
+                try
                 {
-                    if (NetworkStatus.IsInternet())
+                    if (Validate())
                     {
-                        using (HttpClient client = new HttpClient())
+                        if (NetworkStatus.IsInternet())
                         {
-                            AddMedTakeRequestObject requestObj = new AddMedTakeRequestObject
+                            using (HttpClient client = new HttpClient())
                             {
-                                medtake = new Med_Take
+                                AddMedTakeRequestObject obj = new AddMedTakeRequestObject
                                 {
-                                    Account_ID = PersistentSettings.AccountID,
-                                    Med_Name = medname,
-                                    Med_Count = medcount,
-                                    Med_Type_ID = selectedMedType.Med_Type_ID
-                                },
-                                medtakeschedules = MedTakeSchedules.ToList()
-                            };
-                            string serializedObject = JsonConvert.SerializeObject(requestObj, Formatting.Indented);
-                            using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
-                            {
-                                using (HttpResponseMessage response = await client.PostAsync(Common.POST_ADD_MED_TAKE, content))
-                                {
-                                    if (response.IsSuccessStatusCode)
+                                    medtake = new Med_Take
                                     {
-                                        string jData = await response.Content.ReadAsStringAsync();
-                                        if (!string.IsNullOrWhiteSpace(jData))
+                                        Account_ID = PersistentSettings.AccountID,
+                                        Med_Name = medname,
+                                        Med_Count = medcount,
+                                        Med_Type_ID = selectedMedType.Med_Type_ID
+                                    },
+                                    medtakeschedules = MedTakeSchedules.ToList()
+                                };
+
+                                string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
+
+                                using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
+                                {
+                                    using (HttpResponseMessage response = await client.PostAsync(Common.POST_ADD_MED_TAKE, content))
+                                    {
+                                        if (response.IsSuccessStatusCode)
                                         {
-                                            AddMedTakeResult result = JsonConvert.DeserializeObject<AddMedTakeResult>(jData);
-                                            if (result.result > 0)
+                                            string jData = await response.Content.ReadAsStringAsync();
+                                            if (!string.IsNullOrWhiteSpace(jData))
                                             {
-                                                await Common.NavigateBack();
+                                                AddMedTakeResult result = JsonConvert.DeserializeObject<AddMedTakeResult>(jData);
+                                                if (result.result > 0)
+                                                {
+                                                    await Common.NavigateBack();
+                                                }
+                                                else
+                                                    await Common.ShowMessageAsyncUnknownError();
                                             }
-                                            else
-                                                await Common.ShowMessageAsyncUnknownError();
                                         }
                                     }
                                 }
                             }
                         }
+                        else
+                        {
+                            await Common.ShowMessageAsyncNetworkError();
+                        }
                     }
                     else
                     {
-                        await Common.ShowMessageAsyncNetworkError();
+                        ValidateMessage();
                     }
                 }
-                else
+                catch (Exception error)
                 {
-                    ValidateMessage();
+                    await Common.ShowMessageAsyncApplicationError(error.Message);
                 }
-            }
-            catch (Exception error)
-            {
-                await Common.ShowMessageAsyncApplicationError(error.Message);
-            }
-            finally
-            {
-                IsBusy = false;
+                finally
+                {
+                    IsBusy = false;
+                }
             }
         }
     }

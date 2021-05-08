@@ -23,6 +23,7 @@ namespace MedicationMngApp.Models
         [JsonProperty(PropertyName = "Med_Type_ID")]
         public int Med_Type_ID { get; set; }
 
+        [JsonProperty(PropertyName = "Med_Description")]
         public string Med_Description
         {
             get
@@ -45,5 +46,14 @@ namespace MedicationMngApp.Models
     {
         [JsonProperty(PropertyName = nameof(AddMedTakeResult))]
         public int result { get; set; }
+    }
+
+    public class GetMedTakeResult
+    {
+        [JsonProperty(PropertyName = nameof(medtake))]
+        public Med_Take medtake { get; set; }
+
+        [JsonProperty(PropertyName = nameof(medtakeschedules))]
+        public List<Med_Take_Schedule> medtakeschedules { get; set; }
     }
 }
