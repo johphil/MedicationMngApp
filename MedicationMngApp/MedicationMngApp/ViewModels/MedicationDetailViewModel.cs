@@ -34,7 +34,7 @@ namespace MedicationMngApp.ViewModels
 
         public MedicationDetailViewModel() //new med take
         {
-            LoadMedTypes();
+            Task.Run(() => this.LoadMedTypes()).Wait();
             Title = "Add New Medication";
             medcount = null;
             AddScheduleCommand = new Command(OnAddScheduleClicked);
@@ -46,7 +46,7 @@ namespace MedicationMngApp.ViewModels
 
         public MedicationDetailViewModel(Med_Take medtake) //edit med take
         {
-            LoadMedTypes();
+            Task.Run(() => this.LoadMedTypes()).Wait();
             IsEdit = true;
             Title = medtake.Med_Name;
             medcount = medtake.Med_Count;
@@ -57,10 +57,11 @@ namespace MedicationMngApp.ViewModels
             SaveScheduleCommand = new Command(OnSaveScheduleClicked);
             DeleteMedTakeCommand = new Command(OnDeleteMedTakeClicked);
             MedTakeSchedules = new ObservableCollection<Med_Take_Schedule>();
-            LoadMedTakeSchedules();
+
+            Task.Run(() => this.LoadMedTakeSchedules()).Wait();
         }
 
-        private async void LoadMedTakeSchedules()
+        private async Task LoadMedTakeSchedules()
         {
             if (selectedMedTake != null)
             {
@@ -162,7 +163,7 @@ namespace MedicationMngApp.ViewModels
             });
         }
 
-        private async void LoadMedTypes()
+        private async Task LoadMedTypes()
         {
             IsBusy = true;
             ListViewVisibility = false;

@@ -8,13 +8,12 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using XamEffects;
 
 namespace MedicationMngApp.ViewModels
 {
     public class MedicationViewModel : BaseViewModel
     {
-        private Med_Take selectedMedTake;
-
         public ObservableCollection<Med_Take> MedTakes { get; set; }
         public Command LoadMedTakesCommand { get; }
         public Command AddMedTakeCommand { get; }
@@ -24,7 +23,6 @@ namespace MedicationMngApp.ViewModels
         public MedicationViewModel()
         {
             IsBusy = true;
-            selectedMedTake = null;
             MedTakes = new ObservableCollection<Med_Take>();
             AddCommand = new Command(OnAddClicked);
             MedTakeTapped = new Command<Med_Take>(OnMedTakeSelected);
@@ -85,6 +83,11 @@ namespace MedicationMngApp.ViewModels
         private async void OnAddClicked()
         {
             await Common.NavigatePage(new MedicationDetailPage());
+        }
+
+        public void OnAppearing()
+        {
+            IsBusy = true;
         }
     }
 }

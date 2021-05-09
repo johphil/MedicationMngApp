@@ -24,6 +24,7 @@ namespace MedicationMngApp.iOS
         {
             global::Xamarin.Forms.Forms.SetFlags("CollectionView_Experimental");
             global::Xamarin.Forms.Forms.Init();
+            XamEffects.iOS.Effects.Init();
             LoadApplication(new App());
 
             return base.FinishedLaunching(app, options);

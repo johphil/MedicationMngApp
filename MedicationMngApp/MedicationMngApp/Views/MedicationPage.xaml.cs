@@ -13,10 +13,16 @@ namespace MedicationMngApp.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class MedicationPage : ContentPage
 	{
+		MedicationViewModel _viewModel;
 		public MedicationPage ()
 		{
 			InitializeComponent ();
-			BindingContext = new MedicationViewModel();
+			BindingContext = _viewModel = new MedicationViewModel();
+		}
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			_viewModel.OnAppearing();
 		}
 	}
 }

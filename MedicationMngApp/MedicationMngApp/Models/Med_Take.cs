@@ -27,7 +27,7 @@ namespace MedicationMngApp.Models
         {
             get
             {
-                return IsCount ? Med_Count.ToString() : "";
+                return IsCount ? "Count: " + Med_Count.ToString() : "";
             }
         }
 

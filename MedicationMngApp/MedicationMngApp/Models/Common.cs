@@ -11,7 +11,7 @@ namespace MedicationMngApp.Models
     {
         #region Json URIs & Settings
         public static string HEADER_CONTENT_TYPE = "application/json";
-        public static string SERVICE_IP = "192.168.1.40";
+        public static string SERVICE_IP = "192.168.88.243";
         public static string POST_ADD_ACCOUNT = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddAccount";
         public static string POST_ADD_MED_TAKE = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddMedTake";
         public static string GET_LOGIN_ACCOUNT(string username, string password)
@@ -68,7 +68,7 @@ namespace MedicationMngApp.Models
 
         public static async Task NavigatePage(Page page)
         {
-            await Application.Current.MainPage.Navigation.PushAsync(page, true);
+            await Application.Current.MainPage.Navigation.PushAsync(page);
         }
 
         public static async Task NavigateBack()
