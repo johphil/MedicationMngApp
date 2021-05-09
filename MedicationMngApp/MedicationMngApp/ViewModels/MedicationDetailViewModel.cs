@@ -23,30 +23,129 @@ namespace MedicationMngApp.ViewModels
         private int? medcount;
         private string medname = string.Empty;
         private Med_Type selectedMedType = null;
+        private Med_Take selectedMedTake = null;
+
         public ObservableCollection<Med_Take_Schedule> MedTakeSchedules { get; }
 
         public Command AddScheduleCommand { get; }
         public Command RemoveScheduleCommand { get; }
         public Command SaveScheduleCommand { get; }
+        public Command DeleteMedTakeCommand { get; }
 
         public MedicationDetailViewModel() //new med take
         {
+            LoadMedTypes();
             Title = "Add New Medication";
             medcount = null;
-            medcountplaceholder = "# Count On Hand";
             AddScheduleCommand = new Command(OnAddScheduleClicked);
             RemoveScheduleCommand = new Command(OnRemoveScheduleClicked);
             SaveScheduleCommand = new Command(OnSaveScheduleClicked);
-            LoadMedTypes();
 
             MedTakeSchedules = new ObservableCollection<Med_Take_Schedule>();
         }
 
         public MedicationDetailViewModel(Med_Take medtake) //edit med take
         {
-            Title = medtake.Med_Name;
             LoadMedTypes();
             IsEdit = true;
+            Title = medtake.Med_Name;
+            medcount = medtake.Med_Count;
+            medname = medtake.Med_Name;
+            selectedMedTake = medtake;
+            AddScheduleCommand = new Command(OnAddScheduleClicked);
+            RemoveScheduleCommand = new Command(OnRemoveScheduleClicked);
+            SaveScheduleCommand = new Command(OnSaveScheduleClicked);
+            DeleteMedTakeCommand = new Command(OnDeleteMedTakeClicked);
+            MedTakeSchedules = new ObservableCollection<Med_Take_Schedule>();
+            LoadMedTakeSchedules();
+        }
+
+        private async void LoadMedTakeSchedules()
+        {
+            if (selectedMedTake != null)
+            {
+                try
+                {
+                    if (NetworkStatus.IsInternet())
+                    {
+                        using (HttpClient client = new HttpClient())
+                        {
+                            using (HttpResponseMessage response = await client.GetAsync(Common.GET_GET_MED_TAKE_SCHEDULES(selectedMedTake.Med_Take_ID)))
+                            {
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    var jData = await response.Content.ReadAsStringAsync();
+                                    if (!string.IsNullOrWhiteSpace(jData))
+                                    {
+                                        GetMedTakeSchedulesResult result = JsonConvert.DeserializeObject<GetMedTakeSchedulesResult>(jData);
+                                        if (result != null)
+                                        {
+                                            foreach(var schedule in result.results)
+                                            {
+                                                MedTakeSchedules.Add(schedule);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        await Common.ShowMessageAsyncNetworkError();
+                    }
+                }
+                catch (Exception error)
+                {
+                    await Common.ShowMessageAsyncApplicationError(error.Message);
+                }
+            }
+        }
+
+        private async void OnDeleteMedTakeClicked()
+        {
+            if (CanSubmit && selectedMedTake != null)
+            {
+                IsBusy = true;
+                try
+                {
+                    if (NetworkStatus.IsInternet())
+                    {
+                        using (HttpClient client = new HttpClient())
+                        {
+                            using (HttpResponseMessage response = await client.DeleteAsync(Common.DELETE_DELETE_MED_TAKE(selectedMedTake.Med_Take_ID)))
+                            {
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    string jData = await response.Content.ReadAsStringAsync();
+                                    if (!string.IsNullOrWhiteSpace(jData))
+                                    {
+                                        DeleteMedTakeResult result = JsonConvert.DeserializeObject<DeleteMedTakeResult>(jData);
+                                        if (result.result > 0)
+                                        {
+                                            await Common.NavigateBack();
+                                        }
+                                        else
+                                            await Common.ShowMessageAsyncUnknownError();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        await Common.ShowMessageAsyncNetworkError();
+                    }
+                }
+                catch (Exception error)
+                {
+                    await Common.ShowMessageAsyncApplicationError(error.Message);
+                }
+                finally
+                {
+                    IsBusy = false;
+                }
+            }
         }
 
         private void OnRemoveScheduleClicked(object obj)
@@ -58,7 +157,7 @@ namespace MedicationMngApp.ViewModels
         {
             MedTakeSchedules.Add(new Med_Take_Schedule
             {
-                Day_Of_Week = (int)DateTime.Now.DayOfWeek - 1,
+                Day_Of_Week = (int)DateTime.Now.DayOfWeek,
                 Time = DateTime.Now.TimeOfDay
             });
         }
@@ -82,6 +181,9 @@ namespace MedicationMngApp.ViewModels
                                 {
                                     GetMedTypesResult result = JsonConvert.DeserializeObject<GetMedTypesResult>(jData);
                                     MedTypes = result.result;
+
+                                    if (isedit && selectedMedTake != null && MedTypes != null)
+                                        SelectedMedType = MedTypes.Find(mt => mt.Med_Type_ID == selectedMedTake.Med_Type_ID);
                                 }
                             }
                         }
@@ -121,6 +223,14 @@ namespace MedicationMngApp.ViewModels
             set => SetProperty(ref listviewVisibility, value);
         }
 
+        public bool DeleteButtonVisibility
+        {
+            get
+            {
+                return IsEdit;
+            }
+        }
+
         public string MedName
         {
             get => medname;
@@ -152,7 +262,7 @@ namespace MedicationMngApp.ViewModels
                 }
                 else
                 {
-                    MedCountPlaceholder = "# Count On Hand";
+                    MedCountPlaceholder = string.Empty;
                 }
             }
         }
@@ -209,44 +319,108 @@ namespace MedicationMngApp.ViewModels
         {
             if (CanSubmit)
             {
-                IsBusy = true;
                 try
                 {
                     if (Validate())
                     {
                         if (NetworkStatus.IsInternet())
                         {
-                            using (HttpClient client = new HttpClient())
+                            if (CanSubmit)
                             {
-                                AddMedTakeRequestObject obj = new AddMedTakeRequestObject
+                                IsBusy = true;
+                                if (isedit && selectedMedTake != null)
                                 {
-                                    medtake = new Med_Take
+                                    try
                                     {
-                                        Account_ID = PersistentSettings.AccountID,
-                                        Med_Name = medname,
-                                        Med_Count = medcount,
-                                        Med_Type_ID = selectedMedType.Med_Type_ID
-                                    },
-                                    medtakeschedules = MedTakeSchedules.ToList()
-                                };
-
-                                string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
-                                using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
-                                {
-                                    using (HttpResponseMessage response = await client.PostAsync(Common.POST_ADD_MED_TAKE, content))
-                                    {
-                                        if (response.IsSuccessStatusCode)
+                                        if (Validate())
                                         {
-                                            string jData = await response.Content.ReadAsStringAsync();
-                                            if (!string.IsNullOrWhiteSpace(jData))
+                                            if (NetworkStatus.IsInternet())
                                             {
-                                                AddMedTakeResult result = JsonConvert.DeserializeObject<AddMedTakeResult>(jData);
-                                                if (result.result > 0)
+                                                using (HttpClient client = new HttpClient())
                                                 {
-                                                    await Common.NavigateBack();
+                                                    UpdateMedTakeRequestObject obj = new UpdateMedTakeRequestObject
+                                                    {
+                                                        medtake = selectedMedTake
+                                                    };
+                                                    obj.medtake.Med_Name = medname;
+                                                    obj.medtake.Med_Count = medcount;
+                                                    obj.medtake.Med_Type_ID = selectedMedType.Med_Type_ID;
+                                                    string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
+                                                    using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
+                                                    {
+                                                        using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_MED_TAKE, content))
+                                                        {
+                                                            if (response.IsSuccessStatusCode)
+                                                            {
+                                                                string jData = await response.Content.ReadAsStringAsync();
+                                                                if (!string.IsNullOrWhiteSpace(jData))
+                                                                {
+                                                                    UpdateMedTakeResult result = JsonConvert.DeserializeObject<UpdateMedTakeResult>(jData);
+                                                                    if (result.result > 0)
+                                                                    {
+                                                                        await Common.NavigateBack();
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 }
-                                                else
-                                                    await Common.ShowMessageAsyncUnknownError();
+                                            }
+                                            else
+                                            {
+                                                await Common.ShowMessageAsyncNetworkError();
+                                            }
+                                        }
+                                        else
+                                        {
+                                            ValidateMessage();
+                                        }
+                                    }
+                                    catch (Exception error)
+                                    {
+                                        await Common.ShowMessageAsyncApplicationError(error.Message);
+                                    }
+                                    finally
+                                    {
+                                        IsBusy = false;
+                                    }
+
+                                }
+                                else //new
+                                {
+                                    using (HttpClient client = new HttpClient())
+                                    {
+                                        AddMedTakeRequestObject obj = new AddMedTakeRequestObject
+                                        {
+                                            medtake = new Med_Take
+                                            {
+                                                Account_ID = PersistentSettings.AccountID,
+                                                Med_Name = medname,
+                                                Med_Count = medcount,
+                                                Med_Type_ID = selectedMedType.Med_Type_ID
+                                            },
+                                            medtakeschedules = MedTakeSchedules.ToList()
+                                        };
+
+                                        string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
+                                        using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
+                                        {
+                                            using (HttpResponseMessage response = await client.PostAsync(Common.POST_ADD_MED_TAKE, content))
+                                            {
+                                                if (response.IsSuccessStatusCode)
+                                                {
+                                                    string jData = await response.Content.ReadAsStringAsync();
+                                                    if (!string.IsNullOrWhiteSpace(jData))
+                                                    {
+                                                        AddMedTakeResult result = JsonConvert.DeserializeObject<AddMedTakeResult>(jData);
+                                                        if (result.result > 0)
+                                                        {
+                                                            await Common.NavigateBack();
+                                                        }
+                                                        else
+                                                            await Common.ShowMessageAsyncUnknownError();
+                                                    }
+                                                }
                                             }
                                         }
                                     }

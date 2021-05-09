@@ -172,7 +172,7 @@ public class Service : IService
                             command.CommandType = CommandType.StoredProcedure;
 
                             command.Parameters.Add("account_id", SqlDbType.Int).Value = DBConvert.From(medtake.Account_ID);
-                            command.Parameters.Add("med_name", SqlDbType.VarChar, 50).Value = DBConvert.From(medtake.Med_Name);
+                            command.Parameters.Add("med_name", SqlDbType.VarChar, 20).Value = DBConvert.From(medtake.Med_Name);
                             command.Parameters.Add("med_count", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Count);
                             command.Parameters.Add("med_type_id", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Type_ID);
 
@@ -214,9 +214,9 @@ public class Service : IService
 
     public List<MedTake> GetMedTakes(string account_id)
     {
-        List<MedTake> collection = new List<MedTake>();
         try
         {
+            List<MedTake> collection = new List<MedTake>();
             using (SqlConnection connection = new SqlConnection(conStr))
             {
                 using (SqlCommand command = new SqlCommand("spGetMedTakes", connection))
@@ -239,6 +239,7 @@ public class Service : IService
                                 Med_Type_Name = DBConvert.To<string>(reader[5]),
                                 IsCount = DBConvert.To<bool>(reader[6]),
                                 Image = DBConvert.To<string>(reader[7]),
+                                IsActive = DBConvert.To<bool>(reader[8])
                             });
                         }
                     }
@@ -252,9 +253,53 @@ public class Service : IService
         }
     }
 
-    public int UpdateMedTake(MedTake medtake) { return -1; }
+    public int UpdateMedTake(MedTake medtake) 
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                using (SqlCommand command = new SqlCommand("spUpdateMedTake", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("med_take_id", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Take_ID);
+                    command.Parameters.Add("med_name", SqlDbType.VarChar, 20).Value = DBConvert.From(medtake.Med_Name);
+                    command.Parameters.Add("med_count", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Count);
+                    command.Parameters.Add("med_type_id", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Type_ID);
 
-    public int DeleteMedTake(MedTake medtake) { return -1; }
+                    connection.Open();
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+        }
+        catch
+        {
+            return -1;
+        }
+    }
+
+    public int DeleteMedTake(string med_take_id)
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                using (SqlCommand command = new SqlCommand("spDeleteMedTake", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("med_take_id", SqlDbType.Int).Value = DBConvert.From(int.Parse(med_take_id));
+                    connection.Open();
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+        }
+        catch
+        {
+            return -1;
+        }
+    }
 
     public List<MedType> GetMedTypes()
     {
@@ -278,6 +323,43 @@ public class Service : IService
                                 Med_Type_Name = DBConvert.To<string>(reader[1]),
                                 IsCount = DBConvert.To<bool>(reader[2]),
                                 Image = DBConvert.To<string>(reader[3])
+                            });
+                        }
+                    }
+                }
+            }
+            return collection;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public List<MedTakeSchedule> GetMedTakeSchedules(string med_take_id)
+    {
+        try
+        {
+            List<MedTakeSchedule> collection = new List<MedTakeSchedule>();
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                using (SqlCommand command = new SqlCommand("spGetMedTakeSchedules", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("med_take_id", SqlDbType.Int).Value = DBConvert.From(int.Parse(med_take_id));
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            collection.Add(new MedTakeSchedule
+                            {
+                                Med_Take_Schedule_ID = DBConvert.To<int>(reader[0]),
+                                Med_Take_ID = DBConvert.To<int>(reader[1]),
+                                Day_Of_Week = DBConvert.To<int>(reader[2]),
+                                Dosage_Count = DBConvert.To<int>(reader[3]),
+                                Time = DBConvert.To<TimeSpan>(reader[4]).ToString()
                             });
                         }
                     }

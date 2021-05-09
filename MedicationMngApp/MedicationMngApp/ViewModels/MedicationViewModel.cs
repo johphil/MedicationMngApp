@@ -19,7 +19,7 @@ namespace MedicationMngApp.ViewModels
         public Command LoadMedTakesCommand { get; }
         public Command AddMedTakeCommand { get; }
         public Command AddCommand { get; }
-        public Command<Item> MedTakeTapped { get; }
+        public Command<Med_Take> MedTakeTapped { get; }
 
         public MedicationViewModel()
         {
@@ -27,7 +27,16 @@ namespace MedicationMngApp.ViewModels
             selectedMedTake = null;
             MedTakes = new ObservableCollection<Med_Take>();
             AddCommand = new Command(OnAddClicked);
+            MedTakeTapped = new Command<Med_Take>(OnMedTakeSelected);
             LoadMedTakesCommand = new Command(async () => await ExecuteLoadMedTakesCommand());
+        }
+
+        private async void OnMedTakeSelected(Med_Take obj)
+        {
+            if (obj == null)
+                return;
+
+            await Common.NavigatePage(new MedicationDetailPage(obj));
         }
 
         private async Task ExecuteLoadMedTakesCommand()

@@ -22,4 +22,10 @@ namespace MedicationMngApp.Models
         [JsonProperty(PropertyName = "Time")]
         public TimeSpan Time { get; set; }
     }
+
+    public class GetMedTakeSchedulesResult
+    {
+        [JsonProperty(PropertyName = nameof(GetMedTakeSchedulesResult))]
+        public List<Med_Take_Schedule> results { get; set; }
+    }
 }

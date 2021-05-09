@@ -20,12 +20,22 @@ namespace MedicationMngApp.Models
         [JsonProperty(PropertyName = "Med_Count")]
         public int? Med_Count { get; set; }
 
-        [JsonProperty(PropertyName = "Med_Description")]
+        [JsonProperty(PropertyName = "IsActive")]
+        public bool IsActve { get; set; }
+
         public string Med_Description
         {
             get
             {
-                return string.Format("{0} remaining", Med_Count);
+                return IsCount ? Med_Count.ToString() : "";
+            }
+        }
+
+        public string Med_Description_Image
+        {
+            get
+            {
+                return IsCount ? Image : "icon_infinity.png";
             }
         }
     }
@@ -49,5 +59,22 @@ namespace MedicationMngApp.Models
     {
         [JsonProperty(PropertyName = nameof(GetMedTakesResult))]
         public List<Med_Take> results { get; set; }
+    }
+
+    public class DeleteMedTakeResult
+    {
+        [JsonProperty(PropertyName = nameof(DeleteMedTakeResult))]
+        public int result { get; set; }
+    }
+    public class UpdateMedTakeResult
+    {
+        [JsonProperty(PropertyName = nameof(UpdateMedTakeResult))]
+        public int result { get; set; }
+    }
+
+    public class UpdateMedTakeRequestObject
+    {
+        [JsonProperty(PropertyName = nameof(medtake))]
+        public Med_Take medtake { get; set; }
     }
 }

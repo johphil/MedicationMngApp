@@ -53,6 +53,15 @@ public interface IService
         RequestFormat = WebMessageFormat.Json)]
     [return: MessageParameter(Name = "GetMedTakesResult")]
     List<MedTake> GetMedTakes(string account_id);
+
+    [OperationContract]
+    [WebInvoke(Method = "GET",
+        UriTemplate = "/GetMedTakeSchedules/{med_take_id}",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "GetMedTakeSchedulesResult")]
+    List<MedTakeSchedule> GetMedTakeSchedules(string med_take_id);
     #endregion //METHOD: GET
 
     #region METHOD: POST
@@ -116,12 +125,12 @@ public interface IService
     #region METHOD: DELETE
     [OperationContract]
     [WebInvoke(Method = "DELETE",
-        UriTemplate = "/DeleteMedTake",
+        UriTemplate = "/DeleteMedTake/{med_take_id}",
         BodyStyle = WebMessageBodyStyle.Wrapped,
         RequestFormat = WebMessageFormat.Json,
         ResponseFormat = WebMessageFormat.Json)]
     [return: MessageParameter(Name = "DeleteMedTakeResult")]
-    int DeleteMedTake(MedTake medtake);
+    int DeleteMedTake(string med_take_id);
     #endregion //METHOD: DELETE
 }
 
@@ -201,6 +210,7 @@ public class MedTake: MedType
     private string med_name = string.Empty;
     private int? med_count = null;
     private int account_id = -1;
+    private bool isactive = true;
 
     [DataMember]
     public int Med_Take_ID
@@ -228,6 +238,13 @@ public class MedTake: MedType
     {
         get { return med_count; }
         set { med_count = value; }
+    }
+
+    [DataMember]
+    public bool IsActive
+    {
+        get { return isactive; }
+        set { isactive = value; }
     }
 }
 
