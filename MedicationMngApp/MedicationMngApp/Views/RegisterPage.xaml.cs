@@ -20,9 +20,14 @@ namespace MedicationMngApp.Views
             this.BindingContext = new RegisterViewModel();
         }
 
-        private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
-            await Common.NavigateBack();
+            Common.NavigateNewPage(new LoginPage());
+        }
+        protected override bool OnBackButtonPressed()
+        {
+            Common.NavigateNewPage(new LoginPage());
+            return true;
         }
     }
 }

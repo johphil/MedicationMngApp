@@ -3,43 +3,45 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              x:Class="MedicationMngApp.Views.RegisterPage"
              xmlns:vm="clr-namespace:MedicationMngApp.ViewModels"
-             xmlns:local="clr-namespace:MedicationMngApp.Renderer" 
+            Visual="Material"
              Title="Register"
              NavigationPage.HasNavigationBar="False">    
     <ContentPage.Content>
-        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-            <StackLayout Padding="10,20,10,0" VerticalOptions="StartAndExpand">
-                <Label Text="Personal Information" FontSize="Medium" 
+        <ScrollView>
+            <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <StackLayout Padding="10,20,10,0" VerticalOptions="StartAndExpand">
+                    <Label Text="Personal Information" FontSize="Medium" 
                        TextDecorations="Underline" TextColor="{StaticResource Primary}"/>
-                <Entry Text="{Binding FirstName, Mode=TwoWay}" Placeholder="First Name" FontSize="Medium" MaxLength="99" Keyboard="Plain"/>
-                <Entry Text="{Binding LastName, Mode=TwoWay}" Placeholder="Last Name" FontSize="Medium" MaxLength="99"/>
-                <local:ExtendedDatePicker Date="{Binding Birthday, Mode=TwoWay}"
-                                          Format="MMMM dd, yyyy" MinimumDate="{Binding MinimumBirthday}" MaximumDate="{Binding MaximumBirthday}"/>
-                <Entry Text="{Binding Email, Mode=TwoWay}" Placeholder="Email" FontSize="Medium" Keyboard="Email" MaxLength="99"/>
+                    <Entry Text="{Binding FirstName, Mode=TwoWay}" Placeholder="First Name" FontSize="Medium" MaxLength="99" Keyboard="Plain"/>
+                    <Entry Text="{Binding LastName, Mode=TwoWay}" Placeholder="Last Name" FontSize="Medium" MaxLength="99"/>
+                    <Label Text="Birthday: " />
+                    <DatePicker Date="{Binding Birthday, Mode=TwoWay}" Format="MMMM dd, yyyy" MinimumDate="{Binding MinimumBirthday}" MaximumDate="{Binding MaximumBirthday}"/>
+                    <Entry Text="{Binding Email, Mode=TwoWay}" Placeholder="Email" FontSize="Medium" Keyboard="Email" MaxLength="99"/>
 
-                <Label Text="Account Information" FontSize="Medium" Margin="0,30,0,0"
+                    <Label Text="Account Information" FontSize="Medium" Margin="0,30,0,0"
                        TextDecorations="Underline" TextColor="{StaticResource Primary}"/>
-                <Entry Text="{Binding Username, Mode=TwoWay}" Placeholder="Username" FontSize="Medium" MaxLength="99"/>
-                <Entry Text="{Binding Password, Mode=TwoWay}" Placeholder="Password" FontSize="Medium" IsPassword="True" MaxLength="99"/>
-                <Entry Text="{Binding ConfirmPassword, Mode=TwoWay}" Placeholder="Confirm Password" FontSize="Medium" IsPassword="True" MaxLength="99"/>
+                    <Entry Text="{Binding Username, Mode=TwoWay}" Placeholder="Username" FontSize="Medium" MaxLength="99"/>
+                    <Entry Text="{Binding Password, Mode=TwoWay}" Placeholder="Password" FontSize="Medium" IsPassword="True" MaxLength="99"/>
+                    <Entry Text="{Binding ConfirmPassword, Mode=TwoWay}" Placeholder="Confirm Password" FontSize="Medium" IsPassword="True" MaxLength="99"/>
 
-                <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
-                <Label Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}"/>
-                <Button VerticalOptions="Center" Text="Register" Command="{Binding RegisterCommand}" />
+                    <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+                    <Label Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}"/>
+                    <Button VerticalOptions="Center" Text="Register" Command="{Binding RegisterCommand}" />
 
-            </StackLayout>
-            <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="10,0,10,50" HorizontalOptions="CenterAndExpand">
-                <Label Text="Already have an account?" />
-                <Label Text="Click Here" 
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="10,0,10,50" HorizontalOptions="CenterAndExpand">
+                    <Label Text="Already have an account?" />
+                    <Label Text="Click Here" 
                        TextColor="{StaticResource Primary}"
                        TextDecorations="Underline" >
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer 
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer 
                             NumberOfTapsRequired="1"
                             Tapped="TapGestureRecognizer_Tapped" />
-                    </Label.GestureRecognizers>
-                </Label>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </StackLayout>
             </StackLayout>
-        </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

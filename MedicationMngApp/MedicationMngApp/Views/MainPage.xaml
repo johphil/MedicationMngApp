@@ -6,7 +6,8 @@
              x:Class="MedicationMngApp.Views.MainPage"
              NavigationPage.HasNavigationBar="False"
              android:TabbedPage.ToolbarPlacement="Bottom"
-             Title="Medication Manager">
+             Title="Medication Manager"
+            Visual="Material">
     <local:ProfilePage Title="Profile" IconImageSource="icon_profile.png"/>
     <local:HomePage Title="Home" IconImageSource="icon_home.png"/>
     <local:MedicationPage Title="Medication" IconImageSource="icon_medicbag.png"/>

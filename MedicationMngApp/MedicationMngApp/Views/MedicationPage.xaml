@@ -4,6 +4,7 @@
              xmlns:local="clr-namespace:MedicationMngApp.ViewModels" 
              xmlns:model="clr-namespace:MedicationMngApp.Models"
              xmlns:xe="clr-namespace:XamEffects;assembly=XamEffects"
+            Visual="Material"
              x:Class="MedicationMngApp.Views.MedicationPage" x:Name="pageMedication">
     <ContentPage.Content>
         <StackLayout HorizontalOptions="FillAndExpand" Padding="10">

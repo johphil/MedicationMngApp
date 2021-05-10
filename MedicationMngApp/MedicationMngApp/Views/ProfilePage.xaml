@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MedicationMngApp.ViewModels"  
              xmlns:model="clr-namespace:MedicationMngApp.Models"  
+            Visual="Material"
              x:Class="MedicationMngApp.Views.ProfilePage">
     <ScrollView>
         <StackLayout HorizontalOptions="FillAndExpand" Padding="10">

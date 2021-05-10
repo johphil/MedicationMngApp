@@ -72,14 +72,14 @@ namespace MedicationMngApp.ViewModels
             await Shell.Current.GoToAsync(nameof(NewItemPage));
         }
 
-        async void OnItemSelected(Item item)
+        private void OnItemSelected(Item item)
         {
             if (item == null)
                 return;
 
             // This will push the ItemDetailPage onto the navigation stack
             //await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
-            await Common.NavigatePage(new ItemDetailPage(item.Id));
+            Common.NavigatePage(new ItemDetailPage(item.Id));
         }
     }
 }

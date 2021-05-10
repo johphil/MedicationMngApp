@@ -19,9 +19,9 @@ namespace MedicationMngApp.Views
             this.BindingContext = new LoginViewModel();
         }
 
-        private async void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
         {
-            await Common.NavigatePage(new RegisterPage());
+            Common.NavigateNewPage(new RegisterPage());
         }
     }
 }

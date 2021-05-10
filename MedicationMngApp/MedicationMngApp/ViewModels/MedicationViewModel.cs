@@ -29,12 +29,12 @@ namespace MedicationMngApp.ViewModels
             LoadMedTakesCommand = new Command(async () => await ExecuteLoadMedTakesCommand());
         }
 
-        private async void OnMedTakeSelected(Med_Take obj)
+        private void OnMedTakeSelected(Med_Take obj)
         {
             if (obj == null)
                 return;
 
-            await Common.NavigatePage(new MedicationDetailPage(obj));
+            Common.NavigatePage(new MedicationDetailPage(obj));
         }
 
         private async Task ExecuteLoadMedTakesCommand()
@@ -80,9 +80,9 @@ namespace MedicationMngApp.ViewModels
             }
         }
 
-        private async void OnAddClicked()
+        private void OnAddClicked()
         {
-            await Common.NavigatePage(new MedicationDetailPage());
+            Common.NavigatePage(new MedicationDetailPage());
         }
 
         public void OnAppearing()

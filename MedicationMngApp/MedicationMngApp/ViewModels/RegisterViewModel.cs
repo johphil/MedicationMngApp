@@ -24,7 +24,7 @@ namespace MedicationMngApp.ViewModels
         private string confirmpassword = string.Empty;
         
         private int MaxAge = 100;
-        private int MinAge = 10;
+        private int MinAge = 5;
 
         public Command RegisterCommand { get; }
 

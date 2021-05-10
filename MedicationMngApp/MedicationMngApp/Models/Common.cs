@@ -66,9 +66,9 @@ namespace MedicationMngApp.Models
             Application.Current.MainPage = new NavigationPage(page);
         }
 
-        public static async Task NavigatePage(Page page)
+        public static void NavigatePage(Page page)
         {
-            await Application.Current.MainPage.Navigation.PushAsync(page);
+            Application.Current.MainPage.Navigation.PushAsync(page);
         }
 
         public static async Task NavigateBack()

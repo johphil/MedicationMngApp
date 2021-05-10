@@ -16,7 +16,7 @@ namespace MedicationMngApp.ViewModels
         private bool isedit = false;
         private bool listviewVisibility = false;
         private bool medcountenabled = true;
-        private string medcountplaceholder = string.Empty;
+        private string medcountplaceholder = "Count On Hand";
 
         private List<Med_Type> medtypes;
 
@@ -34,7 +34,6 @@ namespace MedicationMngApp.ViewModels
 
         public MedicationDetailViewModel() //new med take
         {
-            Task.Run(() => this.LoadMedTypes()).Wait();
             Title = "Add New Medication";
             medcount = null;
             AddScheduleCommand = new Command(OnAddScheduleClicked);
@@ -46,7 +45,6 @@ namespace MedicationMngApp.ViewModels
 
         public MedicationDetailViewModel(Med_Take medtake) //edit med take
         {
-            Task.Run(() => this.LoadMedTypes()).Wait();
             IsEdit = true;
             Title = medtake.Med_Name;
             medcount = medtake.Med_Count;
@@ -58,7 +56,14 @@ namespace MedicationMngApp.ViewModels
             DeleteMedTakeCommand = new Command(OnDeleteMedTakeClicked);
             MedTakeSchedules = new ObservableCollection<Med_Take_Schedule>();
 
-            Task.Run(() => this.LoadMedTakeSchedules()).Wait();
+        }
+
+        public async Task InitializeAsync()
+        {
+            await LoadMedTypes();
+
+            if (selectedMedTake != null)
+                await LoadMedTakeSchedules();
         }
 
         private async Task LoadMedTakeSchedules()
@@ -259,11 +264,11 @@ namespace MedicationMngApp.ViewModels
                 if (value == false)
                 {
                     MedCount = null;
-                    MedCountPlaceholder = "Not applicable.";
+                    MedCountPlaceholder = "Not applicable";
                 }
                 else
                 {
-                    MedCountPlaceholder = string.Empty;
+                    MedCountPlaceholder = "Count On Hand";
                 }
             }
         }

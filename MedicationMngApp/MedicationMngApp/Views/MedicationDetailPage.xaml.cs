@@ -14,22 +14,30 @@ namespace MedicationMngApp.Views
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class MedicationDetailPage : ContentPage
 	{
+		MedicationDetailViewModel vm;
 		public MedicationDetailPage()
 		{
 			InitializeComponent ();
-			BindingContext = new MedicationDetailViewModel();
+			vm = new MedicationDetailViewModel();
+			BindingContext = vm;
 		}
 
 		public MedicationDetailPage(Med_Take medtake)
 		{
 			InitializeComponent();
-			BindingContext = new MedicationDetailViewModel(medtake);
+			vm = new MedicationDetailViewModel(medtake);
+			BindingContext = vm;
 		}
 
         private void ListView_ItemSelected(object sender, SelectedItemChangedEventArgs e)
         {
 			ListView lv = (ListView)sender;
 			lv.ScrollTo(lv.SelectedItem, ScrollToPosition.MakeVisible, true);
+        }
+
+        protected override async void OnAppearing()
+        {
+			await vm.InitializeAsync();
         }
     }
 }

@@ -5,33 +5,34 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
              Title="Login"
+            Visual="Material"
              x:Class="MedicationMngApp.Views.LoginPage"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
-        <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
-            <Image Source="logo.png" Aspect="AspectFit" Margin="0,0,0,-50"/>
-            <StackLayout Padding="10,0,10,0" VerticalOptions="CenterAndExpand">
-                <Label Text="Username" FontSize="Small" />
-                <Entry Text="{Binding Username, Mode=TwoWay}" Placeholder="Username" FontSize="Medium" />
-                <Label Text="Password" FontSize="Small" />
-                <Entry Text="{Binding Password, Mode=TwoWay}" Placeholder="Password" FontSize="Medium" IsPassword="True" />
-                <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
-                
-                <Label Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}"/>
-                <Button VerticalOptions="Center" Text="Login" Command="{Binding LoginCommand}" />
-            </StackLayout>
-            <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="10,0,10,50" HorizontalOptions="CenterAndExpand">
-                <Label Text="Not yet registered?" />
-                <Label Text="Click Here" 
+        <ScrollView>
+            <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                <Image Source="logo.png" Aspect="AspectFit" Margin="0,0,0,-50"/>
+                <StackLayout Padding="10,0,10,0" VerticalOptions="CenterAndExpand">
+                    <Entry Text="{Binding Username, Mode=TwoWay}" Placeholder="Username" FontSize="Medium" />
+                    <Entry Text="{Binding Password, Mode=TwoWay}" Placeholder="Password" FontSize="Medium" IsPassword="True" />
+                    <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+
+                    <Label Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}"/>
+                    <Button VerticalOptions="Center" Text="Login" Command="{Binding LoginCommand}" />
+                </StackLayout>
+                <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="10,0,10,50" HorizontalOptions="CenterAndExpand">
+                    <Label Text="Not yet registered?" />
+                    <Label Text="Click Here" 
                        TextColor="{StaticResource Primary}"
                        TextDecorations="Underline">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer 
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer 
                             NumberOfTapsRequired="1"
                             Tapped="TapGestureRecognizer_Tapped" />
-                    </Label.GestureRecognizers>
-                </Label>
+                        </Label.GestureRecognizers>
+                    </Label>
+                </StackLayout>
             </StackLayout>
-        </StackLayout>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>
