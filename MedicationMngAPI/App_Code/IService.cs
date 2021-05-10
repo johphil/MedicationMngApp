@@ -119,7 +119,10 @@ public interface IService
         RequestFormat = WebMessageFormat.Json,
         ResponseFormat = WebMessageFormat.Json)]
     [return: MessageParameter(Name = "UpdateMedTakeResult")]
-    int UpdateMedTake(MedTake medtake);
+    int UpdateMedTake(MedTake medtake, 
+                        List<MedTakeSchedule> deletemedtakeschedules, 
+                        List<MedTakeSchedule> updatemedtakeschedules, 
+                        List<MedTakeSchedule> createmedtakeschedules);
     #endregion //METHOD: PUT
 
     #region METHOD: DELETE

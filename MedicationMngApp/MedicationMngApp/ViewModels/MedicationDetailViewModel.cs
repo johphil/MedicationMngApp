@@ -32,6 +32,10 @@ namespace MedicationMngApp.ViewModels
         public Command SaveScheduleCommand { get; }
         public Command DeleteMedTakeCommand { get; }
 
+        private List<Med_Take_Schedule> DeleteMedTakeSchedules;
+        private List<Med_Take_Schedule> UpdateMedTakeSchedules;
+        private List<Med_Take_Schedule> CreateMedTakeSchedules;
+
         public MedicationDetailViewModel() //new med take
         {
             Title = "Add New Medication";
@@ -56,6 +60,9 @@ namespace MedicationMngApp.ViewModels
             DeleteMedTakeCommand = new Command(OnDeleteMedTakeClicked);
             MedTakeSchedules = new ObservableCollection<Med_Take_Schedule>();
 
+            DeleteMedTakeSchedules = new List<Med_Take_Schedule>();
+            UpdateMedTakeSchedules = new List<Med_Take_Schedule>();
+            CreateMedTakeSchedules = new List<Med_Take_Schedule>();
         }
 
         public async Task InitializeAsync()
@@ -157,6 +164,9 @@ namespace MedicationMngApp.ViewModels
         private void OnRemoveScheduleClicked(object obj)
         {
             MedTakeSchedules.Remove((Med_Take_Schedule)obj);
+
+            if (CanEdit)
+                DeleteMedTakeSchedules.Add((Med_Take_Schedule)obj);
         }
 
         private void OnAddScheduleClicked()
@@ -188,7 +198,7 @@ namespace MedicationMngApp.ViewModels
                                     GetMedTypesResult result = JsonConvert.DeserializeObject<GetMedTypesResult>(jData);
                                     MedTypes = result.result;
 
-                                    if (isedit && selectedMedTake != null && MedTypes != null)
+                                    if (CanEdit)
                                         SelectedMedType = MedTypes.Find(mt => mt.Med_Type_ID == selectedMedTake.Med_Type_ID);
                                 }
                             }
@@ -215,6 +225,14 @@ namespace MedicationMngApp.ViewModels
         {
             get => isedit;
             set => SetProperty(ref isedit, value);
+        }
+
+        private bool CanEdit
+        {
+            get
+            {
+                return isedit && selectedMedTake != null && MedTypes != null;
+            }
         }
 
         public List<Med_Type> MedTypes
@@ -334,7 +352,7 @@ namespace MedicationMngApp.ViewModels
                             if (CanSubmit)
                             {
                                 IsBusy = true;
-                                if (isedit && selectedMedTake != null)
+                                if (CanEdit)
                                 {
                                     try
                                     {
@@ -342,11 +360,15 @@ namespace MedicationMngApp.ViewModels
                                         {
                                             if (NetworkStatus.IsInternet())
                                             {
+                                                UpdateSortSchedules();
                                                 using (HttpClient client = new HttpClient())
                                                 {
                                                     UpdateMedTakeRequestObject obj = new UpdateMedTakeRequestObject
                                                     {
-                                                        medtake = selectedMedTake
+                                                        medtake = selectedMedTake,
+                                                        createmedtakeschedules = CreateMedTakeSchedules,
+                                                        updatemedtakeschedules = UpdateMedTakeSchedules,
+                                                        deletemedtakeschedules = DeleteMedTakeSchedules
                                                     };
                                                     obj.medtake.Med_Name = medname;
                                                     obj.medtake.Med_Count = medcount;
@@ -452,6 +474,12 @@ namespace MedicationMngApp.ViewModels
                     IsBusy = false;
                 }
             }
+        }
+
+        private void UpdateSortSchedules()
+        {
+            UpdateMedTakeSchedules = MedTakeSchedules.Where(s => s.Med_Take_Schedule_ID > 0).ToList();
+            CreateMedTakeSchedules = MedTakeSchedules.Where(s => s.Med_Take_Schedule_ID <= 0).ToList();
         }
     }
 }

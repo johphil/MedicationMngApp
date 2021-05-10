@@ -253,7 +253,7 @@ public class Service : IService
         }
     }
 
-    public int UpdateMedTake(MedTake medtake) 
+    public int UpdateMedTake(MedTake medtake)
     {
         try
         {
@@ -272,6 +272,100 @@ public class Service : IService
                     return command.ExecuteNonQuery();
                 }
             }
+        }
+        catch
+        {
+            return -1;
+        }
+
+
+    }
+
+    public int UpdateMedTake(MedTake medtake, List<MedTakeSchedule> deletemedtakeschedules, List<MedTakeSchedule> updatemedtakeschedules, List<MedTakeSchedule> createmedtakeschedules)
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                connection.Open();
+                using (SqlTransaction transaction = connection.BeginTransaction())
+                {
+                    try
+                    {
+                        using (SqlCommand command = new SqlCommand("spUpdateMedTake", connection, transaction))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+
+                            command.Parameters.Add("med_take_id", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Take_ID);
+                            command.Parameters.Add("med_name", SqlDbType.VarChar, 20).Value = DBConvert.From(medtake.Med_Name);
+                            command.Parameters.Add("med_count", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Count);
+                            command.Parameters.Add("med_type_id", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Type_ID);
+
+                            int result = command.ExecuteNonQuery();
+
+                            if (result > 0)
+                            {
+                                //Create MedTake Schedule
+                                if (createmedtakeschedules != null && createmedtakeschedules.Count > 0)
+                                {
+                                    command.Parameters.Clear();
+                                    command.CommandText = "spAddMedTakeSchedule";
+
+                                    foreach (var schedule in createmedtakeschedules)
+                                    {
+                                        command.Parameters.Add("med_take_id", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Take_ID);
+                                        command.Parameters.Add("day_of_week", SqlDbType.Int).Value = DBConvert.From(schedule.Day_Of_Week);
+                                        command.Parameters.Add("dosage_count", SqlDbType.Int).Value = DBConvert.From(schedule.Dosage_Count);
+                                        command.Parameters.Add("time", SqlDbType.Time, 7).Value = DBConvert.From(schedule.Time);
+
+                                        command.ExecuteNonQuery();
+                                        command.Parameters.Clear();
+                                    }
+                                }
+
+                                //Update MedTake Schedule
+                                if (updatemedtakeschedules != null && updatemedtakeschedules.Count > 0)
+                                {
+                                    command.Parameters.Clear();
+                                    command.CommandText = "spUpdateMedTakeSchedule";
+
+                                    foreach (var schedule in updatemedtakeschedules)
+                                    {
+                                        command.Parameters.Add("med_take_schedule_id", SqlDbType.Int).Value = DBConvert.From(schedule.Med_Take_Schedule_ID);
+                                        command.Parameters.Add("day_of_week", SqlDbType.Int).Value = DBConvert.From(schedule.Day_Of_Week);
+                                        command.Parameters.Add("dosage_count", SqlDbType.Int).Value = DBConvert.From(schedule.Dosage_Count);
+                                        command.Parameters.Add("time", SqlDbType.Time, 7).Value = DBConvert.From(schedule.Time);
+
+                                        command.ExecuteNonQuery();
+                                        command.Parameters.Clear();
+                                    }
+                                }
+
+                                //Delete MedTake Schedule
+                                if (deletemedtakeschedules != null && deletemedtakeschedules.Count > 0)
+                                {
+                                    command.Parameters.Clear();
+                                    command.CommandText = "spDeleteMedTakeSchedule";
+
+                                    foreach (var schedule in deletemedtakeschedules)
+                                    {
+                                        command.Parameters.Add("med_take_schedule_id", SqlDbType.Int).Value = DBConvert.From(schedule.Med_Take_Schedule_ID);
+
+                                        command.ExecuteNonQuery();
+                                    }
+                                }
+                            }
+                        }
+                        transaction.Commit();
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        return -1;
+                    }
+                }
+            }
+            return 1;
         }
         catch
         {

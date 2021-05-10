@@ -76,5 +76,14 @@ namespace MedicationMngApp.Models
     {
         [JsonProperty(PropertyName = nameof(medtake))]
         public Med_Take medtake { get; set; }
+
+        [JsonProperty(PropertyName = nameof(deletemedtakeschedules))]
+        public List<Med_Take_Schedule> deletemedtakeschedules;
+
+        [JsonProperty(PropertyName = nameof(updatemedtakeschedules))]
+        public List<Med_Take_Schedule> updatemedtakeschedules;
+
+        [JsonProperty(PropertyName = nameof(createmedtakeschedules))]
+        public List<Med_Take_Schedule> createmedtakeschedules;
     }
 }
