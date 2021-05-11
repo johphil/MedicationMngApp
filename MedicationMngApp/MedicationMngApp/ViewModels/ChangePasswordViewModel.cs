@@ -21,6 +21,7 @@ namespace MedicationMngApp.ViewModels
             ChangePasswordCommand = new Command(OnChangePasswordClicked);
         }
 
+        #region Bindings
         public string OldPassword
         {
             get => oldpassword;
@@ -37,8 +38,80 @@ namespace MedicationMngApp.ViewModels
             set => SetProperty(ref newpasswordconfirm, value);
         }
 
+        //Errors
+        private bool iserroroldpassword = false;
+        private bool iserrornewpassword = false;
+        private bool iserrorconfirmpassword = false;
+        private string erroroldpassword = string.Empty;
+        private string errornewpassword = string.Empty;
+        private string errorconfirmpassword = string.Empty;
+
+        void ResetErrors()
+        {
+            IsErrorOldPassword = false;
+            IsErrorNewPassword = false;
+            IsErrorConfirmPassword = false;
+        }
+        public bool IsErrorOldPassword
+        {
+            get => iserroroldpassword;
+            set => SetProperty(ref iserroroldpassword, value);
+        }
+        public bool IsErrorNewPassword
+        {
+            get => iserrornewpassword;
+            set => SetProperty(ref iserrornewpassword, value);
+        }
+        public bool IsErrorConfirmPassword
+        {
+            get => iserrorconfirmpassword;
+            set => SetProperty(ref iserrorconfirmpassword, value);
+        }
+        public string ErrorOldPassword
+        {
+            get => erroroldpassword;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    IsErrorOldPassword = false;
+                else
+                    IsErrorOldPassword = true;
+
+                SetProperty(ref erroroldpassword, value);
+            }
+        }
+        public string ErrorNewPassword
+        {
+            get => errornewpassword;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    IsErrorNewPassword = false;
+                else
+                    IsErrorNewPassword = true;
+
+                SetProperty(ref errornewpassword, value);
+            }
+        }
+        public string ErrorConfirmPassword
+        {
+            get => errorconfirmpassword;
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    IsErrorConfirmPassword = false;
+                else
+                    IsErrorConfirmPassword = true;
+
+                SetProperty(ref errorconfirmpassword, value);
+            }
+        }
+
+        #endregion //Bindings
+
         private bool Validate()
         {
+            ResetErrors();
             return !string.IsNullOrWhiteSpace(oldpassword)
             && !string.IsNullOrWhiteSpace(newpassword)
             && !string.IsNullOrWhiteSpace(newpasswordconfirm)
@@ -47,12 +120,22 @@ namespace MedicationMngApp.ViewModels
 
         private async void ValidateMessage()
         {
-            if (string.IsNullOrWhiteSpace(oldpassword) || string.IsNullOrWhiteSpace(newpassword) || string.IsNullOrWhiteSpace(newpasswordconfirm))
-                ErrorMessage = "Please fill up all fields.";
+            if (string.IsNullOrWhiteSpace(oldpassword))
+            {
+                ErrorOldPassword = "Fill this up.";
+            }
+            if (string.IsNullOrWhiteSpace(newpassword))
+            {
+                ErrorNewPassword = "Fill this up.";
+            }
+            if (string.IsNullOrWhiteSpace(newpasswordconfirm))
+            {
+                ErrorConfirmPassword = "Fill this up.";
+            }
             else if (newpassword != newpasswordconfirm)
-                ErrorMessage = "New Password and Confirm Password do not match.";
-            else
-                await Common.ShowMessageAsyncUnknownError();
+            {
+                ErrorConfirmPassword = "New password and confirm password does not match.";
+            }
         }
 
 
@@ -90,12 +173,12 @@ namespace MedicationMngApp.ViewModels
                                                 {
                                                     case -69: //sql return value -69
                                                         {
-                                                            ErrorMessage = "Old password do not match with the old one.";
+                                                            ErrorOldPassword = "Current password is invalid.";
                                                             break;
                                                         }
                                                     case 1: //sql return value 1
                                                         {
-                                                            await Common.ShowMessageAsync("Change Password Success", "You have successfully changed your password.", "OK");
+                                                            await Common.ShowSnackbarMessage("Change password success!");
                                                             await Common.NavigateBack();
                                                             break;
                                                         }

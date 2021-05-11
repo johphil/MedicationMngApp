@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using XF.Material.Forms.Resources;
+using XF.Material.Forms.Resources.Typography;
+using XF.Material.Forms.UI.Dialogs;
+using XF.Material.Forms.UI.Dialogs.Configurations;
 
 namespace MedicationMngApp.Models
 {
@@ -11,7 +15,7 @@ namespace MedicationMngApp.Models
     {
         #region Json URIs & Settings
         public static string HEADER_CONTENT_TYPE = "application/json";
-        public static string SERVICE_IP = "192.168.88.243";
+        public static string SERVICE_IP = "192.168.1.4";
         public static string POST_ADD_ACCOUNT = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddAccount";
         public static string POST_ADD_MED_TAKE = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddMedTake";
         public static string GET_LOGIN_ACCOUNT(string username, string password)
@@ -38,9 +42,29 @@ namespace MedicationMngApp.Models
         {
             return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/DeleteMedTake/{med_take_id}";
         }
+        public static string PUT_UPDATE_MED_TAKE_STATUS(int med_take_id, int enabled)
+        {
+            return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/UpdateMedTakeEnable/{med_take_id}/{enabled}"; 
+        }
         #endregion
 
         #region Asynchronous Tasks Message Popup & Navigation
+        public static MaterialLoadingDialogConfiguration loadingDialogConfig
+        {
+            get
+            {
+                return new MaterialLoadingDialogConfiguration()
+                {
+                    BackgroundColor = XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.PRIMARY),
+                    MessageTextColor = XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.ON_PRIMARY).MultiplyAlpha(0.8),
+                    //MessageFontFamily = XF.Material.Forms.Material.GetResource<OnPlatform<string>>("FontFamily.OpenSansRegular"),
+                    TintColor = XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.ON_PRIMARY),
+                    CornerRadius = 8,
+                    ScrimColor = Color.FromHex("#232F34").MultiplyAlpha(0.32)
+                };
+            }
+        }
+
         public static async Task ShowMessageAsync(string title, string msgBody, string buttonText)
         {
             await Application.Current.MainPage.DisplayAlert(title, msgBody, buttonText);
@@ -59,6 +83,29 @@ namespace MedicationMngApp.Models
         public static async Task ShowMessageAsyncApplicationError(string error)
         {
             await Common.ShowMessageAsync("Application Error", error, "Dismiss");
+        }
+
+        public static async Task ShowSnackbarMessage(string message, bool isDurationLong = false, bool isError = false)
+        {
+            MaterialSnackbarConfiguration msc = new MaterialSnackbarConfiguration
+            {
+                BackgroundColor = isError ? XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.ERROR)
+                                    : XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.PRIMARY),
+                CornerRadius = 4,
+                MessageTextColor = Color.White,
+                ScrimColor = Color.Transparent,
+                TintColor = Color.AliceBlue
+            };
+            int duration = isDurationLong ? MaterialSnackbar.DurationLong : MaterialSnackbar.DurationShort;
+
+            await MaterialDialog.Instance.SnackbarAsync(message: message, 
+                                                        msDuration: duration,
+                                                        configuration: msc);
+        }
+
+        public static async Task<bool> ShowAlertConfirmation(string message)
+        {
+            return (bool)await MaterialDialog.Instance.ConfirmAsync(message: message);
         }
 
         public static void NavigateNewPage(Page page)

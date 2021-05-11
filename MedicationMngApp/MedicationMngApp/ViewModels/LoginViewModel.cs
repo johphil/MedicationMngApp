@@ -8,6 +8,9 @@ using System.Net.Http;
 using System.Text;
 using System.Windows.Input;
 using Xamarin.Forms;
+using XF.Material.Forms.Resources;
+using XF.Material.Forms.UI.Dialogs;
+using XF.Material.Forms.UI.Dialogs.Configurations;
 
 namespace MedicationMngApp.ViewModels
 {
@@ -23,6 +26,7 @@ namespace MedicationMngApp.ViewModels
             //Login if username & password is not null
             if (!string.IsNullOrWhiteSpace(PersistentSettings.UserName) && !string.IsNullOrWhiteSpace(PersistentSettings.PassWord))
             {
+                Username = PersistentSettings.UserName;
                 ProceedLogin(PersistentSettings.UserName, PersistentSettings.PassWord);
             }
 
@@ -50,25 +54,28 @@ namespace MedicationMngApp.ViewModels
                 {
                     if (NetworkStatus.IsInternet())
                     {
-                        using (HttpClient client = new HttpClient())
+                        using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Signing you in...", configuration: Common.loadingDialogConfig))
                         {
-                            using (HttpResponseMessage response = await client.GetAsync(Common.GET_LOGIN_ACCOUNT(uname, pword)))
+                            using (HttpClient client = new HttpClient())
                             {
-                                if (response.IsSuccessStatusCode)
+                                using (HttpResponseMessage response = await client.GetAsync(Common.GET_LOGIN_ACCOUNT(uname, pword)))
                                 {
-                                    var jData = await response.Content.ReadAsStringAsync();
-                                    if (!string.IsNullOrWhiteSpace(jData))
+                                    if (response.IsSuccessStatusCode)
                                     {
-                                        LoginAccountResult result = JsonConvert.DeserializeObject<LoginAccountResult>(jData);
-                                        if (result.result > 0)
+                                        var jData = await response.Content.ReadAsStringAsync();
+                                        if (!string.IsNullOrWhiteSpace(jData))
                                         {
-                                            PersistentSettings.UserName = uname;
-                                            PersistentSettings.PassWord = pword;
-                                            PersistentSettings.AccountID = result.result;
-                                            Common.NavigateNewPage(new MainPage());
+                                            LoginAccountResult result = JsonConvert.DeserializeObject<LoginAccountResult>(jData);
+                                            if (result.result > 0)
+                                            {
+                                                PersistentSettings.UserName = uname;
+                                                PersistentSettings.PassWord = pword;
+                                                PersistentSettings.AccountID = result.result;
+                                                Common.NavigateNewPage(new MainPage());
+                                            }
+                                            else
+                                                ErrorMessage = "Invalid username or password.";
                                         }
-                                        else
-                                            ErrorMessage = "Invalid username or password.";
                                     }
                                 }
                             }

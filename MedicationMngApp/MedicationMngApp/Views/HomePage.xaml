@@ -1,13 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-            Visual="Material"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              x:Class="MedicationMngApp.Views.HomePage">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Home Page!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <ScrollView>
+            <RefreshView>
+                <StackLayout HorizontalOptions="FillAndExpand" Padding="10">
+                    <!--Header-->
+                    <material:MaterialCard VerticalOptions="Fill" Elevation="5" BackgroundColor="{StaticResource Primary}" Margin="-10,-10,-10,0">
+                        <StackLayout Orientation="Horizontal">
+                            <material:MaterialIcon Source="icon_home" TintColor="White"/>
+                            <Label Text="Home" Style="{StaticResource LabelTitle}" HorizontalOptions="Start" VerticalOptions="Center"/>
+                        </StackLayout>
+                    </material:MaterialCard>
+                    <!--End Header-->
+                    <Label Text="Welcome to Home Page!"
+                        VerticalOptions="CenterAndExpand" 
+                        HorizontalOptions="CenterAndExpand" />
+                </StackLayout>
+            </RefreshView>
+        </ScrollView>
     </ContentPage.Content>
 </ContentPage>

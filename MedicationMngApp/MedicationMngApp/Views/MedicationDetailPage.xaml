@@ -2,20 +2,18 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MedicationMngApp.ViewModels"  
-             xmlns:model="clr-namespace:MedicationMngApp.Models"
+             xmlns:model="clr-namespace:MedicationMngApp.Models" xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              x:Class="MedicationMngApp.Views.MedicationDetailPage"
-            Visual="Material"
              Title="{Binding Title}" x:Name="pageMedicationDetails">
         <StackLayout>
-            <ScrollView VerticalOptions="StartAndExpand">
+        <ScrollView VerticalOptions="StartAndExpand">
             <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Padding="20">
                 <StackLayout>
-                    <Label Text="Medication Details" FontSize="Small" TextDecorations="Underline"/>
-                    <StackLayout Orientation="Horizontal">
-                        <Entry Text="{Binding MedName}" Placeholder="Medicine Name" FontSize="Medium" MaxLength="20" HorizontalOptions="FillAndExpand"/>
-                    </StackLayout>
+                    <material:MaterialTextField HorizontalOptions="Center"
+                                                Placeholder="Medication Name"
+                                                Text="{Binding MedName, Mode=TwoWay}"/>
                     <Label Text="Select Type of Medicine:" FontSize="Small"/>
-                    <ListView HeightRequest="150" ItemsSource="{Binding MedTypes}" IsVisible="{Binding ListViewVisibility}" 
+                    <ListView HeightRequest="200" ItemsSource="{Binding MedTypes}" IsVisible="{Binding ListViewVisibility}" 
                                       SelectedItem="{Binding SelectedMedType, Mode=TwoWay}" ItemSelected="ListView_ItemSelected">
                         <ListView.ItemTemplate>
                             <DataTemplate>
@@ -28,22 +26,20 @@
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-                    <StackLayout Orientation="Horizontal">
-                        <Entry Text="{Binding MedCount}" 
-                                   Placeholder="{Binding MedCountPlaceholder}"
-                                   HorizontalOptions="FillAndExpand"
-                                   Keyboard="Numeric" 
-                                   IsEnabled="{Binding MedCountEnabled}"/>
-                    </StackLayout>
+                    <material:MaterialTextField HorizontalOptions="Center"
+                                                Placeholder="{Binding MedCountPlaceholder}"
+                                                Text="{Binding MedCount, Mode=TwoWay}"
+                                                IsEnabled="{Binding MedCountEnabled}"
+                                                InputType="Numeric"/>
                 </StackLayout>
                 <StackLayout>
                     <Label Text="Dosage and Schedule" FontSize="Small" TextDecorations="Underline"/>
                     <StackLayout BindableLayout.ItemsSource="{Binding MedTakeSchedules}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
-                                <Frame Margin="0" Padding="5" HasShadow="False" BackgroundColor="{StaticResource Secondary}">
-                                    <StackLayout x:DataType="model:Med_Take_Schedule" Orientation="Horizontal">
-                                        <Picker HorizontalTextAlignment="Center" FontSize="Small" SelectedIndex="{Binding Day_Of_Week}">
+                                <material:MaterialCard Margin="0" Padding="5" HasShadow="False" BackgroundColor="{StaticResource Secondary}">
+                                    <StackLayout x:DataType="model:Med_Take_Schedule" Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                                        <Picker HorizontalTextAlignment="Center" FontSize="Small" SelectedIndex="{Binding Day_Of_Week}" WidthRequest="100">
                                             <Picker.Items>
                                                 <x:String>Sunday</x:String>
                                                 <x:String>Monday</x:String>
@@ -54,24 +50,23 @@
                                                 <x:String>Saturday</x:String>
                                             </Picker.Items>
                                         </Picker>
-                                        <TimePicker Time="{Binding Time}" HorizontalOptions="CenterAndExpand" FontSize="Small"/>
-                                        <Entry Placeholder="Count" Keyboard="Numeric" FontSize="Small" Text="{Binding Dosage_Count}" HorizontalTextAlignment="Center"/>
-                                        <Button BackgroundColor="{StaticResource Danger}" WidthRequest="40" HeightRequest="40" Text="x" HorizontalOptions="EndAndExpand" 
-                                                        VerticalOptions="Center" Command="{Binding Source={RelativeSource AncestorType={x:Type local:MedicationDetailViewModel}}, Path=RemoveScheduleCommand}"
-                                                        CommandParameter="{Binding}"/>
+                                        <TimePicker Time="{Binding Time}" FontSize="Small"/>
+                                        <Entry Placeholder="Count" WidthRequest="60" Keyboard="Numeric" FontSize="Small" Text="{Binding Dosage_Count}" HorizontalTextAlignment="Center"/>
+                                        <material:MaterialButton Text="X" BackgroundColor="{StaticResource Danger}" WidthRequest="50"
+                                                                 HorizontalOptions="End" CommandParameter="{Binding}"
+                                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type local:MedicationDetailViewModel}}, Path=RemoveScheduleCommand}"/>
                                     </StackLayout>
-                                </Frame>
+                                </material:MaterialCard>
                             </DataTemplate>
                         </BindableLayout.ItemTemplate>
                     </StackLayout>
-                    <Button Text="Add Schedule" Command="{Binding AddScheduleCommand}"/>
+                    <material:MaterialButton Text="Add Schedule" HorizontalOptions="Center" Command="{Binding AddScheduleCommand}"/>
                 </StackLayout>
-                <Button Text="Delete Medication" Command="{Binding DeleteMedTakeCommand}" 
-                        Margin="0,50,0,40" IsVisible="{Binding DeleteButtonVisibility}" BackgroundColor="{StaticResource Danger}"/>
-                </StackLayout>
-            </ScrollView>
-            <Label Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}" HorizontalOptions="CenterAndExpand"/>
-            <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}"/>
-            <Button Text="Save Schedule" Command="{Binding SaveScheduleCommand}"/>
-        </StackLayout>
+                <material:MaterialButton Text="Delete Medication" Command="{Binding DeleteMedTakeCommand}" 
+                        Margin="0,50,0,40" IsVisible="{Binding DeleteButtonVisibility}" 
+                        BackgroundColor="{StaticResource Danger}"/>
+            </StackLayout>
+        </ScrollView>
+        <material:MaterialButton Text="Save Medication" Command="{Binding SaveScheduleCommand}"/>
+    </StackLayout>
 </ContentPage>

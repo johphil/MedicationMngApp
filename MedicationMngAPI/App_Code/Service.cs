@@ -105,6 +105,29 @@ public class Service : IService
         }
     }
 
+    public int UpdateMedTakeEnable(string med_take_id, string enabled)
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                using (SqlCommand command = new SqlCommand("spUpdateMedTakeStatus", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("med_take_id", SqlDbType.Int).Value = DBConvert.From(int.Parse(med_take_id));
+                    command.Parameters.Add("isactive", SqlDbType.Bit).Value = DBConvert.From(int.Parse(enabled));
+                    connection.Open();
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+        }
+        catch
+        {
+            return -1;
+        }
+    }
+
     public int UpdateAccountPassword(int account_id, string old_password, string new_password)
     {
         try

@@ -2,8 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              x:Class="MedicationMngApp.Views.RegisterPage"
-             xmlns:vm="clr-namespace:MedicationMngApp.ViewModels"
-            Visual="Material"
+             xmlns:vm="clr-namespace:MedicationMngApp.ViewModels" xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              Title="Register"
              NavigationPage.HasNavigationBar="False">    
     <ContentPage.Content>
@@ -12,22 +11,52 @@
                 <StackLayout Padding="10,20,10,0" VerticalOptions="StartAndExpand">
                     <Label Text="Personal Information" FontSize="Medium" 
                        TextDecorations="Underline" TextColor="{StaticResource Primary}"/>
-                    <Entry Text="{Binding FirstName, Mode=TwoWay}" Placeholder="First Name" FontSize="Medium" MaxLength="99" Keyboard="Plain"/>
-                    <Entry Text="{Binding LastName, Mode=TwoWay}" Placeholder="Last Name" FontSize="Medium" MaxLength="99"/>
-                    <Label Text="Birthday: " />
-                    <DatePicker Date="{Binding Birthday, Mode=TwoWay}" Format="MMMM dd, yyyy" MinimumDate="{Binding MinimumBirthday}" MaximumDate="{Binding MaximumBirthday}"/>
-                    <Entry Text="{Binding Email, Mode=TwoWay}" Placeholder="Email" FontSize="Medium" Keyboard="Email" MaxLength="99"/>
+                    <material:MaterialTextField Placeholder="First Name" 
+                                                Text="{Binding FirstName, Mode=TwoWay}"
+                                                InputType="Default" 
+                                                HasError="{Binding IsErrorFirstName}"
+                                                ErrorText="Invalid First Name" 
+                                                MaxLength="99"/>
+                    <material:MaterialTextField Placeholder="Last Name" 
+                                                Text="{Binding LastName, Mode=TwoWay}"
+                                                InputType="Default"
+                                                HasError="{Binding IsErrorLastName}"
+                                                ErrorText="Invalid Last Name" 
+                                                MaxLength="99"/>
+                    <material:MaterialDateField Placeholder="Birthday" 
+                                                Date="{Binding Birthday, Mode=TwoWay}" 
+                                                Format="MMMM dd, yyyy"  
+                                                ErrorText="Invalid Birthday"
+                                                HasError="{Binding IsErrorBirthday}"/>
+                    <material:MaterialTextField Placeholder="Email" 
+                                                Text="{Binding Email, Mode=TwoWay}"
+                                                InputType="Email"
+                                                HasError="{Binding IsErrorEmail}"
+                                                ErrorText="Invalid Email" 
+                                                MaxLength="99"/>
 
                     <Label Text="Account Information" FontSize="Medium" Margin="0,30,0,0"
                        TextDecorations="Underline" TextColor="{StaticResource Primary}"/>
-                    <Entry Text="{Binding Username, Mode=TwoWay}" Placeholder="Username" FontSize="Medium" MaxLength="99"/>
-                    <Entry Text="{Binding Password, Mode=TwoWay}" Placeholder="Password" FontSize="Medium" IsPassword="True" MaxLength="99"/>
-                    <Entry Text="{Binding ConfirmPassword, Mode=TwoWay}" Placeholder="Confirm Password" FontSize="Medium" IsPassword="True" MaxLength="99"/>
+                    <material:MaterialTextField Placeholder="Username" 
+                                                Text="{Binding Username, Mode=TwoWay}"
+                                                InputType="Default"
+                                                HasError="{Binding IsErrorUsername}"
+                                                ErrorText="Invalid Username" 
+                                                MaxLength="99"/>
 
-                    <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
-                    <Label Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}"/>
-                    <Button VerticalOptions="Center" Text="Register" Command="{Binding RegisterCommand}" />
-
+                    <material:MaterialTextField Placeholder="Password" 
+                                                Text="{Binding Password, Mode=TwoWay}"
+                                                InputType="Password" 
+                                                HasError="{Binding IsErrorPassword}"
+                                                ErrorText="Invalid Password"
+                                                MaxLength="99"/>
+                    <material:MaterialTextField Placeholder="Confirm Password" 
+                                                Text="{Binding ConfirmPassword, Mode=TwoWay}"
+                                                InputType="Password"
+                                                HasError="{Binding IsErrorConfirmPassword}"
+                                                ErrorText="{Binding ErrorConfirmPassword}"
+                                                MaxLength="99"/>
+                    <material:MaterialButton HorizontalOptions="Center" Text="Register" Command="{Binding RegisterCommand}"/>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="10,0,10,50" HorizontalOptions="CenterAndExpand">
                     <Label Text="Already have an account?" />

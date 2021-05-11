@@ -1,4 +1,5 @@
-﻿using MedicationMngApp.ViewModels;
+﻿using MedicationMngApp.Models;
+using MedicationMngApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,5 +25,5 @@ namespace MedicationMngApp.Views
 			base.OnAppearing();
 			_viewModel.OnAppearing();
 		}
-	}
+    }
 }

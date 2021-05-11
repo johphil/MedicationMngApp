@@ -13,6 +13,7 @@ namespace MedicationMngApp
         public App()
         {
             InitializeComponent();
+            XF.Material.Forms.Material.Init(this);
 
             DependencyService.Register<ServiceItem>();
             Common.NavigateNewPage(new LoginPage());

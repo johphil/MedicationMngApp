@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using MedicationMngApp.Utils;
+using XF.Material.Forms.UI.Dialogs;
+using XF.Material.Forms.Resources;
+using XF.Material.Forms.UI.Dialogs.Configurations;
 
 namespace MedicationMngApp.ViewModels
 {
@@ -23,7 +26,7 @@ namespace MedicationMngApp.ViewModels
         private bool editbuttonvisibility = true;
         private bool savebuttonvisibility = false;
 
-        private bool isreadonlyField = true;
+        private bool isenabledfield = false;
 
         public Command LogoutCommand { get; }
         public Command LoadProfileCommand { get; }
@@ -50,27 +53,11 @@ namespace MedicationMngApp.ViewModels
         {
             EditButtonVisibility = false;
             SaveButtonVisibility = true;
-            IsReadOnlyField = false;
+            IsEnabledField = true;
         }
 
-        public bool IsReadOnlyField
-        {
-            get => isreadonlyField;
-            set => SetProperty(ref isreadonlyField, value);
-        }
-
-        public bool EditButtonVisibility
-        {
-            get => editbuttonvisibility;
-            set => SetProperty(ref editbuttonvisibility, value); 
-        }
-
-        public bool SaveButtonVisibility
-        {
-            get => savebuttonvisibility;
-            set => SetProperty(ref savebuttonvisibility, value);
-        }
-
+        #region Bindings
+        //Fields
         public string Username
         {
             get => username;
@@ -102,20 +89,63 @@ namespace MedicationMngApp.ViewModels
             set => SetProperty(ref date_registered, value.ToDateTime());
         }
 
+        //Errors
+        private bool isErrorFirstName = false;
+        private bool isErrorLastName = false;
+        public bool IsErrorFirstName
+        {
+            get => isErrorFirstName;
+            set => SetProperty(ref isErrorFirstName, value);
+        }
+        public bool IsErrorLastName
+        {
+            get => isErrorLastName;
+            set => SetProperty(ref isErrorLastName, value);
+        }
+
+        //Others
+        public bool IsEnabledField
+        {
+            get => isenabledfield;
+            set => SetProperty(ref isenabledfield, value);
+        }
+        public bool EditButtonVisibility
+        {
+            get => editbuttonvisibility;
+            set => SetProperty(ref editbuttonvisibility, value); 
+        }
+        public bool SaveButtonVisibility
+        {
+            get => savebuttonvisibility;
+            set => SetProperty(ref savebuttonvisibility, value);
+        }
+        #endregion //Bindings
+
         public bool Validate()
         {
+            ResetErrors();
             return !string.IsNullOrWhiteSpace(firstname)
                 && !string.IsNullOrWhiteSpace(lastname);
         }
 
-        private async void ValidateMessage()
+        private void ValidateMessage()
         {
             if (string.IsNullOrWhiteSpace(firstname))
+            {
+                IsErrorFirstName = true;
                 ErrorMessage = "First name should not be empty.";
-            else if (string.IsNullOrWhiteSpace(lastname))
+            }
+            if (string.IsNullOrWhiteSpace(lastname))
+            {
+                IsErrorLastName = true;
                 ErrorMessage = "Last name should not be empty.";
-            else
-                await Common.ShowMessageAsyncUnknownError();
+            }
+        }
+
+        void ResetErrors()
+        {
+            IsErrorFirstName = false;
+            IsErrorLastName = false;
         }
 
         public async void LoadProfile()
@@ -163,69 +193,73 @@ namespace MedicationMngApp.ViewModels
 
         public async void SaveProfile()
         {
-            if (CanSubmit)
+            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Saving profile...", configuration: Common.loadingDialogConfig))
             {
-                IsBusy = true;
-                try
+                if (CanSubmit)
                 {
-                    if (Validate())
+                    IsBusy = true;
+                    try
                     {
-                        if (NetworkStatus.IsInternet())
+                        if (Validate())
                         {
-                            using (HttpClient client = new HttpClient())
+                            if (NetworkStatus.IsInternet())
                             {
-                                UpdateAccountDetailsRequstObject obj = new UpdateAccountDetailsRequstObject
+                                using (HttpClient client = new HttpClient())
                                 {
-                                    account = new Account
+                                    UpdateAccountDetailsRequstObject obj = new UpdateAccountDetailsRequstObject
                                     {
-                                        Account_ID = PersistentSettings.AccountID,
-                                        FirstName = firstname,
-                                        LastName = lastname
-                                    }
-                                };
-                                string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
-                                using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
-                                {
-                                    using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_ACCOUNT_DETAILS, content))
-                                    {
-                                        if (response.IsSuccessStatusCode)
+                                        account = new Account
                                         {
-                                            string jData = await response.Content.ReadAsStringAsync();
-                                            if (!string.IsNullOrWhiteSpace(jData))
+                                            Account_ID = PersistentSettings.AccountID,
+                                            FirstName = firstname,
+                                            LastName = lastname
+                                        }
+                                    };
+                                    string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
+                                    using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
+                                    {
+                                        using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_ACCOUNT_DETAILS, content))
+                                        {
+                                            if (response.IsSuccessStatusCode)
                                             {
-                                                UpdateAccountPasswordResult result = JsonConvert.DeserializeObject<UpdateAccountPasswordResult>(jData);
-                                                if (result.result < 0)
-                                                    await Common.ShowMessageAsyncUnknownError();
-                                                else
+                                                string jData = await response.Content.ReadAsStringAsync();
+                                                if (!string.IsNullOrWhiteSpace(jData))
                                                 {
-                                                    EditButtonVisibility = true;
-                                                    SaveButtonVisibility = false;
-                                                    IsReadOnlyField = true;
-                                                    ErrorMessage = string.Empty;
+                                                    UpdateAccountPasswordResult result = JsonConvert.DeserializeObject<UpdateAccountPasswordResult>(jData);
+                                                    if (result.result >= 0)
+                                                    {
+                                                        EditButtonVisibility = true;
+                                                        SaveButtonVisibility = false;
+                                                        IsEnabledField = false;
+                                                        ErrorMessage = string.Empty;
+                                                        await Common.ShowSnackbarMessage("Profile updated successfully!");
+                                                    }
+                                                    else
+                                                        await Common.ShowMessageAsyncUnknownError();
                                                 }
                                             }
                                         }
                                     }
                                 }
                             }
+                            else
+                            {
+                                await Common.ShowMessageAsyncNetworkError();
+                            }
                         }
                         else
                         {
-                            await Common.ShowMessageAsyncNetworkError();
+                            ValidateMessage();
                         }
                     }
-                    else
+                    catch (Exception error)
                     {
-                        ValidateMessage();
+                        await Common.ShowMessageAsyncApplicationError(error.Message);
                     }
-                }
-                catch (Exception error)
-                {
-                    await Common.ShowMessageAsyncApplicationError(error.Message);
-                }
-                finally
-                {
-                    IsBusy = false;
+                    finally
+                    {
+                        IsBusy = false;
+                    }
                 }
             }
         }

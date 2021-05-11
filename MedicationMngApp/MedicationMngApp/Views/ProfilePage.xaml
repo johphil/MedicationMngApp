@@ -2,13 +2,18 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:MedicationMngApp.ViewModels"  
-             xmlns:model="clr-namespace:MedicationMngApp.Models"  
-            Visual="Material"
+             xmlns:model="clr-namespace:MedicationMngApp.Models" xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              x:Class="MedicationMngApp.Views.ProfilePage">
     <ScrollView>
         <StackLayout HorizontalOptions="FillAndExpand" Padding="10">
-            <Label Text="Profile" Style="{StaticResource LabelTitle}"/>
-            <BoxView Style="{StaticResource BoxViewSeparator}"/>
+            <!--Header-->
+            <material:MaterialCard VerticalOptions="Fill" Elevation="5" BackgroundColor="{StaticResource Primary}" Margin="-10,-10,-10,0">
+                <StackLayout Orientation="Horizontal">
+                    <material:MaterialIcon Source="icon_profile" TintColor="White"/>
+                    <Label Text="Profile" Style="{StaticResource LabelTitle}" HorizontalOptions="Start" VerticalOptions="Center"/>
+                </StackLayout>
+            </material:MaterialCard>
+            <!--End Header-->
 
             <StackLayout Margin="0,0,0,30">
                 <StackLayout Margin="0,10,0,10">
@@ -31,22 +36,36 @@
                     <Label Text="Date Registered" Style="{StaticResource LabelName}"/>
                 </StackLayout>
 
-                <StackLayout Margin="0,10,0,10">
-                    <Entry Text="{Binding FirstName, Mode=TwoWay}" HorizontalTextAlignment="Center" IsReadOnly="{Binding IsReadOnlyField}"/>
-                    <Label Text="First Name" Style="{StaticResource LabelName}"/>
+                <material:MaterialCard CornerRadius="25">
+                    <StackLayout>
+                        <material:MaterialTextField HorizontalOptions="Center"
+                                                Placeholder="First Name"
+                                                Text="{Binding FirstName, Mode=TwoWay}" 
+                                                IsEnabled="{Binding IsEnabledField}"
+                                                HasError="{Binding IsErrorFirstName}" 
+                                                ErrorText="Invalid First Name" />
+                        <material:MaterialTextField HorizontalOptions="Center"
+                                                Placeholder="Last Name"
+                                                Text="{Binding LastName, Mode=TwoWay}" 
+                                                IsEnabled="{Binding IsEnabledField}"
+                                                HasError="{Binding IsErrorLastName}" 
+                                                ErrorText="Invalid Last Name"/>
 
-                    <Entry Text="{Binding LastName, Mode=TwoWay}" HorizontalTextAlignment="Center" IsReadOnly="{Binding IsReadOnlyField}"/>
-                    <Label Text="Last Name" Style="{StaticResource LabelName}"/>
-
-                    <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}"/>
-                    <Label Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}"/>
-                    <Button Text="Edit" Command="{Binding EditCommand}" IsVisible="{Binding EditButtonVisibility}"/>
-                    <Button Text="Save" Command="{Binding SaveCommand}" IsVisible="{Binding SaveButtonVisibility}" Style="{StaticResource BtnSubmit}"/>
-                </StackLayout>
+                        <material:MaterialButton Text="Edit" HorizontalOptions="Center"
+                                                Command="{Binding EditCommand}" 
+                                                 IsVisible="{Binding EditButtonVisibility}"/>
+                        <material:MaterialButton Text="Save" HorizontalOptions="Center"
+                                                Command="{Binding SaveCommand}" 
+                                                 IsVisible="{Binding SaveButtonVisibility}"/>
+                    </StackLayout>
+                </material:MaterialCard>
             </StackLayout>
 
-            <Button Text="Change Password" Command="{Binding ChangePasswordCommand}" Style="{StaticResource BtnChangePassword}"/>
-            <Button Text="Logout" Command="{Binding LogoutCommand}" Style="{StaticResource BtnLogout}"/>
+
+            <material:MaterialButton Text="Change Password" HorizontalOptions="FillAndExpand"
+                                     Command="{Binding ChangePasswordCommand}"/>
+            <material:MaterialButton Text="Logout" HorizontalOptions="FillAndExpand" 
+                                     Command="{Binding LogoutCommand}" BackgroundColor="{StaticResource Danger}"/>
         </StackLayout>
     </ScrollView>
 </ContentPage>

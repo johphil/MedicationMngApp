@@ -19,6 +19,7 @@ namespace MedicationMngApp.ViewModels
         public Command AddMedTakeCommand { get; }
         public Command AddCommand { get; }
         public Command<Med_Take> MedTakeTapped { get; }
+        public Command EnableMedTakeCommand { get; }
 
         public MedicationViewModel()
         {
@@ -27,6 +28,48 @@ namespace MedicationMngApp.ViewModels
             AddCommand = new Command(OnAddClicked);
             MedTakeTapped = new Command<Med_Take>(OnMedTakeSelected);
             LoadMedTakesCommand = new Command(async () => await ExecuteLoadMedTakesCommand());
+            EnableMedTakeCommand = new Command(OnEnableMedTake);
+        }
+
+        private async void OnEnableMedTake(object obj)
+        {
+            Med_Take selectedMedTake = obj as Med_Take;
+            if (selectedMedTake != null)
+            {
+                try
+                {
+                    if (NetworkStatus.IsInternet())
+                    {
+                        using (HttpClient client = new HttpClient())
+                        {
+                            using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_MED_TAKE_STATUS(selectedMedTake.Med_Take_ID, Convert.ToInt32(!selectedMedTake.IsActive)), null))
+                            {
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    var jData = await response.Content.ReadAsStringAsync();
+                                    if (!string.IsNullOrWhiteSpace(jData))
+                                    {
+                                        UpdateMedTakeEnableResult result = JsonConvert.DeserializeObject<UpdateMedTakeEnableResult>(jData);
+                                        if (result.result > 0)
+                                        {
+                                            string message = String.Format("{0} {1}!", selectedMedTake.Med_Name, !selectedMedTake.IsActive ? "enabled!" : "disabled!");
+                                            await Common.ShowSnackbarMessage(message);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        await Common.ShowMessageAsyncNetworkError();
+                    }
+                }
+                catch (Exception error)
+                {
+                    await Common.ShowMessageAsyncApplicationError(error.Message);
+                }
+            }
         }
 
         private void OnMedTakeSelected(Med_Take obj)

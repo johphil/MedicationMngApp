@@ -3,13 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:local="clr-namespace:MedicationMngApp.ViewModels" 
              xmlns:model="clr-namespace:MedicationMngApp.Models"
-             xmlns:xe="clr-namespace:XamEffects;assembly=XamEffects"
-            Visual="Material"
+             xmlns:xe="clr-namespace:XamEffects;assembly=XamEffects" xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              x:Class="MedicationMngApp.Views.MedicationPage" x:Name="pageMedication">
     <ContentPage.Content>
         <StackLayout HorizontalOptions="FillAndExpand" Padding="10">
-            <Label Text="Medication" Style="{StaticResource LabelTitle}"/>
-            <BoxView Style="{StaticResource BoxViewSeparator}"/>
+            <!--Header-->
+            <material:MaterialCard VerticalOptions="Fill" Elevation="5" BackgroundColor="{StaticResource Primary}" Margin="-10,-10,-10,0">
+                <StackLayout Orientation="Horizontal">
+                    <material:MaterialIcon Source="icon_medicbag" TintColor="White"/>
+                    <Label Text="Medications" Style="{StaticResource LabelTitle}" HorizontalOptions="Start" VerticalOptions="Center"/>
+                </StackLayout>
+            </material:MaterialCard>
+            <!--End Header-->
             <RefreshView x:DataType="local:MedicationViewModel" Command="{Binding LoadMedTakesCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
                 <CollectionView ItemsSource="{Binding MedTakes}" SelectionMode="None">
                     <CollectionView.ItemTemplate>
@@ -17,36 +22,33 @@
                             <StackLayout x:DataType="model:Med_Take"
                                         xe:TouchEffect.Color="{StaticResource Accent}"
                                         xe:Commands.Tap="{Binding Source={RelativeSource AncestorType={x:Type local:MedicationViewModel}}, Path=MedTakeTapped}"
-                                        xe:Commands.TapParameter="{Binding }">
-                                <Frame Padding="10" HasShadow="True" Margin="5">
+                                        xe:Commands.TapParameter="{Binding .}">
+                                <material:MaterialCard Padding="10" Margin="5" Elevation="2">
                                     <StackLayout HorizontalOptions="FillAndExpand">
                                         <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
                                             <Image VerticalOptions="Center" WidthRequest="50" Source="{Binding Image}" Margin="0,0,10,0"/>
                                             <StackLayout HorizontalOptions="FillAndExpand">
-                                                <Label Text="{Binding Med_Name}" LineBreakMode="NoWrap" FontSize="16" />
-                                                <StackLayout Orientation="Horizontal">
-                                                    <Label Text="{Binding Med_Description}" LineBreakMode="NoWrap" Style="{DynamicResource ListItemDetailTextStyle}" FontSize="13" />
-                                                    <Image Source="{Binding Med_Description_Image}" WidthRequest="15" HeightRequest="15"/>
-                                                </StackLayout>
+                                                <Label Text="{Binding Med_Name}" LineBreakMode="NoWrap" FontSize="16"/>
+                                                <material:MaterialChip BackgroundColor="{StaticResource Primary}" HeightRequest="20" TextColor="White"
+                                                                       ActionImage="{Binding Med_Description_Image}" Text="{Binding Med_Count}"/>
                                             </StackLayout>
-                                            <Switch ThumbColor="{StaticResource Primary}"
-                                                    OnColor="{StaticResource Disabled}"
-                                                    IsToggled="{Binding IsActve}" 
-                                                    VerticalOptions="Start" HorizontalOptions="End">
-                                                <Switch.GestureRecognizers>
-                                                    <TapGestureRecognizer  />
-                                                </Switch.GestureRecognizers>
-                                            </Switch>
+                                            <material:MaterialSwitch IsActivated="{Binding IsActive, Mode=OneTime}"
+                                                                    VerticalOptions="Start" HorizontalOptions="End">
+                                                <material:MaterialSwitch.GestureRecognizers>
+                                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type local:MedicationViewModel}}, Path=EnableMedTakeCommand}" 
+                                                                          CommandParameter="{Binding .}"
+                                                                            NumberOfTapsRequired="1" />
+                                                </material:MaterialSwitch.GestureRecognizers>
+                                            </material:MaterialSwitch>
                                         </StackLayout>
                                     </StackLayout>
-                                </Frame>
+                                </material:MaterialCard>
                             </StackLayout>
                         </DataTemplate>
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </RefreshView>
-
-            <Button Text="Add" Command="{Binding AddCommand}"/>
+            <material:MaterialButton Text="Add Medication" HorizontalOptions="FillAndExpand" Command="{Binding AddCommand}"/>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

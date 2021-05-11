@@ -62,12 +62,12 @@
       <Version>13.0.1</Version>
     </PackageReference>
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2012" />
-    <PackageReference Include="Xamarin.Essentials" Version="1.5.3.2" />
-    <PackageReference Include="Xamarin.Forms.Visual.Material">
-      <Version>5.0.0.2012</Version>
-    </PackageReference>
+    <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
     <PackageReference Include="XamEffects">
       <Version>1.6.3</Version>
+    </PackageReference>
+    <PackageReference Include="XF.Material">
+      <Version>1.7.8</Version>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +154,12 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\icon_infinity.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\icon_edit_pencil.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\icon_save_check.png" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <ProjectExtensions>

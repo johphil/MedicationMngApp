@@ -25,7 +25,7 @@ namespace MedicationMngApp.Droid
             Xamarin.Essentials.Platform.Init(this, savedInstanceState);
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             global::XamEffects.Droid.Effects.Init();
-            global::Xamarin.Forms.FormsMaterial.Init(this, savedInstanceState);
+            XF.Material.Droid.Material.Init(this, savedInstanceState);
             LoadApplication(new App());
             //Keyboard overlap on input
             App.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);

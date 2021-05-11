@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
+using XF.Material.Forms.UI.Dialogs;
 
 namespace MedicationMngApp.ViewModels
 {
@@ -38,7 +39,7 @@ namespace MedicationMngApp.ViewModels
 
         public MedicationDetailViewModel() //new med take
         {
-            Title = "Add New Medication";
+            Title = "Add Medication";
             medcount = null;
             AddScheduleCommand = new Command(OnAddScheduleClicked);
             RemoveScheduleCommand = new Command(OnRemoveScheduleClicked);
@@ -117,46 +118,53 @@ namespace MedicationMngApp.ViewModels
 
         private async void OnDeleteMedTakeClicked()
         {
-            if (CanSubmit && selectedMedTake != null)
+            if (await Common.ShowAlertConfirmation("Do you want to delete?"))
             {
-                IsBusy = true;
-                try
+                if (CanSubmit && selectedMedTake != null)
                 {
-                    if (NetworkStatus.IsInternet())
+                    IsBusy = true;
+                    try
                     {
-                        using (HttpClient client = new HttpClient())
+                        if (NetworkStatus.IsInternet())
                         {
-                            using (HttpResponseMessage response = await client.DeleteAsync(Common.DELETE_DELETE_MED_TAKE(selectedMedTake.Med_Take_ID)))
+
+                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Deleting medication...", configuration: Common.loadingDialogConfig))
                             {
-                                if (response.IsSuccessStatusCode)
+                                using (HttpClient client = new HttpClient())
                                 {
-                                    string jData = await response.Content.ReadAsStringAsync();
-                                    if (!string.IsNullOrWhiteSpace(jData))
+                                    using (HttpResponseMessage response = await client.DeleteAsync(Common.DELETE_DELETE_MED_TAKE(selectedMedTake.Med_Take_ID)))
                                     {
-                                        DeleteMedTakeResult result = JsonConvert.DeserializeObject<DeleteMedTakeResult>(jData);
-                                        if (result.result > 0)
+                                        if (response.IsSuccessStatusCode)
                                         {
-                                            await Common.NavigateBack();
+                                            string jData = await response.Content.ReadAsStringAsync();
+                                            if (!string.IsNullOrWhiteSpace(jData))
+                                            {
+                                                DeleteMedTakeResult result = JsonConvert.DeserializeObject<DeleteMedTakeResult>(jData);
+                                                if (result.result > 0)
+                                                {
+                                                    await Common.NavigateBack();
+                                                }
+                                                else
+                                                    await Common.ShowMessageAsyncUnknownError();
+                                            }
                                         }
-                                        else
-                                            await Common.ShowMessageAsyncUnknownError();
                                     }
                                 }
                             }
                         }
+                        else
+                        {
+                            await Common.ShowMessageAsyncNetworkError();
+                        }
                     }
-                    else
+                    catch (Exception error)
                     {
-                        await Common.ShowMessageAsyncNetworkError();
+                        await Common.ShowMessageAsyncApplicationError(error.Message);
                     }
-                }
-                catch (Exception error)
-                {
-                    await Common.ShowMessageAsyncApplicationError(error.Message);
-                }
-                finally
-                {
-                    IsBusy = false;
+                    finally
+                    {
+                        IsBusy = false;
+                    }
                 }
             }
         }
@@ -221,12 +229,12 @@ namespace MedicationMngApp.ViewModels
             }
         }
 
+        #region Bindings
         public bool IsEdit
         {
             get => isedit;
             set => SetProperty(ref isedit, value);
         }
-
         private bool CanEdit
         {
             get
@@ -234,19 +242,16 @@ namespace MedicationMngApp.ViewModels
                 return isedit && selectedMedTake != null && MedTypes != null;
             }
         }
-
         public List<Med_Type> MedTypes
         {
             get => medtypes;
             set => SetProperty(ref medtypes, value);
         }
-
         public bool ListViewVisibility
         {
             get => listviewVisibility;
             set => SetProperty(ref listviewVisibility, value);
         }
-
         public bool DeleteButtonVisibility
         {
             get
@@ -254,13 +259,11 @@ namespace MedicationMngApp.ViewModels
                 return IsEdit;
             }
         }
-
         public string MedName
         {
             get => medname;
             set => SetProperty(ref medname, value);
         }
-
         public string MedCount
         {
             get => medcount == null ? "" : medcount.Value.ToString();
@@ -272,7 +275,6 @@ namespace MedicationMngApp.ViewModels
                     SetProperty(ref medcount, int.Parse(value));
             }
         }
-
         public bool MedCountEnabled
         {
             get => medcountenabled;
@@ -290,13 +292,11 @@ namespace MedicationMngApp.ViewModels
                 }
             }
         }
-
         public string MedCountPlaceholder
         {
             get => medcountplaceholder;
             set => SetProperty(ref medcountplaceholder, value);
         }
-
         public Med_Type SelectedMedType
         {
             get => selectedMedType;
@@ -307,6 +307,8 @@ namespace MedicationMngApp.ViewModels
             }
         }
 
+        #endregion //Bindings
+
         private bool Validate()
         {
             return !string.IsNullOrWhiteSpace(medname)
@@ -316,16 +318,24 @@ namespace MedicationMngApp.ViewModels
                     || (selectedMedType != null && !selectedMedType.IsCount && medcount == null));
         }
 
-        private void ValidateMessage()
+        private async void ValidateMessage()
         {
             if (string.IsNullOrWhiteSpace(medname))
-                ErrorMessage = "Please enter a valid medicine name.";
+                await Common.ShowSnackbarMessage(message: "Please enter a valid medicine name.", 
+                                                isDurationLong: true, 
+                                                isError: true);
             else if (selectedMedType == null)
-                ErrorMessage = "Please select the type of medicine.";
+                await Common.ShowSnackbarMessage(message: "Please select the type of medicine.",
+                                                isDurationLong: true,
+                                                isError: true);
             else if (MedTakeSchedules.Count == 0)
-                ErrorMessage = "Please add a schedule.";
+                await Common.ShowSnackbarMessage(message: "Please add atleast one schedule.",
+                                                isDurationLong: true,
+                                                isError: true);
             else if (selectedMedType.IsCount && medcount == null)
-                ErrorMessage = "Please enter # count on hand.";
+                await Common.ShowSnackbarMessage(message: "Please enter # count on hand.",
+                                                isDurationLong: true,
+                                                isError: true);
         }
 
         private void OnMedTypeSelected(Med_Type value)
@@ -349,70 +359,44 @@ namespace MedicationMngApp.ViewModels
                     {
                         if (NetworkStatus.IsInternet())
                         {
-                            if (CanSubmit)
+                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Saving medication...", configuration: Common.loadingDialogConfig))
                             {
                                 IsBusy = true;
                                 if (CanEdit)
                                 {
-                                    try
+                                    UpdateSortSchedules();
+                                    using (HttpClient client = new HttpClient())
                                     {
-                                        if (Validate())
+                                        UpdateMedTakeRequestObject obj = new UpdateMedTakeRequestObject
                                         {
-                                            if (NetworkStatus.IsInternet())
+                                            medtake = selectedMedTake,
+                                            createmedtakeschedules = CreateMedTakeSchedules,
+                                            updatemedtakeschedules = UpdateMedTakeSchedules,
+                                            deletemedtakeschedules = DeleteMedTakeSchedules
+                                        };
+                                        obj.medtake.Med_Name = medname;
+                                        obj.medtake.Med_Count = medcount;
+                                        obj.medtake.Med_Type_ID = selectedMedType.Med_Type_ID;
+                                        string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
+                                        using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
+                                        {
+                                            using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_MED_TAKE, content))
                                             {
-                                                UpdateSortSchedules();
-                                                using (HttpClient client = new HttpClient())
+                                                if (response.IsSuccessStatusCode)
                                                 {
-                                                    UpdateMedTakeRequestObject obj = new UpdateMedTakeRequestObject
+                                                    string jData = await response.Content.ReadAsStringAsync();
+                                                    if (!string.IsNullOrWhiteSpace(jData))
                                                     {
-                                                        medtake = selectedMedTake,
-                                                        createmedtakeschedules = CreateMedTakeSchedules,
-                                                        updatemedtakeschedules = UpdateMedTakeSchedules,
-                                                        deletemedtakeschedules = DeleteMedTakeSchedules
-                                                    };
-                                                    obj.medtake.Med_Name = medname;
-                                                    obj.medtake.Med_Count = medcount;
-                                                    obj.medtake.Med_Type_ID = selectedMedType.Med_Type_ID;
-                                                    string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
-                                                    using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
-                                                    {
-                                                        using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_MED_TAKE, content))
+                                                        UpdateMedTakeResult result = JsonConvert.DeserializeObject<UpdateMedTakeResult>(jData);
+                                                        if (result.result > 0)
                                                         {
-                                                            if (response.IsSuccessStatusCode)
-                                                            {
-                                                                string jData = await response.Content.ReadAsStringAsync();
-                                                                if (!string.IsNullOrWhiteSpace(jData))
-                                                                {
-                                                                    UpdateMedTakeResult result = JsonConvert.DeserializeObject<UpdateMedTakeResult>(jData);
-                                                                    if (result.result > 0)
-                                                                    {
-                                                                        await Common.NavigateBack();
-                                                                    }
-                                                                }
-                                                            }
+                                                            await Common.NavigateBack();
                                                         }
                                                     }
                                                 }
                                             }
-                                            else
-                                            {
-                                                await Common.ShowMessageAsyncNetworkError();
-                                            }
-                                        }
-                                        else
-                                        {
-                                            ValidateMessage();
                                         }
                                     }
-                                    catch (Exception error)
-                                    {
-                                        await Common.ShowMessageAsyncApplicationError(error.Message);
-                                    }
-                                    finally
-                                    {
-                                        IsBusy = false;
-                                    }
-
                                 }
                                 else //new
                                 {

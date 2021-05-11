@@ -3,9 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:d="http://xamarin.com/schemas/2014/forms/design"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              mc:Ignorable="d"
              Title="Login"
-            Visual="Material"
              x:Class="MedicationMngApp.Views.LoginPage"
              NavigationPage.HasNavigationBar="False">
     <ContentPage.Content>
@@ -13,12 +13,19 @@
             <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <Image Source="logo.png" Aspect="AspectFit" Margin="0,0,0,-50"/>
                 <StackLayout Padding="10,0,10,0" VerticalOptions="CenterAndExpand">
-                    <Entry Text="{Binding Username, Mode=TwoWay}" Placeholder="Username" FontSize="Medium" />
-                    <Entry Text="{Binding Password, Mode=TwoWay}" Placeholder="Password" FontSize="Medium" IsPassword="True" />
-                    <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" />
+                    <material:MaterialTextField HorizontalOptions="Center"
+                                                WidthRequest="250"
+                                                Placeholder="Username" 
+                                                Text="{Binding Username, Mode=TwoWay}"
+                                                InputType="Default"/>
+                    <material:MaterialTextField HorizontalOptions="Center"
+                                                WidthRequest="250"
+                                                Placeholder="Password" 
+                                                Text="{Binding Password, Mode=TwoWay}"
+                                                InputType="Password"/>
 
-                    <Label Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}"/>
-                    <Button VerticalOptions="Center" Text="Login" Command="{Binding LoginCommand}" />
+                    <Label HorizontalOptions="Center" Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}"/>
+                    <material:MaterialButton HorizontalOptions="Center" Text="Login" Command="{Binding LoginCommand}"/>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="10,0,10,50" HorizontalOptions="CenterAndExpand">
                     <Label Text="Not yet registered?" />

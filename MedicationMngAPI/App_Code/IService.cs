@@ -123,6 +123,15 @@ public interface IService
                         List<MedTakeSchedule> deletemedtakeschedules, 
                         List<MedTakeSchedule> updatemedtakeschedules, 
                         List<MedTakeSchedule> createmedtakeschedules);
+
+    [OperationContract]
+    [WebInvoke(Method = "PUT",
+        UriTemplate = "/UpdateMedTakeEnable/{med_take_id}/{enabled}",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "UpdateMedTakeEnableResult")]
+    int UpdateMedTakeEnable(string med_take_id, string enabled);
     #endregion //METHOD: PUT
 
     #region METHOD: DELETE
