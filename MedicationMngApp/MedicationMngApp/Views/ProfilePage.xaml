@@ -12,23 +12,23 @@
             <StackLayout>
                 <StackLayout Margin="0,0,0,30">
                     <StackLayout Margin="0,10,0,10">
-                        <Label Text="{Binding Username}" Style="{StaticResource LabelValue}"/>
-                        <Label Text="Username" Style="{StaticResource LabelName}"/>
+                        <material:MaterialLabel TypeScale="Body1" Text="{Binding Username}" HorizontalOptions="Center"/>
+                        <material:MaterialLabel TypeScale="Overline" Text="Username" HorizontalOptions="Center"/>
                     </StackLayout>
 
                     <StackLayout Margin="0,10,0,10">
-                        <Label Text="{Binding Email}" Style="{StaticResource LabelValue}"/>
-                        <Label Text="Email" Style="{StaticResource LabelName}"/>
+                        <material:MaterialLabel TypeScale="Body1" Text="{Binding Email}" HorizontalOptions="Center"/>
+                        <material:MaterialLabel TypeScale="Overline" Text="Email" HorizontalOptions="Center"/>
                     </StackLayout>
 
                     <StackLayout Margin="0,10,0,10">
-                        <Label Text="{Binding Birthday}" Style="{StaticResource LabelValue}"/>
-                        <Label Text="Birthday" Style="{StaticResource LabelName}"/>
+                        <material:MaterialLabel TypeScale="Body1" Text="{Binding Birthday}" HorizontalOptions="Center"/>
+                        <material:MaterialLabel TypeScale="Overline" Text="Birthday" HorizontalOptions="Center"/>
                     </StackLayout>
 
                     <StackLayout Margin="0,10,0,10">
-                        <Label Text="{Binding Date_Registered}" Style="{StaticResource LabelValue}"/>
-                        <Label Text="Date Registered" Style="{StaticResource LabelName}"/>
+                        <material:MaterialLabel TypeScale="Body1" Text="{Binding Date_Registered}" HorizontalOptions="Center"/>
+                        <material:MaterialLabel TypeScale="Overline" Text="Date Registered" HorizontalOptions="Center"/>
                     </StackLayout>
 
                     <StackLayout>

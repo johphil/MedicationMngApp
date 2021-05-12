@@ -18,6 +18,7 @@ namespace MedicationMngApp.Models
         public static string SERVICE_IP = "192.168.1.4";
         public static string POST_ADD_ACCOUNT = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddAccount";
         public static string POST_ADD_MED_TAKE = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddMedTake";
+        public static string POST_ADD_RATINGS = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddRatingsRecommendation";
         public static string GET_LOGIN_ACCOUNT(string username, string password)
         {
             return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/LoginAccount/{username}/{password}";
@@ -70,24 +71,37 @@ namespace MedicationMngApp.Models
             }
         }
 
-        public static async Task ShowMessageAsync(string title, string msgBody, string buttonText)
+        public static async Task ShowAlertAsync(string title, string msgBody, string buttonText, bool isError = false)
         {
-            await Application.Current.MainPage.DisplayAlert(title, msgBody, buttonText);
+            MaterialAlertDialogConfiguration madc = new MaterialAlertDialogConfiguration
+            {
+                BackgroundColor = isError ? XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.ERROR)
+                                        : XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.PRIMARY),
+                TitleTextColor = XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.ON_PRIMARY),
+                CornerRadius = 4,
+                MessageTextColor = XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.ON_PRIMARY),
+                ScrimColor = Color.Transparent,
+                TintColor = XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.SECONDARY),
+            };
+            await MaterialDialog.Instance.AlertAsync(message: msgBody,
+                                       title: title,
+                                       acknowledgementText: buttonText,
+                                       configuration: madc);
         }
 
         public static async Task ShowMessageAsyncNetworkError()
         {
-            await Common.ShowMessageAsync("Network Error", "Internet is unavailable. Please try again.", "OK");
+            await Common.ShowAlertAsync("Network Error", "Internet is unavailable. Please try again.", "OK", true);
         }
 
         public static async Task ShowMessageAsyncUnknownError()
         {
-            await Common.ShowMessageAsync("Unknown Error", "An unknown error has occurred.", "Dismiss");
+            await Common.ShowAlertAsync("Unknown Error", "An unknown error has occurred.", "Dismiss", true);
         }
 
         public static async Task ShowMessageAsyncApplicationError(string error)
         {
-            await Common.ShowMessageAsync("Application Error", error, "Dismiss");
+            await Common.ShowAlertAsync("Application Error", error, "Dismiss", true);
         }
 
         public static async Task ShowSnackbarMessage(string message, bool isDurationLong = false, bool isError = false)

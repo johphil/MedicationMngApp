@@ -176,7 +176,29 @@ public class Service : IService
         }
     }
 
-    public int AddRatingsRecommendation(Ratings_Recommendation ratingsRecommendation) { return -1; }
+    public int AddRatingsRecommendation(Ratings_Recommendation ratings)
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                using (SqlCommand command = new SqlCommand("spAddRatings", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("account_id", SqlDbType.Int).Value = DBConvert.From(ratings.Account_ID);
+                    command.Parameters.Add("ratings", SqlDbType.Int).Value = DBConvert.From(ratings.Ratings);
+                    command.Parameters.Add("recommendation", SqlDbType.VarChar).Value = DBConvert.From(ratings.Recommendation);
+                    connection.Open();
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+        }
+        catch
+        {
+            return -1;
+        }
+    }
 
     public Ratings_Recommendation GetRatingsRecommendation(string account_id) { return null; }
 

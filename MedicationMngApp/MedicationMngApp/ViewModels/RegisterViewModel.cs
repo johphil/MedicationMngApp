@@ -341,7 +341,7 @@ namespace MedicationMngApp.ViewModels
                                                             }
                                                         case 1://sql return value 1
                                                             {
-                                                                await Common.ShowMessageAsync("Registration Success", "You have successfully registered.", "OK");
+                                                                await Common.ShowAlertAsync("Registration Success", "You have successfully registered.", "OK");
                                                                 await Common.NavigateBack();
                                                                 break;
                                                             }

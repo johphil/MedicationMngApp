@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material" 
+             xmlns:customControl="clr-namespace:MedicationMngApp.Views.CustomControls"
+             x:Class="MedicationMngApp.Views.RatingsPage">
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="10">
+                <!--Header-->
+                <customControl:MainPageHeader Title="Rate Us" Icon="icon_star"/>
+                <!--End Header-->
+                <StackLayout Padding="30,10,30,10" VerticalOptions="FillAndExpand">
+                    <material:MaterialLabel HorizontalTextAlignment="Center" Text="What do you think of Medication Manager App?" TypeScale="Subtitle1"/>
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0">
+                        <material:MaterialIcon x:Name="rate1" Source="icon_rate_1" Opacity="{Binding Rate1Opacity}">
+                            <material:MaterialIcon.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding Rate1Command}" />
+                            </material:MaterialIcon.GestureRecognizers>
+                        </material:MaterialIcon>
+                        <material:MaterialIcon x:Name="rate2" Source="icon_rate_2" Opacity="{Binding Rate2Opacity}">
+                            <material:MaterialIcon.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding Rate2Command}" />
+                            </material:MaterialIcon.GestureRecognizers>
+                        </material:MaterialIcon>
+                        <material:MaterialIcon x:Name="rate3" Source="icon_rate_3" Opacity="{Binding Rate3Opacity}">
+                            <material:MaterialIcon.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding Rate3Command}" />
+                            </material:MaterialIcon.GestureRecognizers>
+                        </material:MaterialIcon>
+                        <material:MaterialIcon x:Name="rate4" Source="icon_rate_4" Opacity="{Binding Rate4Opacity}">
+                            <material:MaterialIcon.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="1" Command="{Binding Rate4Command}" />
+                            </material:MaterialIcon.GestureRecognizers>
+                        </material:MaterialIcon>
+                        <material:MaterialIcon x:Name="rate5" Source="icon_rate_5" Opacity="{Binding Rate5Opacity}">
+                            <material:MaterialIcon.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="1"  Command="{Binding Rate5Command}" />
+                            </material:MaterialIcon.GestureRecognizers>
+                        </material:MaterialIcon>
+                    </StackLayout>
+                    <material:MaterialLabel x:Name="tbThoughts" HorizontalTextAlignment="Center" Text="Send us your thoughts." 
+                                        TypeScale="Subtitle1" Margin="0,50,0,0"/>
+                    <Editor Text="{Binding Recommendation}" Placeholder="Your thoughts." AutoSize="TextChanges" MaxLength="200" Margin="0,20,0,50"/>
+                    <material:MaterialButton Text="Submit" HorizontalOptions="Center" VerticalOptions="End" Command="{Binding SubmitCommand}"/>
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

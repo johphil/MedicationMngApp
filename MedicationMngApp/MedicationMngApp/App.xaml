@@ -138,18 +138,6 @@
                 <Setter Property="FontFamily" Value="RobotoMedium"/>
                 <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
             </Style>
-            <Style x:Key="LabelName" TargetType="Label">
-                <Setter Property="TextColor" Value="{StaticResource Secondary}"/>
-                <Setter Property="FontSize" Value="Caption"/>
-                <Setter Property="FontFamily" Value="RobotoMedium"/>
-                <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
-            </Style>
-            <Style x:Key="LabelValue" TargetType="Label">
-                <Setter Property="TextColor" Value="{StaticResource Primary}"/>
-                <Setter Property="FontSize" Value="Medium"/>
-                <Setter Property="FontFamily" Value="RobotoMedium"/>
-                <Setter Property="HorizontalOptions" Value="CenterAndExpand"/>
-            </Style>
 
             <Style x:Key="FramePill" TargetType="Frame">
                 <Setter Property="BackgroundColor" Value="{StaticResource Primary}"/>

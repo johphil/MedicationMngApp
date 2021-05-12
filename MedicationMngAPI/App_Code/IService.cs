@@ -99,7 +99,7 @@ public interface IService
         ResponseFormat = WebMessageFormat.Json,
         RequestFormat = WebMessageFormat.Json)]
     [return: MessageParameter(Name = "AddRatingsRecommendationResult")]
-    int AddRatingsRecommendation(Ratings_Recommendation ratingsRecommendation);
+    int AddRatingsRecommendation(Ratings_Recommendation ratings);
     #endregion //METHOD: POST
 
     #region METHOD: PUT
@@ -394,7 +394,7 @@ public class Ratings_Recommendation: Account
 {
     private int ratings_recommendation_id = -1;
     private int ratings = 0;
-    private string recommendations = string.Empty;
+    private string recommendation = string.Empty;
     private DateTime date = DateTime.MinValue;
 
     [DataMember]
@@ -412,10 +412,10 @@ public class Ratings_Recommendation: Account
     }
 
     [DataMember]
-    public string Recommendations
+    public string Recommendation
     {
-        get { return recommendations; }
-        set { recommendations = value; }
+        get { return recommendation; }
+        set { recommendation = value; }
     }
 
 
