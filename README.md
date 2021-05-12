@@ -6,4 +6,4 @@ Visual Studio Community 2019
 
 Xamarin Forms
 
-Buy me a coffee☕: Ko-fi.com/johphil
+Buy me a coffee☕: https://Ko-fi.com/johphil
