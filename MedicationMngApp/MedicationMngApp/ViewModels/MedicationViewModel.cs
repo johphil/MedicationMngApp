@@ -14,6 +14,8 @@ namespace MedicationMngApp.ViewModels
 {
     public class MedicationViewModel : BaseViewModel
     {
+        private bool isLoaded = false;
+
         public ObservableCollection<Med_Take> MedTakes { get; set; }
         public Command LoadMedTakesCommand { get; }
         public Command AddMedTakeCommand { get; }
@@ -104,6 +106,7 @@ namespace MedicationMngApp.ViewModels
                                         {
                                             MedTakes.Add(item);
                                         }
+                                        isLoaded = true;
                                     }
                                 }
                             }
@@ -132,7 +135,8 @@ namespace MedicationMngApp.ViewModels
 
         public void OnAppearing()
         {
-            IsBusy = true;
+            if (!isLoaded)
+                IsBusy = true;
         }
     }
 }

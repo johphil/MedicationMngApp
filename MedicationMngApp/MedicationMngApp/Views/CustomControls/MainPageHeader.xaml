@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
+             x:Class="MedicationMngApp.Views.CustomControls.MainPageHeader">
+    <ContentView.Content>
+        <material:MaterialCard VerticalOptions="Fill" CornerRadius="0" Elevation="5" BackgroundColor="{StaticResource Primary}" Margin="-10,-10,-10,0">
+            <StackLayout Orientation="Horizontal">
+                <material:MaterialIcon Source="{Binding Icon}" TintColor="White"/>
+                <Label Text="{Binding Title}" Style="{StaticResource LabelTitle}" HorizontalOptions="Start" VerticalOptions="Center"/>
+            </StackLayout>
+        </material:MaterialCard>
+    </ContentView.Content>
+</ContentView>

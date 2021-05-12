@@ -3,17 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              xmlns:local="clr-namespace:MedicationMngApp.ViewModels" 
              xmlns:model="clr-namespace:MedicationMngApp.Models"
-             xmlns:xe="clr-namespace:XamEffects;assembly=XamEffects" xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
+             xmlns:xe="clr-namespace:XamEffects;assembly=XamEffects" xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material" xmlns:customControl="clr-namespace:MedicationMngApp.Views.CustomControls"
              x:Class="MedicationMngApp.Views.MedicationPage" x:Name="pageMedication">
     <ContentPage.Content>
         <StackLayout HorizontalOptions="FillAndExpand" Padding="10">
             <!--Header-->
-            <material:MaterialCard VerticalOptions="Fill" Elevation="5" BackgroundColor="{StaticResource Primary}" Margin="-10,-10,-10,0">
-                <StackLayout Orientation="Horizontal">
-                    <material:MaterialIcon Source="icon_medicbag" TintColor="White"/>
-                    <Label Text="Medications" Style="{StaticResource LabelTitle}" HorizontalOptions="Start" VerticalOptions="Center"/>
-                </StackLayout>
-            </material:MaterialCard>
+            <customControl:MainPageHeader Title="Medication" Icon="icon_medicbag"/>
             <!--End Header-->
             <RefreshView x:DataType="local:MedicationViewModel" Command="{Binding LoadMedTakesCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
                 <CollectionView ItemsSource="{Binding MedTakes}" SelectionMode="None">

@@ -1,38 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material" xmlns:local="clr-namespace:MedicationMngApp.ViewModels" xmlns:model="clr-namespace:MedicationMngApp.Models"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material" xmlns:local="clr-namespace:MedicationMngApp.ViewModels" xmlns:model="clr-namespace:MedicationMngApp.Models" xmlns:customControl="clr-namespace:MedicationMngApp.Views.CustomControls"
              x:Class="MedicationMngApp.Views.HomePage">
     <ContentPage.Content>
-        <RefreshView>
-            <StackLayout HorizontalOptions="FillAndExpand" Padding="10">
-                <!--Header-->
-                <material:MaterialCard VerticalOptions="Fill" Elevation="5" BackgroundColor="{StaticResource Primary}" Margin="-10,-10,-10,0">
-                    <StackLayout Orientation="Horizontal">
-                        <material:MaterialIcon Source="icon_home" TintColor="White"/>
-                        <Label Text="Home" Style="{StaticResource LabelTitle}" HorizontalOptions="Start" VerticalOptions="Center"/>
-                    </StackLayout>
-                </material:MaterialCard>
-                <!--End Header-->
-                <StackLayout >
-                    <Label Text="{Binding TitleToday}" HorizontalOptions="Center"/>
-                    <RefreshView x:DataType="local:HomeViewModel" Command="{Binding LoadHomepage}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-                        <CollectionView ItemsSource="{Binding UpcomingMedTakes}" SelectionMode="None">
-                            <CollectionView.ItemTemplate>
-                                <DataTemplate>
-                                    <StackLayout x:DataType="model:Med_Take_Upcoming" >
-                                        <StackLayout Orientation="Horizontal">
-                                            <Label Text="{Binding Time}" VerticalOptions="Center" FontSize="Micro" HorizontalOptions="Start"/>
-                                            <material:MaterialChip Image="{Binding Image}"
-                                                                    Text="{Binding Med_Name}" 
-                                                                    BackgroundColor="{StaticResource Accent}" TextColor="Black"/>
-                                        </StackLayout>
-                                    </StackLayout>
-                                </DataTemplate>
-                            </CollectionView.ItemTemplate>
-                        </CollectionView>
-                    </RefreshView>
-                </StackLayout>
-            </StackLayout>
-        </RefreshView>
+        <StackLayout HorizontalOptions="FillAndExpand" Padding="10">
+            <!--Header-->
+            <customControl:MainPageHeader Title="Home" Icon="icon_home"/>
+            <!--End Header-->
+            <Label Text="{Binding TitleToday}"/>
+            <RefreshView x:DataType="local:HomeViewModel" Command="{Binding LoadHomepage}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+                <CollectionView ItemsSource="{Binding UpcomingMedTakes}" SelectionMode="None">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid x:DataType="model:Med_Take_Upcoming">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Text="{Binding Time}" VerticalOptions="Center" FontSize="Micro" HorizontalOptions="Start"/>
+                                <material:MaterialChip Grid.Column="1" Image="{Binding Image}"
+                                                        Text="{Binding Med_Name}" 
+                                                        BackgroundColor="{StaticResource Accent}" TextColor="Black"/>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+        </StackLayout>
     </ContentPage.Content>
 </ContentPage>

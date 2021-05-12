@@ -12,12 +12,13 @@ namespace MedicationMngApp.ViewModels
 {
     public class HomeViewModel : BaseViewModel
     {
+        private bool isLoaded = false;
         public ObservableCollection<Med_Take_Upcoming> UpcomingMedTakes { get; }
         public Command LoadHomepage { get; }
 
         public HomeViewModel()
         {
-            TitleToday = $"Upcoming Medications {DateTime.Today.DayOfWeek.ToString()}";
+            TitleToday = $"Upcoming Medications {DateTime.Today.DayOfWeek}";
             UpcomingMedTakes = new ObservableCollection<Med_Take_Upcoming>();
             LoadHomepage = new Command(async () => await ExecuteLoadHomepage());
         }
@@ -26,7 +27,8 @@ namespace MedicationMngApp.ViewModels
 
         public void OnAppearing()
         {
-            IsBusy = true;
+            if (!isLoaded)
+                IsBusy = true;
         }
 
         private async Task ExecuteLoadHomepage()
@@ -53,6 +55,7 @@ namespace MedicationMngApp.ViewModels
                                         {
                                             UpcomingMedTakes.Add(item);
                                         }
+                                        isLoaded = true;
                                     }
                                 }
                             }
