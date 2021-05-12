@@ -1,11 +1,11 @@
 # MedicationMngApp
 A COE184P Project
 
-Tools:
+Tools:\n
 SQL Server Express 2019
 Visual Studio Community 2019
 
-Project Used:
+Project Used:\n
 Xamarin Forms
 
 Database:
