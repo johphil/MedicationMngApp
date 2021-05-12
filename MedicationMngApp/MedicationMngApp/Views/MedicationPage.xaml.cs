@@ -15,11 +15,12 @@ namespace MedicationMngApp.Views
 	public partial class MedicationPage : ContentPage
 	{
 		MedicationViewModel _viewModel;
-		public MedicationPage ()
+		public MedicationPage()
 		{
-			InitializeComponent ();
+			InitializeComponent();
 			BindingContext = _viewModel = new MedicationViewModel();
 		}
+
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();

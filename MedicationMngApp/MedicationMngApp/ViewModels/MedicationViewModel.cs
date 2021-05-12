@@ -52,7 +52,7 @@ namespace MedicationMngApp.ViewModels
                                         UpdateMedTakeEnableResult result = JsonConvert.DeserializeObject<UpdateMedTakeEnableResult>(jData);
                                         if (result.result > 0)
                                         {
-                                            string message = String.Format("{0} {1}!", selectedMedTake.Med_Name, !selectedMedTake.IsActive ? "enabled!" : "disabled!");
+                                            string message = String.Format("{0} updated!", selectedMedTake.Med_Name);
                                             await Common.ShowSnackbarMessage(message);
                                         }
                                     }
@@ -101,7 +101,9 @@ namespace MedicationMngApp.ViewModels
                                     {
                                         MedTakes.Clear();
                                         foreach (var item in result.results)
+                                        {
                                             MedTakes.Add(item);
+                                        }
                                     }
                                 }
                             }

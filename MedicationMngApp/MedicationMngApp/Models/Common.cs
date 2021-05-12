@@ -15,20 +15,25 @@ namespace MedicationMngApp.Models
     {
         #region Json URIs & Settings
         public static string HEADER_CONTENT_TYPE = "application/json";
-        public static string SERVICE_IP = "192.168.1.4";
+        public static string SERVICE_IP = "192.168.1.40";
         public static string POST_ADD_ACCOUNT = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddAccount";
         public static string POST_ADD_MED_TAKE = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddMedTake";
         public static string GET_LOGIN_ACCOUNT(string username, string password)
         {
             return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/LoginAccount/{username}/{password}";
         }
-        public static string GET_GET_ACCOUNT_DETAILS(int id)
+        public static string GET_GET_ACCOUNT_DETAILS(int account_id)
         {
-            return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/GetAccountDetails/{id}";
+            return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/GetAccountDetails/{account_id}";
         }
-        public static string GET_GET_MED_TAKES(int id)
+        public static string GET_GET_MED_TAKES(int account_id)
         {
-            return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/GetMedTakes/{id}";
+            return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/GetMedTakes/{account_id}";
+        }
+        public static string GET_GET_MED_TAKE_UPCOMING(int account_id)
+        {
+            int day_of_week = (int)DateTime.Today.DayOfWeek;
+            return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/GetMedTakeUpcoming/{account_id}/{day_of_week}";
         }
         public static string GET_GET_MED_TAKE_SCHEDULES(int med_take_id)
         {

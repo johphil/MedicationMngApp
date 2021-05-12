@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.ServiceModel;
@@ -276,34 +277,6 @@ public class Service : IService
         }
     }
 
-    public int UpdateMedTake(MedTake medtake)
-    {
-        try
-        {
-            using (SqlConnection connection = new SqlConnection(conStr))
-            {
-                using (SqlCommand command = new SqlCommand("spUpdateMedTake", connection))
-                {
-                    command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add("med_take_id", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Take_ID);
-                    command.Parameters.Add("med_name", SqlDbType.VarChar, 20).Value = DBConvert.From(medtake.Med_Name);
-                    command.Parameters.Add("med_count", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Count);
-                    command.Parameters.Add("med_type_id", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Type_ID);
-
-                    connection.Open();
-
-                    return command.ExecuteNonQuery();
-                }
-            }
-        }
-        catch
-        {
-            return -1;
-        }
-
-
-    }
-
     public int UpdateMedTake(MedTake medtake, List<MedTakeSchedule> deletemedtakeschedules, List<MedTakeSchedule> updatemedtakeschedules, List<MedTakeSchedule> createmedtakeschedules)
     {
         try
@@ -375,6 +348,7 @@ public class Service : IService
                                         command.Parameters.Add("med_take_schedule_id", SqlDbType.Int).Value = DBConvert.From(schedule.Med_Take_Schedule_ID);
 
                                         command.ExecuteNonQuery();
+                                        command.Parameters.Clear();
                                     }
                                 }
                             }
@@ -477,6 +451,43 @@ public class Service : IService
                                 Day_Of_Week = DBConvert.To<int>(reader[2]),
                                 Dosage_Count = DBConvert.To<int>(reader[3]),
                                 Time = DBConvert.To<TimeSpan>(reader[4]).ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            return collection;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public List<MedTakeUpcoming> GetMedTakeUpcoming(string account_id, string day_of_week)
+    {
+        try
+        {
+            List<MedTakeUpcoming> collection = new List<MedTakeUpcoming>();
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                using (SqlCommand command = new SqlCommand("spGetMedTakeUpcoming", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("account_id", SqlDbType.Int).Value = DBConvert.From(int.Parse(account_id));
+                    command.Parameters.Add("day_of_week", SqlDbType.Int).Value = DBConvert.From(int.Parse(day_of_week));
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            collection.Add(new MedTakeUpcoming
+                            {
+                                Time = DateTime.Today.Add(DBConvert.To<TimeSpan>(reader[0])).ToString("hh:mm tt").ToUpper(),
+                                Day_Of_Week = DBConvert.To<int>(reader[1]),
+                                Med_Name = DBConvert.To<string>(reader[2]),
+                                Image = DBConvert.To<string>(reader[3])
                             });
                         }
                     }

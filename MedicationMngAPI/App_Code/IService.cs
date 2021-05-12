@@ -62,6 +62,15 @@ public interface IService
         RequestFormat = WebMessageFormat.Json)]
     [return: MessageParameter(Name = "GetMedTakeSchedulesResult")]
     List<MedTakeSchedule> GetMedTakeSchedules(string med_take_id);
+
+    [OperationContract]
+    [WebInvoke(Method = "GET",
+        UriTemplate = "/GetMedTakeUpcoming/{account_id}/{day_of_week}",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "GetMedTakeUpcomingResult")]
+    List<MedTakeUpcoming> GetMedTakeUpcoming(string account_id, string day_of_week);
     #endregion //METHOD: GET
 
     #region METHOD: POST
@@ -216,7 +225,7 @@ public class Account
 }
 
 [DataContract]
-public class MedTake: MedType
+public class MedTake : MedType
 {
     private int med_take_id = -1;
     private string med_name = string.Empty;
@@ -300,6 +309,7 @@ public class MedType
 [DataContract]
 public class MedTakeSchedule
 {
+    private MedTake m;
     private int med_take_schedule_id = -1;
     private int day_of_week = 0;
     private int dosage_count = 0;
@@ -339,6 +349,43 @@ public class MedTakeSchedule
     {
         get { return time; }
         set { time = value; }
+    }
+}
+
+[DataContract]
+public class MedTakeUpcoming
+{
+    private string time;
+    private int day_of_week;
+    private string med_name;
+    private string image;
+
+    [DataMember]
+    public string Time
+    {
+        get { return time; }
+        set { time = value; }
+    }
+
+    [DataMember]
+    public int Day_Of_Week
+    {
+        get { return day_of_week; }
+        set { day_of_week = value; }
+    }
+
+    [DataMember]
+    public string Med_Name
+    {
+        get { return med_name; }
+        set { med_name = value; }
+    }
+
+    [DataMember]
+    public string Image
+    {
+        get { return image; }
+        set { image = value; }
     }
 }
 
