@@ -15,7 +15,7 @@ namespace MedicationMngApp.Models
     {
         #region Json URIs & Settings
         public static string HEADER_CONTENT_TYPE = "application/json";
-        public static string SERVICE_IP = "192.168.1.40";
+        public static string SERVICE_IP = "192.168.1.4";
         public static string POST_ADD_ACCOUNT = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddAccount";
         public static string POST_ADD_MED_TAKE = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddMedTake";
         public static string GET_LOGIN_ACCOUNT(string username, string password)
@@ -110,7 +110,15 @@ namespace MedicationMngApp.Models
 
         public static async Task<bool> ShowAlertConfirmation(string message)
         {
-            return (bool)await MaterialDialog.Instance.ConfirmAsync(message: message);
+            MaterialAlertDialogConfiguration madc = new MaterialAlertDialogConfiguration
+            {
+                BackgroundColor = XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.PRIMARY),
+                CornerRadius = 4,
+                MessageTextColor = Color.White,
+                ScrimColor = Color.Transparent,
+                TintColor = Color.AliceBlue
+            };
+            return (bool)await MaterialDialog.Instance.ConfirmAsync(message: message, configuration: madc);
         }
 
         public static void NavigateNewPage(Page page)

@@ -31,36 +31,34 @@
                         <Label Text="Date Registered" Style="{StaticResource LabelName}"/>
                     </StackLayout>
 
-                    <material:MaterialCard CornerRadius="15">
-                        <StackLayout>
-                            <material:MaterialTextField HorizontalOptions="Center"
-                                                Placeholder="First Name"
-                                                Text="{Binding FirstName, Mode=TwoWay}" 
-                                                IsEnabled="{Binding IsEnabledField}"
-                                                HasError="{Binding IsErrorFirstName}" 
-                                                ErrorText="Invalid First Name" />
-                            <material:MaterialTextField HorizontalOptions="Center"
-                                                Placeholder="Last Name"
-                                                Text="{Binding LastName, Mode=TwoWay}" 
-                                                IsEnabled="{Binding IsEnabledField}"
-                                                HasError="{Binding IsErrorLastName}" 
-                                                ErrorText="Invalid Last Name"/>
+                    <StackLayout>
+                        <material:MaterialTextField HorizontalOptions="Center"
+                                            Placeholder="First Name"
+                                            Text="{Binding FirstName, Mode=TwoWay}" 
+                                            IsEnabled="{Binding IsEnabledField}"
+                                            HasError="{Binding IsErrorFirstName}" 
+                                            ErrorText="Invalid First Name" />
+                        <material:MaterialTextField HorizontalOptions="Center"
+                                            Placeholder="Last Name"
+                                            Text="{Binding LastName, Mode=TwoWay}" 
+                                            IsEnabled="{Binding IsEnabledField}"
+                                            HasError="{Binding IsErrorLastName}" 
+                                            ErrorText="Invalid Last Name"/>
 
-                            <material:MaterialButton Text="Edit" HorizontalOptions="Center"
-                                                Command="{Binding EditCommand}" 
-                                                 IsVisible="{Binding EditButtonVisibility}"/>
-                            <material:MaterialButton Text="Save" HorizontalOptions="Center"
-                                                Command="{Binding SaveCommand}" 
-                                                 IsVisible="{Binding SaveButtonVisibility}"/>
-                        </StackLayout>
-                    </material:MaterialCard>
+                        <material:MaterialButton Text="Edit" HorizontalOptions="Center"
+                                            Command="{Binding EditCommand}" 
+                                                IsVisible="{Binding EditButtonVisibility}"/>
+                        <material:MaterialButton Text="Save" HorizontalOptions="Center"
+                                            Command="{Binding SaveCommand}" 
+                                                IsVisible="{Binding SaveButtonVisibility}"/>
+                    </StackLayout>
                 </StackLayout>
 
 
                 <material:MaterialButton Text="Change Password" HorizontalOptions="FillAndExpand"
                                      Command="{Binding ChangePasswordCommand}"/>
                 <material:MaterialButton Text="Logout" HorizontalOptions="FillAndExpand" 
-                                     Command="{Binding LogoutCommand}" BackgroundColor="{StaticResource Danger}"/>
+                                     Command="{Binding LogoutCommand}" BackgroundColor="{StaticResource Error}"/>
             </StackLayout>
         </ScrollView>
     </StackLayout>

@@ -4,6 +4,12 @@
              xmlns:local="clr-namespace:MedicationMngApp.ViewModels"  
              xmlns:model="clr-namespace:MedicationMngApp.Models" xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              x:Class="MedicationMngApp.Views.MedicationDetailPage"
+             material:MaterialNavigationPage.AppBarColor="{StaticResource Secondary}"
+             material:MaterialNavigationPage.AppBarTitleTextFontFamily="RobotoRegular"
+             material:MaterialNavigationPage.AppBarTitleTextFontSize="14"
+             material:MaterialNavigationPage.StatusBarColor="{StaticResource Secondary}"
+             material:MaterialNavigationPage.AppBarTitleTextAlignment="Start"
+             NavigationPage.HasNavigationBar="True"
              Title="{Binding Title}" x:Name="pageMedicationDetails">
         <StackLayout>
         <ScrollView VerticalOptions="StartAndExpand">
@@ -37,7 +43,7 @@
                     <StackLayout BindableLayout.ItemsSource="{Binding MedTakeSchedules}">
                         <BindableLayout.ItemTemplate>
                             <DataTemplate>
-                                <material:MaterialCard Margin="0" Padding="5" HasShadow="False" BackgroundColor="{StaticResource Secondary}">
+                                <material:MaterialCard Margin="0" Padding="5" HasShadow="False" BackgroundColor="{StaticResource Surface}">
                                     <StackLayout x:DataType="model:Med_Take_Schedule" Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
                                         <Picker HorizontalTextAlignment="Center" FontSize="Small" SelectedIndex="{Binding Day_Of_Week}" WidthRequest="100">
                                             <Picker.Items>
@@ -52,7 +58,7 @@
                                         </Picker>
                                         <TimePicker Time="{Binding Time}" FontSize="Small"/>
                                         <Entry Placeholder="Count" WidthRequest="60" Keyboard="Numeric" FontSize="Small" Text="{Binding Dosage_Count}" HorizontalTextAlignment="Center"/>
-                                        <material:MaterialButton Text="X" BackgroundColor="{StaticResource Danger}" WidthRequest="50"
+                                        <material:MaterialButton Text="X" BackgroundColor="{StaticResource Error}" WidthRequest="50"
                                                                  HorizontalOptions="End" CommandParameter="{Binding}"
                                                                  Command="{Binding Source={RelativeSource AncestorType={x:Type local:MedicationDetailViewModel}}, Path=RemoveScheduleCommand}"/>
                                     </StackLayout>
@@ -64,7 +70,7 @@
                 </StackLayout>
                 <material:MaterialButton Text="Delete Medication" Command="{Binding DeleteMedTakeCommand}" 
                         Margin="0,50,0,40" IsVisible="{Binding DeleteButtonVisibility}" 
-                        BackgroundColor="{StaticResource Danger}"/>
+                        BackgroundColor="{StaticResource Error}"/>
             </StackLayout>
         </ScrollView>
         <material:MaterialButton Text="Save Medication" Command="{Binding SaveScheduleCommand}"/>

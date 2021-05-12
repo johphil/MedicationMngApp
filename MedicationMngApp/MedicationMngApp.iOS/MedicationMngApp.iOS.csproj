@@ -68,6 +68,9 @@
     <None Include="Entitlements.plist" />
     <None Include="Info.plist" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <AndroidResource Include="Resources\Fonts\RobotoLight.ttf" />
+    <AndroidResource Include="Resources\Fonts\RobotoMedium.ttf" />
+    <AndroidResource Include="Resources\Fonts\RobotoRegular.ttf" />
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json">

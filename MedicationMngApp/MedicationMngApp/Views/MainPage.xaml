@@ -6,6 +6,10 @@
              x:Class="MedicationMngApp.Views.MainPage"
              NavigationPage.HasNavigationBar="False"
              android:TabbedPage.ToolbarPlacement="Bottom"
+             BackgroundColor="{StaticResource Surface}"
+             BarBackgroundColor="{StaticResource Secondary}"
+             SelectedTabColor="{StaticResource OnSecondary}"
+             UnselectedTabColor="{StaticResource Background}"
              Title="Medication Manager">
     <local:ProfilePage Title="Profile" IconImageSource="icon_profile.png"/>
     <local:HomePage Title="Home" IconImageSource="icon_home.png"/>

@@ -24,7 +24,7 @@
                                                 Text="{Binding Password, Mode=TwoWay}"
                                                 InputType="Password"/>
 
-                    <Label HorizontalOptions="Center" Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Danger}" IsVisible="{Binding ErrorVisibility}"/>
+                    <Label HorizontalOptions="Center" Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Error}" IsVisible="{Binding ErrorVisibility}"/>
                     <material:MaterialButton HorizontalOptions="Center" Text="Login" Command="{Binding LoginCommand}"/>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="10,0,10,50" HorizontalOptions="CenterAndExpand">

@@ -1,15 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:customControl="clr-namespace:MedicationMngApp.Views.CustomControls"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:customControl="clr-namespace:MedicationMngApp.Views.CustomControls" xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
              x:Class="MedicationMngApp.Views.ContactUsPage">
     <ContentPage.Content>
         <StackLayout HorizontalOptions="FillAndExpand" Padding="10">
             <!--Header-->
             <customControl:MainPageHeader Title="Contact Us" Icon="icon_telephone"/>
             <!--End Header-->
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <StackLayout HorizontalOptions="FillAndExpand" Padding="30,10,30,10">
+                <material:MaterialLabel HorizontalTextAlignment="Center" TypeScale="Body1" 
+                                    Text="If ever you have any questions about Medication Manager, you can reach us through the following:"/>
+                <material:MaterialLabel HorizontalTextAlignment="Center" TypeScale="Body1" TextDecorations="Underline" Margin="0,30,0,0"
+                                        Text="Address" />
+                <material:MaterialLabel HorizontalTextAlignment="Center" TypeScale="Body2" 
+                                        Text="658 Muralla St, Intramuros, Manila, 1002 Metro Manila" />
+                <material:MaterialLabel HorizontalTextAlignment="Center" TypeScale="Body1" TextDecorations="Underline" Margin="0,30,0,0" 
+                                        Text="Phone" />
+                <material:MaterialLabel HorizontalTextAlignment="Center" TypeScale="Body2" 
+                                        Text="(6302) 8247 5000" />
+                <material:MaterialLabel HorizontalTextAlignment="Center" TypeScale="Body1" TextDecorations="Underline" Margin="0,30,0,0" 
+                                        Text="Email" />
+                <material:MaterialLabel HorizontalTextAlignment="Center" TypeScale="Body2" 
+                                        Text="support@medman.com" />
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
