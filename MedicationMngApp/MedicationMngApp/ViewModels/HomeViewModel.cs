@@ -13,13 +13,15 @@ namespace MedicationMngApp.ViewModels
     public class HomeViewModel : BaseViewModel
     {
         private bool isLoaded = false;
-        public ObservableCollection<Med_Take_Upcoming> UpcomingMedTakes { get; }
+        public ObservableCollection<Med_Take_Today> UpcomingMedTakes { get; }
+        public ObservableCollection<Account_Log> AccountLogs { get; }
         public Command LoadHomepage { get; }
 
         public HomeViewModel()
         {
-            TitleToday = $"Upcoming Medications {DateTime.Today.DayOfWeek}";
-            UpcomingMedTakes = new ObservableCollection<Med_Take_Upcoming>();
+            TitleToday = $"Medications for Today {DateTime.Today.ToShortDateString()}";
+            UpcomingMedTakes = new ObservableCollection<Med_Take_Today>();
+            AccountLogs = new ObservableCollection<Account_Log>();
             LoadHomepage = new Command(async () => await ExecuteLoadHomepage());
         }
 
@@ -40,20 +42,41 @@ namespace MedicationMngApp.ViewModels
                 {
                     using (HttpClient client = new HttpClient())
                     {
-                        using (HttpResponseMessage response = await client.GetAsync(Common.GET_GET_MED_TAKE_UPCOMING(PersistentSettings.AccountID)))
+                        using (HttpResponseMessage response = await client.GetAsync(Common.GET_GET_MED_TAKE_TODAY(PersistentSettings.AccountID)))
                         {
                             if (response.IsSuccessStatusCode)
                             {
                                 var jData = await response.Content.ReadAsStringAsync();
                                 if (!string.IsNullOrWhiteSpace(jData))
                                 {
-                                    GetMedTakeUpcomingResult result = JsonConvert.DeserializeObject<GetMedTakeUpcomingResult>(jData);
+                                    GetMedTakeTodayResult result = JsonConvert.DeserializeObject<GetMedTakeTodayResult>(jData);
                                     if (result != null)
                                     {
                                         UpcomingMedTakes.Clear();
                                         foreach (var item in result.results)
                                         {
                                             UpcomingMedTakes.Add(item);
+                                        }
+                                        isLoaded = true;
+                                    }
+                                }
+                            }
+                        }
+
+                        using (HttpResponseMessage response = await client.GetAsync(Common.GET_GET_ACCOUNT_LOGS(PersistentSettings.AccountID)))
+                        {
+                            if (response.IsSuccessStatusCode)
+                            {
+                                var jData = await response.Content.ReadAsStringAsync();
+                                if (!string.IsNullOrWhiteSpace(jData))
+                                {
+                                    GetAccountLogsResult result = JsonConvert.DeserializeObject<GetAccountLogsResult>(jData);
+                                    if (result.results != null)
+                                    {
+                                        AccountLogs.Clear();
+                                        foreach (var item in result.results)
+                                        {
+                                            AccountLogs.Add(item);
                                         }
                                         isLoaded = true;
                                     }

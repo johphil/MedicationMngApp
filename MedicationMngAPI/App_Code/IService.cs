@@ -65,12 +65,30 @@ public interface IService
 
     [OperationContract]
     [WebInvoke(Method = "GET",
-        UriTemplate = "/GetMedTakeUpcoming/{account_id}/{day_of_week}",
+        UriTemplate = "/GetMedTakeToday/{account_id}/{day_of_week}",
         BodyStyle = WebMessageBodyStyle.Wrapped,
         ResponseFormat = WebMessageFormat.Json,
         RequestFormat = WebMessageFormat.Json)]
-    [return: MessageParameter(Name = "GetMedTakeUpcomingResult")]
-    List<MedTakeUpcoming> GetMedTakeUpcoming(string account_id, string day_of_week);
+    [return: MessageParameter(Name = "GetMedTakeTodayResult")]
+    List<MedTakeToday> GetMedTakeToday(string account_id, string day_of_week);
+
+    [OperationContract]
+    [WebInvoke(Method = "GET",
+        UriTemplate = "/GetAccountPassword/{email}",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "GetAccountPasswordResult")]
+    string GetAccountPassword(string email);
+
+    [OperationContract]
+    [WebInvoke(Method = "GET",
+        UriTemplate = "/GetAccountLogs/{account_id}",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "GetAccountLogsResult")]
+    List<AccountLog> GetAccountLogs(string account_id);
     #endregion //METHOD: GET
 
     #region METHOD: POST
@@ -225,6 +243,51 @@ public class Account
 }
 
 [DataContract]
+public class AccountLog
+{
+    private int account_log_id = -1;
+    private int account_id = -1;
+    private DateTime time = DateTime.MinValue;
+    private string tag = string.Empty;
+    private string description = string.Empty;
+
+    [DataMember]
+    public int Account_Log_ID
+    {
+        get { return account_log_id; }
+        set { account_log_id = value; }
+    }
+    
+    [DataMember]
+    public int Account_ID
+    {
+        get { return account_id; }
+        set { account_id = value; }
+    }
+
+    [DataMember]
+    public DateTime Date
+    {
+        get { return time; }
+        set { time = value; }
+    }
+
+    [DataMember]
+    public string Tag
+    {
+        get { return tag; }
+        set { tag = value; }
+    }
+
+    [DataMember]
+    public string Description
+    {
+        get { return description; }
+        set { description = value; }
+    }
+}
+
+[DataContract]
 public class MedTake : MedType
 {
     private int med_take_id = -1;
@@ -353,7 +416,7 @@ public class MedTakeSchedule
 }
 
 [DataContract]
-public class MedTakeUpcoming
+public class MedTakeToday
 {
     private string time;
     private int day_of_week;

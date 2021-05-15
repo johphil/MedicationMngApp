@@ -95,6 +95,9 @@ namespace MedicationMngApp.ViewModels
                                                     if (result.result > 0)
                                                     {
                                                         await Common.ShowAlertAsync("Thank you!", "Thank you for sending us your feedback.", "OK");
+                                                        SetRate(0);
+                                                        Recommendation = string.Empty;
+                                                        Common.ShowNotification("Ratings Submission", "Thank you for your feedback!");
                                                     }
                                                 }
                                             }

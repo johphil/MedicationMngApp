@@ -9,12 +9,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 using XamEffects;
+using XF.Material.Forms.UI.Dialogs;
 
 namespace MedicationMngApp.ViewModels
 {
     public class MedicationViewModel : BaseViewModel
     {
         private bool isLoaded = false;
+        private bool isSelectedMedTake = false;
 
         public ObservableCollection<Med_Take> MedTakes { get; set; }
         public Command LoadMedTakesCommand { get; }
@@ -42,20 +44,23 @@ namespace MedicationMngApp.ViewModels
                 {
                     if (NetworkStatus.IsInternet())
                     {
-                        using (HttpClient client = new HttpClient())
+                        using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Processing...", configuration: Common.loadingDialogConfig))
                         {
-                            using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_MED_TAKE_STATUS(selectedMedTake.Med_Take_ID, Convert.ToInt32(!selectedMedTake.IsActive)), null))
+                            using (HttpClient client = new HttpClient())
                             {
-                                if (response.IsSuccessStatusCode)
+                                using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_MED_TAKE_STATUS(selectedMedTake.Med_Take_ID, Convert.ToInt32(!selectedMedTake.IsActive)), null))
                                 {
-                                    var jData = await response.Content.ReadAsStringAsync();
-                                    if (!string.IsNullOrWhiteSpace(jData))
+                                    if (response.IsSuccessStatusCode)
                                     {
-                                        UpdateMedTakeEnableResult result = JsonConvert.DeserializeObject<UpdateMedTakeEnableResult>(jData);
-                                        if (result.result > 0)
+                                        var jData = await response.Content.ReadAsStringAsync();
+                                        if (!string.IsNullOrWhiteSpace(jData))
                                         {
-                                            string message = String.Format("{0} updated!", selectedMedTake.Med_Name);
-                                            await Common.ShowSnackbarMessage(message);
+                                            UpdateMedTakeEnableResult result = JsonConvert.DeserializeObject<UpdateMedTakeEnableResult>(jData);
+                                            if (result.result > 0)
+                                            {
+                                                string message = String.Format("{0} updated!", selectedMedTake.Med_Name);
+                                                await Common.ShowSnackbarMessage(message);
+                                            }
                                         }
                                     }
                                 }
@@ -76,9 +81,10 @@ namespace MedicationMngApp.ViewModels
 
         private void OnMedTakeSelected(Med_Take obj)
         {
-            if (obj == null)
+            if (obj == null && isSelectedMedTake)
                 return;
 
+            isSelectedMedTake = true;
             Common.NavigatePage(new MedicationDetailPage(obj));
         }
 
@@ -136,7 +142,10 @@ namespace MedicationMngApp.ViewModels
         public void OnAppearing()
         {
             if (!isLoaded)
+            {
+                isSelectedMedTake = false;
                 IsBusy = true;
+            }
         }
     }
 }

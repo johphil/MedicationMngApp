@@ -7,26 +7,62 @@
             <!--Header-->
             <customControl:MainPageHeader Title="Home" Icon="icon_home"/>
             <!--End Header-->
-            <Label Text="{Binding TitleToday}"/>
-            <RefreshView x:DataType="local:HomeViewModel" Command="{Binding LoadHomepage}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-                <CollectionView ItemsSource="{Binding UpcomingMedTakes}" SelectionMode="None">
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid x:DataType="model:Med_Take_Upcoming">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Label Grid.Column="0" Text="{Binding Time}" VerticalOptions="Center" FontSize="Micro" HorizontalOptions="Start"/>
-                                <material:MaterialChip Grid.Column="1" Image="{Binding Image}"
-                                                        Text="{Binding Med_Name}" 
-                                                        TextColor="{StaticResource OnSecondary}"
-                                                        BackgroundColor="{StaticResource Secondary}"/>
-                            </Grid>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </RefreshView>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+            <material:MaterialCard Elevation="5" Grid.Row="0">
+                <StackLayout>
+                        <material:MaterialLabel TypeScale="Overline" Text="{Binding TitleToday}" HorizontalOptions="Fill" 
+                                            TextColor="{StaticResource OnSecondary}" BackgroundColor="{StaticResource Secondary}"
+                                            Padding="10,5,0,5"/>
+                    <RefreshView x:DataType="local:HomeViewModel" Command="{Binding LoadHomepage}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+                        <CollectionView ItemsSource="{Binding UpcomingMedTakes}" SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                        <StackLayout x:DataType="model:Med_Take_Today" Orientation="Horizontal" HorizontalOptions="Fill" VerticalOptions="Center">
+                                            <Label Text="{Binding Time}" VerticalOptions="Center" FontSize="Micro" HorizontalOptions="Start"/>
+                                            <material:MaterialChip Image="{Binding Image}" 
+                                                                   ActionImage="icon_check"
+                                                                   HorizontalOptions="StartAndExpand"
+                                                                   Text="{Binding Med_Name}" 
+                                                                   TextColor="{StaticResource OnSecondary}"
+                                                                   BackgroundColor="{StaticResource Secondary}"/>
+                                        </StackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </RefreshView>
+                </StackLayout>
+            </material:MaterialCard>
+            <material:MaterialCard Elevation="5" Grid.Row="1">
+                <StackLayout>
+                    <material:MaterialLabel TypeScale="Overline" Text="Logs" HorizontalOptions="Fill" 
+                                            TextColor="{StaticResource OnSecondary}" BackgroundColor="{StaticResource Secondary}"
+                                            Padding="10,5,0,5"/>
+                        <ScrollView>
+                            <StackLayout BindableLayout.ItemsSource="{Binding AccountLogs}">
+                                <BindableLayout.ItemTemplate>
+                                    <DataTemplate>
+                                        <ScrollView>
+                                            <StackLayout x:DataType="model:Account_Log" Orientation="Horizontal">
+                                                <Label Text="{Binding SimpleDate}" VerticalOptions="Center" 
+                                                   HorizontalTextAlignment="Center" FontSize="Micro" HorizontalOptions="Start"/>
+                                                <Label FontSize="Micro" VerticalOptions="Center" 
+                                                            Padding="5" Text="{Binding Tag}" WidthRequest="70" 
+                                                            HorizontalTextAlignment="Center" BackgroundColor="Aqua"/>
+                                                <Label FontSize="Micro" VerticalOptions="Center" 
+                                                            Text="{Binding Description}"/>
+                                            </StackLayout>
+                                        </ScrollView>
+                                    </DataTemplate>
+                                </BindableLayout.ItemTemplate>
+                            </StackLayout>
+                        </ScrollView>
+                </StackLayout>
+            </material:MaterialCard>
+            </Grid>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

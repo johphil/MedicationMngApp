@@ -12,8 +12,8 @@
              UnselectedTabColor="{StaticResource Background}"
              Title="Medication Manager">
     <local:ProfilePage Title="Profile" IconImageSource="icon_profile.png"/>
-    <local:HomePage Title="Home" IconImageSource="icon_home.png"/>
     <local:MedicationPage Title="Medication" IconImageSource="icon_medicbag.png"/>
+    <local:HomePage Title="Home" IconImageSource="icon_home.png"/>
     <local:ContactUsPage Title="Contact Us" IconImageSource="icon_telephone.png"/>
     <local:RatingsPage Title="Rate Us" IconImageSource="icon_star.png"/>
 </TabbedPage>

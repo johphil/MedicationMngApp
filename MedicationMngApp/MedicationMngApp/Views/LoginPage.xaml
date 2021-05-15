@@ -16,26 +16,37 @@
                     <material:MaterialTextField HorizontalOptions="Center"
                                                 WidthRequest="250"
                                                 Placeholder="Username" 
+                                                ErrorText="Invalid Username"
+                                                HasError="{Binding IsErrorUsername}"
                                                 Text="{Binding Username, Mode=TwoWay}"
                                                 InputType="Default"/>
                     <material:MaterialTextField HorizontalOptions="Center"
                                                 WidthRequest="250"
                                                 Placeholder="Password" 
+                                                ErrorText="Invalid Password"
+                                                HasError="{Binding IsErrorPassword}"
                                                 Text="{Binding Password, Mode=TwoWay}"
                                                 InputType="Password"/>
 
                     <Label HorizontalOptions="Center" Text="{Binding ErrorMessage}" FontSize="Small" TextColor="{StaticResource Error}" IsVisible="{Binding ErrorVisibility}"/>
                     <material:MaterialButton HorizontalOptions="Center" Text="Login" Command="{Binding LoginCommand}"/>
                 </StackLayout>
+                <material:MaterialLabel TypeScale="Caption" Text="Forgot Password" HorizontalOptions="Center"
+                                       TextColor="{StaticResource Primary}"
+                                       TextDecorations="Underline" Margin="0,0,0,30"> 
+                    <material:MaterialLabel.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="TapGestureRecognizer_Tapped_1" />
+                    </material:MaterialLabel.GestureRecognizers>
+                </material:MaterialLabel>
                 <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="10,0,10,50" HorizontalOptions="CenterAndExpand">
-                    <Label Text="Not yet registered?" />
-                    <Label Text="Click Here" 
+                    <material:MaterialLabel TypeScale="Caption" Text="Not yet registered?" />
+                    <material:MaterialLabel TypeScale="Caption" Text="Click Here" 
                        TextColor="{StaticResource Primary}"
                        TextDecorations="Underline">
-                        <Label.GestureRecognizers>
+                        <material:MaterialLabel.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="TapGestureRecognizer_Tapped" />
-                        </Label.GestureRecognizers>
-                    </Label>
+                        </material:MaterialLabel.GestureRecognizers>
+                    </material:MaterialLabel>
                 </StackLayout>
             </StackLayout>
         </ScrollView>

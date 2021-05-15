@@ -15,7 +15,7 @@ using System.Text;
 [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
 public class Service : IService
 {
-    private string conStr = ConfigurationManager.ConnectionStrings["MEDMNG_DBF"].ConnectionString;
+    protected string conStr = ConfigurationManager.ConnectionStrings["MEDMNG_DBF"].ConnectionString;
 
     public Account GetAccountDetails(string id)
     {
@@ -486,14 +486,14 @@ public class Service : IService
         }
     }
 
-    public List<MedTakeUpcoming> GetMedTakeUpcoming(string account_id, string day_of_week)
+    public List<MedTakeToday> GetMedTakeToday(string account_id, string day_of_week)
     {
         try
         {
-            List<MedTakeUpcoming> collection = new List<MedTakeUpcoming>();
+            List<MedTakeToday> collection = new List<MedTakeToday>();
             using (SqlConnection connection = new SqlConnection(conStr))
             {
-                using (SqlCommand command = new SqlCommand("spGetMedTakeUpcoming", connection))
+                using (SqlCommand command = new SqlCommand("spGetMedTakeToday", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("account_id", SqlDbType.Int).Value = DBConvert.From(int.Parse(account_id));
@@ -504,12 +504,79 @@ public class Service : IService
                     {
                         while (reader.Read())
                         {
-                            collection.Add(new MedTakeUpcoming
+                            collection.Add(new MedTakeToday
                             {
                                 Time = DateTime.Today.Add(DBConvert.To<TimeSpan>(reader[0])).ToString("hh:mm tt").ToUpper(),
                                 Day_Of_Week = DBConvert.To<int>(reader[1]),
                                 Med_Name = DBConvert.To<string>(reader[2]),
                                 Image = DBConvert.To<string>(reader[3])
+                            });
+                        }
+                    }
+                }
+            }
+            return collection;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public string GetAccountPassword(string email)
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                using (SqlCommand command = new SqlCommand("spGetAccountPassword", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("email", SqlDbType.VarChar, 99).Value = DBConvert.From(email);
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return PassHash.MD5HashDecrypt(DBConvert.To<string>(reader[0]));
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public List<AccountLog> GetAccountLogs(string account_id)
+    {
+        try
+        {
+            List<AccountLog> collection = new List<AccountLog>();
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                using (SqlCommand command = new SqlCommand("spGetAccountLogs", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("account_id", SqlDbType.Int).Value = DBConvert.From(int.Parse(account_id));
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            collection.Add(new AccountLog
+                            {
+                                Account_Log_ID = DBConvert.To<int>(reader[0]),
+                                Account_ID = DBConvert.To<int>(reader[1]),
+                                Date = DBConvert.To<DateTime>(reader[2]),
+                                Tag = DBConvert.To<string>(reader[3]),
+                                Description = DBConvert.To<string>(reader[4])
                             });
                         }
                     }

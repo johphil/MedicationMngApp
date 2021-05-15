@@ -6,7 +6,7 @@ using System.Text;
 
 namespace MedicationMngApp.Models
 {
-    public class Med_Take_Upcoming
+    public class Med_Take_Today
     {
         [JsonProperty(PropertyName = "Time")]
         public string Time { get; set; }
@@ -19,11 +19,14 @@ namespace MedicationMngApp.Models
 
         [JsonProperty(PropertyName = "Image")]
         public string Image { get; set; }
+
+        [JsonProperty(PropertyName = "ActionImage")]
+        public string ActionImage { get; set; }
     }
 
-    public class GetMedTakeUpcomingResult
+    public class GetMedTakeTodayResult
     {
-        [JsonProperty(PropertyName = nameof(GetMedTakeUpcomingResult))]
-        public List<Med_Take_Upcoming> results { get; set; }
+        [JsonProperty(PropertyName = nameof(GetMedTakeTodayResult))]
+        public List<Med_Take_Today> results { get; set; }
     }
 }

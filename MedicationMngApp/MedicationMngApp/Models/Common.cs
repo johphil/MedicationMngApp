@@ -1,4 +1,5 @@
 ﻿using MedicationMngApp.Views;
+using Plugin.LocalNotifications;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -16,41 +17,50 @@ namespace MedicationMngApp.Models
         #region Json URIs & Settings
         public static string HEADER_CONTENT_TYPE = "application/json";
         public static string SERVICE_IP = "192.168.1.4";
-        public static string POST_ADD_ACCOUNT = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddAccount";
-        public static string POST_ADD_MED_TAKE = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddMedTake";
-        public static string POST_ADD_RATINGS = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/AddRatingsRecommendation";
+        public static string SERVICE_ADDR_ENDPOINT = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/";
+        public static string POST_ADD_ACCOUNT = SERVICE_ADDR_ENDPOINT + "AddAccount";
+        public static string POST_ADD_MED_TAKE = SERVICE_ADDR_ENDPOINT + "AddMedTake";
+        public static string POST_ADD_RATINGS = SERVICE_ADDR_ENDPOINT + "AddRatingsRecommendation";
         public static string GET_LOGIN_ACCOUNT(string username, string password)
         {
-            return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/LoginAccount/{username}/{password}";
+            return SERVICE_ADDR_ENDPOINT + $"LoginAccount/{username}/{password}";
         }
         public static string GET_GET_ACCOUNT_DETAILS(int account_id)
         {
-            return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/GetAccountDetails/{account_id}";
+            return SERVICE_ADDR_ENDPOINT + $"GetAccountDetails/{account_id}";
         }
         public static string GET_GET_MED_TAKES(int account_id)
         {
-            return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/GetMedTakes/{account_id}";
+            return SERVICE_ADDR_ENDPOINT + $"GetMedTakes/{account_id}";
         }
-        public static string GET_GET_MED_TAKE_UPCOMING(int account_id)
+        public static string GET_GET_MED_TAKE_TODAY(int account_id)
         {
             int day_of_week = (int)DateTime.Today.DayOfWeek;
-            return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/GetMedTakeUpcoming/{account_id}/{day_of_week}";
+            return SERVICE_ADDR_ENDPOINT + $"GetMedTakeToday/{account_id}/{day_of_week}";
         }
         public static string GET_GET_MED_TAKE_SCHEDULES(int med_take_id)
         {
-            return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/GetMedTakeSchedules/{med_take_id}";
+            return SERVICE_ADDR_ENDPOINT + $"GetMedTakeSchedules/{med_take_id}";
         }
-        public static string GET_GET_MED_TYPES = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/GetMedTypes";
-        public static string PUT_UPDATE_ACCOUNT_PASSWORD = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/UpdateAccountPassword";
-        public static string PUT_UPDATE_ACCOUNT_DETAILS = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/UpdateAccountDetails";
-        public static string PUT_UPDATE_MED_TAKE = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/UpdateMedTake";
+        public static string GET_GET_ACCOUNT_PASSWORD(string email)
+        {
+            return SERVICE_ADDR_ENDPOINT + $"GetAccountPassword/{email}";
+        }
+        public static string GET_GET_ACCOUNT_LOGS(int account_id)
+        {
+            return SERVICE_ADDR_ENDPOINT + $"GetAccountLogs/{account_id}";
+        }
+        public static string GET_GET_MED_TYPES = SERVICE_ADDR_ENDPOINT + "GetMedTypes";
+        public static string PUT_UPDATE_ACCOUNT_PASSWORD = SERVICE_ADDR_ENDPOINT + "UpdateAccountPassword";
+        public static string PUT_UPDATE_ACCOUNT_DETAILS = SERVICE_ADDR_ENDPOINT + "UpdateAccountDetails";
+        public static string PUT_UPDATE_MED_TAKE = SERVICE_ADDR_ENDPOINT + "UpdateMedTake";
         public static string DELETE_DELETE_MED_TAKE(int med_take_id)
         {
-            return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/DeleteMedTake/{med_take_id}";
+            return SERVICE_ADDR_ENDPOINT + $"DeleteMedTake/{med_take_id}";
         }
         public static string PUT_UPDATE_MED_TAKE_STATUS(int med_take_id, int enabled)
         {
-            return $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/UpdateMedTakeEnable/{med_take_id}/{enabled}"; 
+            return SERVICE_ADDR_ENDPOINT + $"UpdateMedTakeEnable/{med_take_id}/{enabled}"; 
         }
         #endregion
 
@@ -71,6 +81,7 @@ namespace MedicationMngApp.Models
             }
         }
 
+        //Alert Dialogs
         public static async Task ShowAlertAsync(string title, string msgBody, string buttonText, bool isError = false)
         {
             MaterialAlertDialogConfiguration madc = new MaterialAlertDialogConfiguration
@@ -81,7 +92,7 @@ namespace MedicationMngApp.Models
                 CornerRadius = 4,
                 MessageTextColor = XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.ON_PRIMARY),
                 ScrimColor = Color.Transparent,
-                TintColor = XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.SECONDARY),
+                TintColor = XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.ON_SECONDARY),
             };
             await MaterialDialog.Instance.AlertAsync(message: msgBody,
                                        title: title,
@@ -135,6 +146,7 @@ namespace MedicationMngApp.Models
             return (bool)await MaterialDialog.Instance.ConfirmAsync(message: message, configuration: madc);
         }
 
+        //Navigation
         public static void NavigateNewPage(Page page)
         {
             Application.Current.MainPage = new NavigationPage(page);
@@ -148,6 +160,12 @@ namespace MedicationMngApp.Models
         public static async Task NavigateBack()
         {
             await Application.Current.MainPage.Navigation.PopAsync();
+        }
+
+        //Notifications
+        public static void ShowNotification(string title, string message)
+        {
+            CrossLocalNotifications.Current.Show(title, message, 1, DateTime.Now.AddSeconds(15));
         }
         #endregion
     }

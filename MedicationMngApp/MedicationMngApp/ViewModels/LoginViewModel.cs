@@ -18,6 +18,8 @@ namespace MedicationMngApp.ViewModels
     {
         private string username = string.Empty;
         private string password = string.Empty;
+        private bool iserrorusername = false;
+        private bool iserrorpassword = false;
 
         public Command LoginCommand { get; }
         
@@ -27,79 +29,120 @@ namespace MedicationMngApp.ViewModels
             if (!string.IsNullOrWhiteSpace(PersistentSettings.UserName) && !string.IsNullOrWhiteSpace(PersistentSettings.PassWord))
             {
                 Username = PersistentSettings.UserName;
-                ProceedLogin(PersistentSettings.UserName, PersistentSettings.PassWord);
+                ProceedLogin(PersistentSettings.UserName, PersistentSettings.PassWord, true);
             }
 
             LoginCommand = new Command(OnLoginClicked);
         }
 
+        #region Bindings
         public string Username
         {
             get => username;
             set => SetProperty(ref username, value);
         }
-
         public string Password
         {
             get => password;
             set => SetProperty(ref password, value);
         }
+        public bool IsErrorUsername
+        {
+            get => iserrorusername;
+            set => SetProperty(ref iserrorusername, value);
+        }
+        public bool IsErrorPassword
+        {
+            get => iserrorpassword;
+            set => SetProperty(ref iserrorpassword, value);
+        }
+        #endregion //End Bindings
 
-        private async void ProceedLogin(string uname, string pword)
+        #region Commands
+        private void OnLoginClicked(object obj)
+        {
+            ProceedLogin(Username, password);
+        }
+        #endregion //Commands
+
+        #region Functions
+        private bool Validate(bool isPersistent)
+        {
+            if (isPersistent)
+                return true;
+
+            IsErrorUsername = false;
+            IsErrorPassword = false;
+            bool result = true;
+
+            if (string.IsNullOrWhiteSpace(username))
+            {
+                IsErrorUsername = true;
+                result = false;
+            }
+
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                IsErrorPassword = true;
+                result = false;
+            }
+
+            return result;
+        }
+        private async void ProceedLogin(string uname, string pword, bool isPersistent = false)
         {
             if (CanSubmit)
             {
-                IsBusy = true;
-                try
+                if (Validate(isPersistent))
                 {
-                    if (NetworkStatus.IsInternet())
+                    IsBusy = true;
+                    try
                     {
-                        using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Signing you in...", configuration: Common.loadingDialogConfig))
+                        if (NetworkStatus.IsInternet())
                         {
-                            using (HttpClient client = new HttpClient())
+                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Signing you in...", configuration: Common.loadingDialogConfig))
                             {
-                                using (HttpResponseMessage response = await client.GetAsync(Common.GET_LOGIN_ACCOUNT(uname, pword)))
+                                using (HttpClient client = new HttpClient())
                                 {
-                                    if (response.IsSuccessStatusCode)
+                                    using (HttpResponseMessage response = await client.GetAsync(Common.GET_LOGIN_ACCOUNT(uname, pword)))
                                     {
-                                        var jData = await response.Content.ReadAsStringAsync();
-                                        if (!string.IsNullOrWhiteSpace(jData))
+                                        if (response.IsSuccessStatusCode)
                                         {
-                                            LoginAccountResult result = JsonConvert.DeserializeObject<LoginAccountResult>(jData);
-                                            if (result.result > 0)
+                                            var jData = await response.Content.ReadAsStringAsync();
+                                            if (!string.IsNullOrWhiteSpace(jData))
                                             {
-                                                PersistentSettings.UserName = uname;
-                                                PersistentSettings.PassWord = pword;
-                                                PersistentSettings.AccountID = result.result;
-                                                Common.NavigateNewPage(new MainPage());
+                                                LoginAccountResult result = JsonConvert.DeserializeObject<LoginAccountResult>(jData);
+                                                if (result.result > 0)
+                                                {
+                                                    PersistentSettings.UserName = uname;
+                                                    PersistentSettings.PassWord = pword;
+                                                    PersistentSettings.AccountID = result.result;
+                                                    Common.NavigateNewPage(new MainPage());
+                                                }
+                                                else
+                                                    ErrorMessage = "Invalid username or password.";
                                             }
-                                            else
-                                                ErrorMessage = "Invalid username or password.";
                                         }
                                     }
                                 }
                             }
                         }
+                        else
+                        {
+                            await Common.ShowMessageAsyncNetworkError();
+                        }
                     }
-                    else
+                    catch (Exception error)
                     {
-                        await Common.ShowMessageAsyncNetworkError();
+                        await Common.ShowMessageAsyncApplicationError(error.Message);
                     }
-                }
-                catch (Exception error)
-                {
-                    await Common.ShowMessageAsyncApplicationError(error.Message);
-                }
-                finally
-                {
-                    IsBusy = false;
+                    finally
+                    {
+                        IsBusy = false;
+                    }
                 }
             }
         }
-
-        private void OnLoginClicked(object obj)
-        {
-            ProceedLogin(Username, password);
-        }
+        #endregion //End Functions
     }
 }

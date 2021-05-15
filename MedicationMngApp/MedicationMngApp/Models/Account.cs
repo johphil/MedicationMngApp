@@ -65,4 +65,9 @@ namespace MedicationMngApp.Models
         public int result { get; set; }
     }
 
+    public class GetAccountPasswordResult
+    {
+        [JsonProperty(PropertyName = "GetAccountPasswordResult")]
+        public string result { get; set; }
+    }
 }

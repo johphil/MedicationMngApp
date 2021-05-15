@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
              x:Class="MedicationMngApp.Views.RegisterPage"
              xmlns:vm="clr-namespace:MedicationMngApp.ViewModels" xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material"
-             Title="Register"
-             NavigationPage.HasNavigationBar="False">    
+             Title="Register">    
     <ContentPage.Content>
         <ScrollView>
             <StackLayout VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
@@ -59,16 +58,14 @@
                     <material:MaterialButton HorizontalOptions="Center" Text="Register" Command="{Binding RegisterCommand}"/>
                 </StackLayout>
                 <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="10,0,10,50" HorizontalOptions="CenterAndExpand">
-                    <Label Text="Already have an account?" />
-                    <Label Text="Click Here" 
+                    <material:MaterialLabel TypeScale="Caption" Text="Already have an account?" />
+                    <material:MaterialLabel TypeScale="Caption" Text="Click Here" 
                        TextColor="{StaticResource Primary}"
                        TextDecorations="Underline" >
-                        <Label.GestureRecognizers>
-                            <TapGestureRecognizer 
-                            NumberOfTapsRequired="1"
-                            Tapped="TapGestureRecognizer_Tapped" />
-                        </Label.GestureRecognizers>
-                    </Label>
+                        <material:MaterialLabel.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="TapGestureRecognizer_Tapped" />
+                        </material:MaterialLabel.GestureRecognizers>
+                    </material:MaterialLabel>
                 </StackLayout>
             </StackLayout>
         </ScrollView>
