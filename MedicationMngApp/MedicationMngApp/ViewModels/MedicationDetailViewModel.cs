@@ -18,10 +18,11 @@ namespace MedicationMngApp.ViewModels
         private bool listviewVisibility = false;
         private bool medcountenabled = true;
         private string medcountplaceholder = "Count On Hand";
+        private string medcountcriticalplaceholder = "Critical Count";
 
         private List<Med_Type> medtypes;
 
-        private int? medcount;
+        private int? medcount, medcountcritical;
         private string medname = string.Empty;
         private Med_Type selectedMedType = null;
         private Med_Take selectedMedTake = null;
@@ -53,6 +54,7 @@ namespace MedicationMngApp.ViewModels
             IsEdit = true;
             Title = medtake.Med_Name;
             medcount = medtake.Med_Count;
+            medcountcritical = medtake.Med_Count_Critical;
             medname = medtake.Med_Name;
             selectedMedTake = medtake;
             AddScheduleCommand = new Command(OnAddScheduleClicked);
@@ -92,9 +94,9 @@ namespace MedicationMngApp.ViewModels
                                     if (!string.IsNullOrWhiteSpace(jData))
                                     {
                                         GetMedTakeSchedulesResult result = JsonConvert.DeserializeObject<GetMedTakeSchedulesResult>(jData);
-                                        if (result != null)
+                                        if (result != null && result.results != null)
                                         {
-                                            foreach(var schedule in result.results)
+                                            foreach (var schedule in result.results)
                                             {
                                                 MedTakeSchedules.Add(schedule);
                                             }
@@ -266,13 +268,24 @@ namespace MedicationMngApp.ViewModels
         }
         public string MedCount
         {
-            get => medcount == null ? "" : medcount.Value.ToString();
+            get => medcount == null ? string.Empty : medcount.Value.ToString();
             set
             {
                 if (string.IsNullOrWhiteSpace(value))
                     SetProperty(ref medcount, null);
                 else
                     SetProperty(ref medcount, int.Parse(value));
+            }
+        }
+        public string MedCountCritical
+        {
+            get => medcountcritical == null ? string.Empty : medcountcritical.Value.ToString();
+            set
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                    SetProperty(ref medcountcritical, null);
+                else
+                    SetProperty(ref medcountcritical, int.Parse(value));
             }
         }
         public bool MedCountEnabled
@@ -284,11 +297,14 @@ namespace MedicationMngApp.ViewModels
                 if (value == false)
                 {
                     MedCount = null;
+                    MedCountCritical = null;
                     MedCountPlaceholder = "Not applicable";
+                    MedCountCriticalPlaceholder = "Not applicable";
                 }
                 else
                 {
                     MedCountPlaceholder = "Count On Hand";
+                    MedCountCriticalPlaceholder = "Critical Count";
                 }
             }
         }
@@ -296,6 +312,11 @@ namespace MedicationMngApp.ViewModels
         {
             get => medcountplaceholder;
             set => SetProperty(ref medcountplaceholder, value);
+        }
+        public string MedCountCriticalPlaceholder
+        {
+            get => medcountcriticalplaceholder;
+            set => SetProperty(ref medcountcriticalplaceholder, value);
         }
         public Med_Type SelectedMedType
         {
@@ -314,7 +335,8 @@ namespace MedicationMngApp.ViewModels
             return !string.IsNullOrWhiteSpace(medname)
                 && selectedMedType != null
                 && MedTakeSchedules.Count > 0
-                && ((selectedMedType != null && selectedMedType.IsCount && medcount != null && medcount.HasValue) 
+                && ((selectedMedType != null && selectedMedType.IsCount && medcount != null && medcount.HasValue)
+                    || (selectedMedType != null && selectedMedType.IsCount && medcountcritical != null && medcountcritical.HasValue)
                     || (selectedMedType != null && !selectedMedType.IsCount && medcount == null));
         }
 
@@ -334,6 +356,10 @@ namespace MedicationMngApp.ViewModels
                                                 isError: true);
             else if (selectedMedType.IsCount && medcount == null)
                 await Common.ShowSnackbarMessage(message: "Please enter # count on hand.",
+                                                isDurationLong: true,
+                                                isError: true);
+            else if (selectedMedType.IsCount && medcountcritical == null)
+                await Common.ShowSnackbarMessage(message: "Please enter # critical count.",
                                                 isDurationLong: true,
                                                 isError: true);
         }
@@ -376,6 +402,7 @@ namespace MedicationMngApp.ViewModels
                                         };
                                         obj.medtake.Med_Name = medname;
                                         obj.medtake.Med_Count = medcount;
+                                        obj.medtake.Med_Count_Critical = medcountcritical;
                                         obj.medtake.Med_Type_ID = selectedMedType.Med_Type_ID;
                                         string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
                                         using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
@@ -409,6 +436,7 @@ namespace MedicationMngApp.ViewModels
                                                 Account_ID = PersistentSettings.AccountID,
                                                 Med_Name = medname,
                                                 Med_Count = medcount,
+                                                Med_Count_Critical = medcountcritical,
                                                 Med_Type_ID = selectedMedType.Med_Type_ID
                                             },
                                             medtakeschedules = MedTakeSchedules.ToList()

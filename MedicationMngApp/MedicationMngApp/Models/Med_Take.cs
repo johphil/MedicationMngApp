@@ -20,6 +20,9 @@ namespace MedicationMngApp.Models
         [JsonProperty(PropertyName = "Med_Count")]
         public int? Med_Count { get; set; }
 
+        [JsonProperty(PropertyName = "Med_Count_Critical")]
+        public int? Med_Count_Critical { get; set; }
+
         [JsonProperty(PropertyName = "IsActive")]
         public bool IsActive { get; set; }
 
@@ -27,9 +30,21 @@ namespace MedicationMngApp.Models
         {
             get
             {
-                return IsCount ? Image : "icon_infinity.png";
+                if (IsCritical)
+                    return "icon_exclamation";
+                else
+                    return IsCount ? Image : "icon_infinity.png";
             }
         }
+
+        public bool IsCritical
+        {
+            get
+            {
+                return !IsCount ? false : Med_Count <= Med_Count_Critical;
+            }
+        }
+
     }
 
     public class AddMedTakeRequestObject

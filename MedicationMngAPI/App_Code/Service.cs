@@ -220,6 +220,7 @@ public class Service : IService
                             command.Parameters.Add("account_id", SqlDbType.Int).Value = DBConvert.From(medtake.Account_ID);
                             command.Parameters.Add("med_name", SqlDbType.VarChar, 20).Value = DBConvert.From(medtake.Med_Name);
                             command.Parameters.Add("med_count", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Count);
+                            command.Parameters.Add("med_count_critical", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Count_Critical);
                             command.Parameters.Add("med_type_id", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Type_ID);
 
                             medtake.Med_Take_ID = (int)command.ExecuteScalar();
@@ -281,11 +282,12 @@ public class Service : IService
                                 Account_ID = DBConvert.To<int>(reader[1]),
                                 Med_Name = DBConvert.To<string>(reader[2]),
                                 Med_Count = DBConvert.To<int>(reader[3]),
-                                Med_Type_ID = DBConvert.To<int>(reader[4]),
-                                Med_Type_Name = DBConvert.To<string>(reader[5]),
-                                IsCount = DBConvert.To<bool>(reader[6]),
-                                Image = DBConvert.To<string>(reader[7]),
-                                IsActive = DBConvert.To<bool>(reader[8])
+                                Med_Count_Critical = DBConvert.To<int>(reader[4]),
+                                Med_Type_ID = DBConvert.To<int>(reader[5]),
+                                Med_Type_Name = DBConvert.To<string>(reader[6]),
+                                IsCount = DBConvert.To<bool>(reader[7]),
+                                Image = DBConvert.To<string>(reader[8]),
+                                IsActive = DBConvert.To<bool>(reader[9])
                             });
                         }
                     }
@@ -317,6 +319,7 @@ public class Service : IService
                             command.Parameters.Add("med_take_id", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Take_ID);
                             command.Parameters.Add("med_name", SqlDbType.VarChar, 20).Value = DBConvert.From(medtake.Med_Name);
                             command.Parameters.Add("med_count", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Count);
+                            command.Parameters.Add("med_count_critical", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Count_Critical);
                             command.Parameters.Add("med_type_id", SqlDbType.Int).Value = DBConvert.From(medtake.Med_Type_ID);
 
                             int result = command.ExecuteNonQuery();
@@ -472,7 +475,7 @@ public class Service : IService
                                 Med_Take_ID = DBConvert.To<int>(reader[1]),
                                 Day_Of_Week = DBConvert.To<int>(reader[2]),
                                 Dosage_Count = DBConvert.To<int>(reader[3]),
-                                Time = DBConvert.To<TimeSpan>(reader[4]).ToString()
+                                Time = DBConvert.To<TimeSpan>(reader[4]).ToString(),
                             });
                         }
                     }
@@ -506,10 +509,14 @@ public class Service : IService
                         {
                             collection.Add(new MedTakeToday
                             {
-                                Time = DateTime.Today.Add(DBConvert.To<TimeSpan>(reader[0])).ToString("hh:mm tt").ToUpper(),
-                                Day_Of_Week = DBConvert.To<int>(reader[1]),
-                                Med_Name = DBConvert.To<string>(reader[2]),
-                                Image = DBConvert.To<string>(reader[3])
+                                Med_Take_ID = DBConvert.To<int>(reader[0]),
+                                Med_Take_Schedule_ID = DBConvert.To<int>(reader[1]),
+                                Time = DBConvert.To<TimeSpan>(reader[2]).ToString(),
+                                Day_Of_Week = DBConvert.To<int>(reader[3]),
+                                Med_Name = DBConvert.To<string>(reader[4]),
+                                Dosage_Count = DBConvert.To<int>(reader[5]),
+                                Image = DBConvert.To<string>(reader[6]),
+                                Last_Take = DBConvert.To<DateTime?>(reader[7]),
                             });
                         }
                     }
@@ -587,6 +594,29 @@ public class Service : IService
         catch
         {
             return null;
+        }
+    }
+
+    public int TakeMedicine(string med_take_schedule_id, string med_take_id)
+    {
+        try
+        {
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                using (SqlCommand command = new SqlCommand("spTakeMedicine", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("med_take_id", SqlDbType.Int).Value = DBConvert.From(int.Parse(med_take_id));
+                    command.Parameters.Add("med_take_schedule_id", SqlDbType.Int).Value = DBConvert.From(int.Parse(med_take_schedule_id));
+                    connection.Open();
+
+                    return command.ExecuteNonQuery();
+                }
+            }
+        }
+        catch
+        {
+            return -1;
         }
     }
 }

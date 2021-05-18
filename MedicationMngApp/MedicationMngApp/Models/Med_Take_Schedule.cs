@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MedicationMngApp.Utils;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,9 +19,12 @@ namespace MedicationMngApp.Models
 
         [JsonProperty(PropertyName = "Dosage_Count")]
         public int Dosage_Count { get; set; }
-        
+
         [JsonProperty(PropertyName = "Time")]
         public TimeSpan Time { get; set; }
+
+        [JsonProperty(PropertyName = "Last_Take")]
+        public DateTime? Last_Take { get; set; }
     }
 
     public class GetMedTakeSchedulesResult

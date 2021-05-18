@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using Xamarin.Forms;
+using XF.Material.Forms.UI.Dialogs;
 
 namespace MedicationMngApp.ViewModels
 {
@@ -118,7 +119,7 @@ namespace MedicationMngApp.ViewModels
             && newpassword == newpasswordconfirm;
         }
 
-        private async void ValidateMessage()
+        private void ValidateMessage()
         {
             if (string.IsNullOrWhiteSpace(oldpassword))
             {
@@ -150,44 +151,47 @@ namespace MedicationMngApp.ViewModels
                     {
                         if (NetworkStatus.IsInternet())
                         {
-                            using (HttpClient client = new HttpClient())
+                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Changing Password...", configuration: Common.loadingDialogConfig))
                             {
-                                UpdateAccountPasswordRequestObject obj = new UpdateAccountPasswordRequestObject
+                                using (HttpClient client = new HttpClient())
                                 {
-                                    account_id = PersistentSettings.AccountID,
-                                    old_password = oldpassword,
-                                    new_password = newpasswordconfirm
-                                };
-                                string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
-                                using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
-                                {
-                                    using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_ACCOUNT_PASSWORD, content))
+                                    UpdateAccountPasswordRequestObject obj = new UpdateAccountPasswordRequestObject
                                     {
-                                        if (response.IsSuccessStatusCode)
+                                        account_id = PersistentSettings.AccountID,
+                                        old_password = oldpassword,
+                                        new_password = newpasswordconfirm
+                                    };
+                                    string serializedObject = JsonConvert.SerializeObject(obj, Formatting.Indented);
+                                    using (HttpContent content = new StringContent(serializedObject, Encoding.UTF8, Common.HEADER_CONTENT_TYPE))
+                                    {
+                                        using (HttpResponseMessage response = await client.PutAsync(Common.PUT_UPDATE_ACCOUNT_PASSWORD, content))
                                         {
-                                            string jData = await response.Content.ReadAsStringAsync();
-                                            if (!string.IsNullOrWhiteSpace(jData))
+                                            if (response.IsSuccessStatusCode)
                                             {
-                                                UpdateAccountPasswordResult result = JsonConvert.DeserializeObject<UpdateAccountPasswordResult>(jData);
-                                                switch (result.result)
+                                                string jData = await response.Content.ReadAsStringAsync();
+                                                if (!string.IsNullOrWhiteSpace(jData))
                                                 {
-                                                    case -69: //sql return value -69
-                                                        {
-                                                            ErrorOldPassword = "Current password is invalid.";
-                                                            break;
-                                                        }
-                                                    case 1: //sql return value 1
-                                                        {
-                                                            await Common.ShowSnackbarMessage("Change password success!");
-                                                            await Common.NavigateBack();
-                                                            break;
-                                                        }
-                                                    default:
-                                                        {
-                                                            await Common.ShowMessageAsyncUnknownError();
-                                                            break;
-                                                        }
+                                                    UpdateAccountPasswordResult result = JsonConvert.DeserializeObject<UpdateAccountPasswordResult>(jData);
+                                                    switch (result.result)
+                                                    {
+                                                        case -69: //sql return value -69
+                                                            {
+                                                                ErrorOldPassword = "Current password is invalid.";
+                                                                break;
+                                                            }
+                                                        case 1: //sql return value 1
+                                                            {
+                                                                await Common.ShowSnackbarMessage("Change password success!");
+                                                                await Common.NavigateBack();
+                                                                break;
+                                                            }
+                                                        default:
+                                                            {
+                                                                await Common.ShowMessageAsyncUnknownError();
+                                                                break;
+                                                            }
 
+                                                    }
                                                 }
                                             }
                                         }

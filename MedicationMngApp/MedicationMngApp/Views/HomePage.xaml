@@ -14,21 +14,29 @@
                 </Grid.RowDefinitions>
             <material:MaterialCard Elevation="5" Grid.Row="0">
                 <StackLayout>
-                        <material:MaterialLabel TypeScale="Overline" Text="{Binding TitleToday}" HorizontalOptions="Fill" 
-                                            TextColor="{StaticResource OnSecondary}" BackgroundColor="{StaticResource Secondary}"
-                                            Padding="10,5,0,5"/>
-                    <RefreshView x:DataType="local:HomeViewModel" Command="{Binding LoadHomepage}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
+                        <StackLayout Orientation="Horizontal">
+                            <material:MaterialLabel TypeScale="Overline" TextDecorations="Underline" Text="{Binding TitleToday}" HorizontalOptions="StartAndExpand" Padding="10,5,0,5"/>
+                            <material:MaterialIconButton Image="icon_list" TintColor="Black" 
+                                                         PressedBackgroundColor="Transparent" ButtonType="Text" 
+                                                         HorizontalOptions="End" Command="{Binding ShowIntakeLogsCommand}"/>
+                        </StackLayout>
+                        <RefreshView x:DataType="local:HomeViewModel" Command="{Binding LoadHomepage}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
                         <CollectionView ItemsSource="{Binding UpcomingMedTakes}" SelectionMode="None">
                             <CollectionView.ItemTemplate>
                                 <DataTemplate>
                                         <StackLayout x:DataType="model:Med_Take_Today" Orientation="Horizontal" HorizontalOptions="Fill" VerticalOptions="Center">
-                                            <Label Text="{Binding Time}" VerticalOptions="Center" FontSize="Micro" HorizontalOptions="Start"/>
+                                            <Label Text="{Binding GetTime}" VerticalOptions="Center" FontSize="Micro" HorizontalOptions="Start"/>
                                             <material:MaterialChip Image="{Binding Image}" 
-                                                                   ActionImage="icon_check"
+                                                                   ActionImage="{Binding ActionImage}"
                                                                    HorizontalOptions="StartAndExpand"
-                                                                   Text="{Binding Med_Name}" 
+                                                                   Text="{Binding Med_Name}"
                                                                    TextColor="{StaticResource OnSecondary}"
                                                                    BackgroundColor="{StaticResource Secondary}"/>
+                                            <StackLayout.GestureRecognizers>
+                                                <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                                          Command="{Binding Source={RelativeSource AncestorType={x:Type local:HomeViewModel}}, Path=CheckMedTakeCommand}" 
+                                                                          CommandParameter="{Binding .}"/>
+                                            </StackLayout.GestureRecognizers>
                                         </StackLayout>
                                 </DataTemplate>
                             </CollectionView.ItemTemplate>
@@ -37,11 +45,10 @@
                 </StackLayout>
             </material:MaterialCard>
             <material:MaterialCard Elevation="5" Grid.Row="1">
-                <StackLayout>
-                    <material:MaterialLabel TypeScale="Overline" Text="Logs" HorizontalOptions="Fill" 
-                                            TextColor="{StaticResource OnSecondary}" BackgroundColor="{StaticResource Secondary}"
-                                            Padding="10,5,0,5"/>
-                        <ScrollView>
+                    <StackLayout>
+                        <material:MaterialLabel TypeScale="Overline" Text="Logs" HorizontalOptions="Fill" Padding="10,5,0,5"
+                                                    BackgroundColor="{StaticResource Secondary}" TextColor="{StaticResource OnSecondary}"/>
+                            <ScrollView>
                             <StackLayout BindableLayout.ItemsSource="{Binding AccountLogs}">
                                 <BindableLayout.ItemTemplate>
                                     <DataTemplate>

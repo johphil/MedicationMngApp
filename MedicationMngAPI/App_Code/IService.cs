@@ -159,6 +159,15 @@ public interface IService
         ResponseFormat = WebMessageFormat.Json)]
     [return: MessageParameter(Name = "UpdateMedTakeEnableResult")]
     int UpdateMedTakeEnable(string med_take_id, string enabled);
+
+    [OperationContract]
+    [WebInvoke(Method = "PUT",
+        UriTemplate = "/TakeMedicine/{med_take_schedule_id}/{med_take_id}",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        RequestFormat = WebMessageFormat.Json,
+        ResponseFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "TakeMedicineResult")]
+    int TakeMedicine(string med_take_schedule_id, string med_take_id);
     #endregion //METHOD: PUT
 
     #region METHOD: DELETE
@@ -293,6 +302,7 @@ public class MedTake : MedType
     private int med_take_id = -1;
     private string med_name = string.Empty;
     private int? med_count = null;
+    private int? med_count_critical = null;
     private int account_id = -1;
     private bool isactive = true;
 
@@ -322,6 +332,13 @@ public class MedTake : MedType
     {
         get { return med_count; }
         set { med_count = value; }
+    }
+
+    [DataMember]
+    public int? Med_Count_Critical
+    {
+        get { return med_count_critical; }
+        set { med_count_critical = value; }
     }
 
     [DataMember]
@@ -372,12 +389,12 @@ public class MedType
 [DataContract]
 public class MedTakeSchedule
 {
-    private MedTake m;
     private int med_take_schedule_id = -1;
     private int day_of_week = 0;
     private int dosage_count = 0;
     private int med_take_id = -1;
     private string time = string.Empty;
+    private DateTime? last_take = null;
 
     [DataMember]
     public int Med_Take_Schedule_ID 
@@ -413,29 +430,20 @@ public class MedTakeSchedule
         get { return time; }
         set { time = value; }
     }
+
+    [DataMember]
+    public DateTime? Last_Take
+    {
+        get { return last_take; }
+        set { last_take = value; }
+    }
 }
 
 [DataContract]
-public class MedTakeToday
+public class MedTakeToday : MedTakeSchedule
 {
-    private string time;
-    private int day_of_week;
-    private string med_name;
-    private string image;
-
-    [DataMember]
-    public string Time
-    {
-        get { return time; }
-        set { time = value; }
-    }
-
-    [DataMember]
-    public int Day_Of_Week
-    {
-        get { return day_of_week; }
-        set { day_of_week = value; }
-    }
+    private string med_name = string.Empty;
+    private string image = string.Empty;
 
     [DataMember]
     public string Med_Name

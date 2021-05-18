@@ -1,4 +1,5 @@
-﻿using MedicationMngApp.Views;
+﻿using MedicationMngApp.Utils;
+using MedicationMngApp.Views;
 using Plugin.LocalNotifications;
 using System;
 using System.Collections.Generic;
@@ -62,6 +63,10 @@ namespace MedicationMngApp.Models
         {
             return SERVICE_ADDR_ENDPOINT + $"UpdateMedTakeEnable/{med_take_id}/{enabled}"; 
         }
+        public static string PUT_TAKE_MEDICINE(int med_take_schedule_id, int med_take_id)
+        {
+            return SERVICE_ADDR_ENDPOINT + $"TakeMedicine/{med_take_schedule_id}/{med_take_id}";
+        }
         #endregion
 
         #region Asynchronous Tasks Message Popup & Navigation
@@ -80,6 +85,14 @@ namespace MedicationMngApp.Models
                 };
             }
         }
+        public static MaterialAlertDialogConfiguration alertDialogConfig = new MaterialAlertDialogConfiguration
+        {
+            BackgroundColor = XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.PRIMARY),
+            CornerRadius = 4,
+            MessageTextColor = Color.White,
+            ScrimColor = Color.Transparent,
+            TintColor = Color.AliceBlue
+        };
 
         //Alert Dialogs
         public static async Task ShowAlertAsync(string title, string msgBody, string buttonText, bool isError = false)
@@ -135,17 +148,16 @@ namespace MedicationMngApp.Models
 
         public static async Task<bool> ShowAlertConfirmation(string message)
         {
-            MaterialAlertDialogConfiguration madc = new MaterialAlertDialogConfiguration
-            {
-                BackgroundColor = XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.PRIMARY),
-                CornerRadius = 4,
-                MessageTextColor = Color.White,
-                ScrimColor = Color.Transparent,
-                TintColor = Color.AliceBlue
-            };
-            return (bool)await MaterialDialog.Instance.ConfirmAsync(message: message, configuration: madc);
+            return (bool)await MaterialDialog.Instance.ConfirmAsync(message: message, configuration: alertDialogConfig);
         }
 
+        public static async Task<bool> ShowAlertConfirmationWithButton(string message, string confirmText, string dismissText)
+        {
+            return (bool)await MaterialDialog.Instance.ConfirmAsync(message: message,
+                                    confirmingText: confirmText,
+                                    dismissiveText: dismissText, 
+                                    configuration: alertDialogConfig);
+        }
         //Navigation
         public static void NavigateNewPage(Page page)
         {
