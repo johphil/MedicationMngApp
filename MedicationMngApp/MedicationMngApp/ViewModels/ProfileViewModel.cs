@@ -193,7 +193,7 @@ namespace MedicationMngApp.ViewModels
 
         public async void SaveProfile()
         {
-            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Saving profile...", configuration: Common.loadingDialogConfig))
+            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Saving profile...", configuration: Common.LoadingDialogConfig))
             {
                 if (CanSubmit)
                 {

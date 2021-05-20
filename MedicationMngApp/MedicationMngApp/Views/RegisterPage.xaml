@@ -14,24 +14,24 @@
                                                 Text="{Binding FirstName, Mode=TwoWay}"
                                                 InputType="Default" 
                                                 HasError="{Binding IsErrorFirstName}"
-                                                ErrorText="Invalid First Name" 
+                                                ErrorText="{Binding ErrorFirstName}" 
                                                 MaxLength="99"/>
                     <material:MaterialTextField Placeholder="Last Name" 
                                                 Text="{Binding LastName, Mode=TwoWay}"
                                                 InputType="Default"
                                                 HasError="{Binding IsErrorLastName}"
-                                                ErrorText="Invalid Last Name" 
+                                                ErrorText="{Binding ErrorLastName}" 
                                                 MaxLength="99"/>
                     <material:MaterialDateField Placeholder="Birthday" 
                                                 Date="{Binding Birthday, Mode=TwoWay}" 
                                                 Format="MMMM dd, yyyy"  
-                                                ErrorText="Invalid Birthday"
+                                                ErrorText="{Binding ErrorBirthday}"
                                                 HasError="{Binding IsErrorBirthday}"/>
                     <material:MaterialTextField Placeholder="Email" 
                                                 Text="{Binding Email, Mode=TwoWay}"
                                                 InputType="Email"
                                                 HasError="{Binding IsErrorEmail}"
-                                                ErrorText="Invalid Email" 
+                                                ErrorText="{Binding ErrorEmail}" 
                                                 MaxLength="99"/>
 
                     <Label Text="Account Information" FontSize="Medium" Margin="0,30,0,0"
@@ -40,14 +40,14 @@
                                                 Text="{Binding Username, Mode=TwoWay}"
                                                 InputType="Default"
                                                 HasError="{Binding IsErrorUsername}"
-                                                ErrorText="Invalid Username" 
+                                                ErrorText="{Binding ErrorUsername}" 
                                                 MaxLength="99"/>
 
                     <material:MaterialTextField Placeholder="Password" 
                                                 Text="{Binding Password, Mode=TwoWay}"
                                                 InputType="Password" 
                                                 HasError="{Binding IsErrorPassword}"
-                                                ErrorText="Invalid Password"
+                                                ErrorText="{Binding ErrorPassword}"
                                                 MaxLength="99"/>
                     <material:MaterialTextField Placeholder="Confirm Password" 
                                                 Text="{Binding ConfirmPassword, Mode=TwoWay}"
@@ -61,7 +61,7 @@
                     <material:MaterialLabel TypeScale="Caption" Text="Already have an account?" />
                     <material:MaterialLabel TypeScale="Caption" Text="Click Here" 
                        TextColor="{StaticResource Primary}"
-                       TextDecorations="Underline" >
+                       TextDecorations="Underline">
                         <material:MaterialLabel.GestureRecognizers>
                             <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="TapGestureRecognizer_Tapped" />
                         </material:MaterialLabel.GestureRecognizers>

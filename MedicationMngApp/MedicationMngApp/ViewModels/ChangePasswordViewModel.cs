@@ -151,7 +151,7 @@ namespace MedicationMngApp.ViewModels
                     {
                         if (NetworkStatus.IsInternet())
                         {
-                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Changing Password...", configuration: Common.loadingDialogConfig))
+                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Changing Password...", configuration: Common.LoadingDialogConfig))
                             {
                                 using (HttpClient client = new HttpClient())
                                 {

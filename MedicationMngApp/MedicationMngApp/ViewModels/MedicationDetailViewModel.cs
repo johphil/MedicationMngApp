@@ -25,7 +25,7 @@ namespace MedicationMngApp.ViewModels
         private int? medcount, medcountcritical;
         private string medname = string.Empty;
         private Med_Type selectedMedType = null;
-        private Med_Take selectedMedTake = null;
+        private readonly Med_Take selectedMedTake = null;
 
         public ObservableCollection<Med_Take_Schedule> MedTakeSchedules { get; }
 
@@ -34,7 +34,7 @@ namespace MedicationMngApp.ViewModels
         public Command SaveScheduleCommand { get; }
         public Command DeleteMedTakeCommand { get; }
 
-        private List<Med_Take_Schedule> DeleteMedTakeSchedules;
+        private readonly List<Med_Take_Schedule> DeleteMedTakeSchedules;
         private List<Med_Take_Schedule> UpdateMedTakeSchedules;
         private List<Med_Take_Schedule> CreateMedTakeSchedules;
 
@@ -66,169 +66,6 @@ namespace MedicationMngApp.ViewModels
             DeleteMedTakeSchedules = new List<Med_Take_Schedule>();
             UpdateMedTakeSchedules = new List<Med_Take_Schedule>();
             CreateMedTakeSchedules = new List<Med_Take_Schedule>();
-        }
-
-        public async Task InitializeAsync()
-        {
-            await LoadMedTypes();
-
-            if (selectedMedTake != null)
-                await LoadMedTakeSchedules();
-        }
-
-        private async Task LoadMedTakeSchedules()
-        {
-            if (selectedMedTake != null)
-            {
-                try
-                {
-                    if (NetworkStatus.IsInternet())
-                    {
-                        using (HttpClient client = new HttpClient())
-                        {
-                            using (HttpResponseMessage response = await client.GetAsync(Common.GET_GET_MED_TAKE_SCHEDULES(selectedMedTake.Med_Take_ID)))
-                            {
-                                if (response.IsSuccessStatusCode)
-                                {
-                                    var jData = await response.Content.ReadAsStringAsync();
-                                    if (!string.IsNullOrWhiteSpace(jData))
-                                    {
-                                        GetMedTakeSchedulesResult result = JsonConvert.DeserializeObject<GetMedTakeSchedulesResult>(jData);
-                                        if (result != null && result.results != null)
-                                        {
-                                            foreach (var schedule in result.results)
-                                            {
-                                                MedTakeSchedules.Add(schedule);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        await Common.ShowMessageAsyncNetworkError();
-                    }
-                }
-                catch (Exception error)
-                {
-                    await Common.ShowMessageAsyncApplicationError(error.Message);
-                }
-            }
-        }
-
-        private async void OnDeleteMedTakeClicked()
-        {
-            if (await Common.ShowAlertConfirmation("Do you want to delete?"))
-            {
-                if (CanSubmit && selectedMedTake != null)
-                {
-                    IsBusy = true;
-                    try
-                    {
-                        if (NetworkStatus.IsInternet())
-                        {
-
-                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Deleting medication...", configuration: Common.loadingDialogConfig))
-                            {
-                                using (HttpClient client = new HttpClient())
-                                {
-                                    using (HttpResponseMessage response = await client.DeleteAsync(Common.DELETE_DELETE_MED_TAKE(selectedMedTake.Med_Take_ID)))
-                                    {
-                                        if (response.IsSuccessStatusCode)
-                                        {
-                                            string jData = await response.Content.ReadAsStringAsync();
-                                            if (!string.IsNullOrWhiteSpace(jData))
-                                            {
-                                                DeleteMedTakeResult result = JsonConvert.DeserializeObject<DeleteMedTakeResult>(jData);
-                                                if (result.result > 0)
-                                                {
-                                                    await Common.NavigateBack();
-                                                }
-                                                else
-                                                    await Common.ShowMessageAsyncUnknownError();
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            await Common.ShowMessageAsyncNetworkError();
-                        }
-                    }
-                    catch (Exception error)
-                    {
-                        await Common.ShowMessageAsyncApplicationError(error.Message);
-                    }
-                    finally
-                    {
-                        IsBusy = false;
-                    }
-                }
-            }
-        }
-
-        private void OnRemoveScheduleClicked(object obj)
-        {
-            MedTakeSchedules.Remove((Med_Take_Schedule)obj);
-
-            if (CanEdit)
-                DeleteMedTakeSchedules.Add((Med_Take_Schedule)obj);
-        }
-
-        private void OnAddScheduleClicked()
-        {
-            MedTakeSchedules.Add(new Med_Take_Schedule
-            {
-                Day_Of_Week = (int)DateTime.Now.DayOfWeek,
-                Time = DateTime.Now.TimeOfDay
-            });
-        }
-
-        private async Task LoadMedTypes()
-        {
-            IsBusy = true;
-            ListViewVisibility = false;
-            try
-            {
-                if (NetworkStatus.IsInternet())
-                {
-                    using (HttpClient client = new HttpClient())
-                    {
-                        using (HttpResponseMessage response = await client.GetAsync(Common.GET_GET_MED_TYPES))
-                        {
-                            if (response.IsSuccessStatusCode)
-                            {
-                                var jData = await response.Content.ReadAsStringAsync();
-                                if (!string.IsNullOrWhiteSpace(jData))
-                                {
-                                    GetMedTypesResult result = JsonConvert.DeserializeObject<GetMedTypesResult>(jData);
-                                    MedTypes = result.result;
-
-                                    if (CanEdit)
-                                        SelectedMedType = MedTypes.Find(mt => mt.Med_Type_ID == selectedMedTake.Med_Type_ID);
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    await Common.ShowMessageAsyncNetworkError();
-                }
-            }
-            catch (Exception error)
-            {
-                await Common.ShowMessageAsyncApplicationError(error.Message);
-            }
-            finally
-            {
-                IsBusy = false;
-                ListViewVisibility = true;
-            }
         }
 
         #region Bindings
@@ -330,38 +167,168 @@ namespace MedicationMngApp.ViewModels
 
         #endregion //Bindings
 
-        private bool Validate()
+        #region Commands
+        public async Task InitializeAsync()
         {
-            return !string.IsNullOrWhiteSpace(medname)
-                && selectedMedType != null
-                && MedTakeSchedules.Count > 0
-                && ((selectedMedType != null && selectedMedType.IsCount && medcount != null && medcount.HasValue)
-                    || (selectedMedType != null && selectedMedType.IsCount && medcountcritical != null && medcountcritical.HasValue)
-                    || (selectedMedType != null && !selectedMedType.IsCount && medcount == null));
+            await LoadMedTypes();
+
+            if (selectedMedTake != null)
+                await LoadMedTakeSchedules();
         }
 
-        private async void ValidateMessage()
+        private async Task LoadMedTakeSchedules()
         {
-            if (string.IsNullOrWhiteSpace(medname))
-                await Common.ShowSnackbarMessage(message: "Please enter a valid medicine name.", 
-                                                isDurationLong: true, 
-                                                isError: true);
-            else if (selectedMedType == null)
-                await Common.ShowSnackbarMessage(message: "Please select the type of medicine.",
-                                                isDurationLong: true,
-                                                isError: true);
-            else if (MedTakeSchedules.Count == 0)
-                await Common.ShowSnackbarMessage(message: "Please add atleast one schedule.",
-                                                isDurationLong: true,
-                                                isError: true);
-            else if (selectedMedType.IsCount && medcount == null)
-                await Common.ShowSnackbarMessage(message: "Please enter # count on hand.",
-                                                isDurationLong: true,
-                                                isError: true);
-            else if (selectedMedType.IsCount && medcountcritical == null)
-                await Common.ShowSnackbarMessage(message: "Please enter # critical count.",
-                                                isDurationLong: true,
-                                                isError: true);
+            if (selectedMedTake != null)
+            {
+                try
+                {
+                    if (NetworkStatus.IsInternet())
+                    {
+                        using (HttpClient client = new HttpClient())
+                        {
+                            using (HttpResponseMessage response = await client.GetAsync(Common.GET_GET_MED_TAKE_SCHEDULES(selectedMedTake.Med_Take_ID)))
+                            {
+                                if (response.IsSuccessStatusCode)
+                                {
+                                    var jData = await response.Content.ReadAsStringAsync();
+                                    if (!string.IsNullOrWhiteSpace(jData))
+                                    {
+                                        GetMedTakeSchedulesResult result = JsonConvert.DeserializeObject<GetMedTakeSchedulesResult>(jData);
+                                        if (result != null && result.results != null)
+                                        {
+                                            foreach (var schedule in result.results)
+                                            {
+                                                MedTakeSchedules.Add(schedule);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        await Common.ShowMessageAsyncNetworkError();
+                    }
+                }
+                catch (Exception error)
+                {
+                    await Common.ShowMessageAsyncApplicationError(error.Message);
+                }
+            }
+        }
+
+        private async void OnDeleteMedTakeClicked()
+        {
+            if (await Common.ShowAlertConfirmation("Do you want to delete?"))
+            {
+                if (CanSubmit && selectedMedTake != null)
+                {
+                    IsBusy = true;
+                    try
+                    {
+                        if (NetworkStatus.IsInternet())
+                        {
+
+                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Deleting medication...", configuration: Common.LoadingDialogConfig))
+                            {
+                                using (HttpClient client = new HttpClient())
+                                {
+                                    using (HttpResponseMessage response = await client.DeleteAsync(Common.DELETE_DELETE_MED_TAKE(selectedMedTake.Med_Take_ID)))
+                                    {
+                                        if (response.IsSuccessStatusCode)
+                                        {
+                                            string jData = await response.Content.ReadAsStringAsync();
+                                            if (!string.IsNullOrWhiteSpace(jData))
+                                            {
+                                                DeleteMedTakeResult result = JsonConvert.DeserializeObject<DeleteMedTakeResult>(jData);
+                                                if (result.result > 0)
+                                                {
+                                                    await Common.NavigateBack();
+                                                }
+                                                else
+                                                    await Common.ShowMessageAsyncUnknownError();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            await Common.ShowMessageAsyncNetworkError();
+                        }
+                    }
+                    catch (Exception error)
+                    {
+                        await Common.ShowMessageAsyncApplicationError(error.Message);
+                    }
+                    finally
+                    {
+                        IsBusy = false;
+                    }
+                }
+            }
+        }
+
+        private void OnRemoveScheduleClicked(object obj)
+        {
+            MedTakeSchedules.Remove((Med_Take_Schedule)obj);
+
+            if (CanEdit)
+                DeleteMedTakeSchedules.Add((Med_Take_Schedule)obj);
+        }
+
+        private void OnAddScheduleClicked()
+        {
+            MedTakeSchedules.Add(new Med_Take_Schedule
+            {
+                Day_Of_Week = (int)DateTime.Now.DayOfWeek,
+                Time = DateTime.Now.TimeOfDay
+            });
+        }
+
+        private async Task LoadMedTypes()
+        {
+            IsBusy = true;
+            ListViewVisibility = false;
+            try
+            {
+                if (NetworkStatus.IsInternet())
+                {
+                    using (HttpClient client = new HttpClient())
+                    {
+                        using (HttpResponseMessage response = await client.GetAsync(Common.GET_GET_MED_TYPES))
+                        {
+                            if (response.IsSuccessStatusCode)
+                            {
+                                var jData = await response.Content.ReadAsStringAsync();
+                                if (!string.IsNullOrWhiteSpace(jData))
+                                {
+                                    GetMedTypesResult result = JsonConvert.DeserializeObject<GetMedTypesResult>(jData);
+                                    MedTypes = result.result;
+
+                                    if (CanEdit)
+                                        SelectedMedType = MedTypes.Find(mt => mt.Med_Type_ID == selectedMedTake.Med_Type_ID);
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    await Common.ShowMessageAsyncNetworkError();
+                }
+            }
+            catch (Exception error)
+            {
+                await Common.ShowMessageAsyncApplicationError(error.Message);
+            }
+            finally
+            {
+                IsBusy = false;
+                ListViewVisibility = true;
+            }
         }
 
         private void OnMedTypeSelected(Med_Type value)
@@ -385,7 +352,7 @@ namespace MedicationMngApp.ViewModels
                     {
                         if (NetworkStatus.IsInternet())
                         {
-                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Saving medication...", configuration: Common.loadingDialogConfig))
+                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Saving medication...", configuration: Common.LoadingDialogConfig))
                             {
                                 IsBusy = true;
                                 if (CanEdit)
@@ -487,11 +454,48 @@ namespace MedicationMngApp.ViewModels
                 }
             }
         }
+        #endregion //End Commands
+
+        #region Functions
+        private bool Validate()
+        {
+            return !string.IsNullOrWhiteSpace(medname)
+                && selectedMedType != null
+                && MedTakeSchedules.Count > 0
+                && ((selectedMedType != null && selectedMedType.IsCount && medcount != null && medcount.HasValue)
+                    || (selectedMedType != null && selectedMedType.IsCount && medcountcritical != null && medcountcritical.HasValue)
+                    || (selectedMedType != null && !selectedMedType.IsCount && medcount == null));
+        }
+
+        private async void ValidateMessage()
+        {
+            if (string.IsNullOrWhiteSpace(medname))
+                await Common.ShowSnackbarMessage(message: "Please enter a valid medicine name.",
+                                                isDurationLong: true,
+                                                isError: true);
+            else if (selectedMedType == null)
+                await Common.ShowSnackbarMessage(message: "Please select the type of medicine.",
+                                                isDurationLong: true,
+                                                isError: true);
+            else if (MedTakeSchedules.Count == 0)
+                await Common.ShowSnackbarMessage(message: "Please add atleast one schedule.",
+                                                isDurationLong: true,
+                                                isError: true);
+            else if (selectedMedType.IsCount && medcount == null)
+                await Common.ShowSnackbarMessage(message: "Please enter # count on hand.",
+                                                isDurationLong: true,
+                                                isError: true);
+            else if (selectedMedType.IsCount && medcountcritical == null)
+                await Common.ShowSnackbarMessage(message: "Please enter # critical count.",
+                                                isDurationLong: true,
+                                                isError: true);
+        }
 
         private void UpdateSortSchedules()
         {
             UpdateMedTakeSchedules = MedTakeSchedules.Where(s => s.Med_Take_Schedule_ID > 0).ToList();
             CreateMedTakeSchedules = MedTakeSchedules.Where(s => s.Med_Take_Schedule_ID <= 0).ToList();
         }
+        #endregion //End Functions
     }
 }

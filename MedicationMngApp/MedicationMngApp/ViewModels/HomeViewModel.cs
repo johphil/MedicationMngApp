@@ -1,4 +1,5 @@
 ﻿using MedicationMngApp.Models;
+using MedicationMngApp.Views;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -31,9 +32,9 @@ namespace MedicationMngApp.ViewModels
 
         public string TitleToday { get; }
 
-        private async void OnShowIntakeLogsClicked(object obj)
+        private void OnShowIntakeLogsClicked(object obj)
         {
-        
+            Common.NavigatePage(new IntakeLogPage());
         }
 
         private async void OnMedTakeClicked(object obj)
@@ -52,7 +53,7 @@ namespace MedicationMngApp.ViewModels
                     {
                         if (NetworkStatus.IsInternet())
                         {
-                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Taking Medicine...", configuration: Common.loadingDialogConfig))
+                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Taking Medicine...", configuration: Common.LoadingDialogConfig))
                             {
                                 using (HttpClient client = new HttpClient())
                                 {
@@ -65,10 +66,25 @@ namespace MedicationMngApp.ViewModels
                                             if (!string.IsNullOrWhiteSpace(jData))
                                             {
                                                 TakeMedicineResult result = JsonConvert.DeserializeObject<TakeMedicineResult>(jData);
-                                                if (result.result > 0)
+                                                switch(result.result)
                                                 {
-                                                    await Common.ShowSnackbarMessage("Success!");
-                                                    IsBusy = true;
+                                                    case 11: //Critical
+                                                        {
+                                                            await Common.ShowSnackbarMessage("Success!");
+                                                            IsBusy = true;
+                                                            Common.ShowNotification($"{medtake.Med_Name} Count is Critical!", $"{medtake.Med_Name} needs to be replenished.");
+                                                            break;
+                                                        }
+                                                    case 22: //Not Critical
+                                                        {
+                                                            await Common.ShowSnackbarMessage("Success!");
+                                                            IsBusy = true;
+                                                            break;
+                                                        }
+                                                    default: //Error
+                                                        {
+                                                            break;
+                                                        }
                                                 }
                                             }
                                         }

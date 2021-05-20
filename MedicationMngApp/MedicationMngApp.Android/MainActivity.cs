@@ -8,6 +8,7 @@ using Android.OS;
 using Xamarin.Forms.Platform.Android;
 using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 using Plugin.LocalNotifications;
+using Android.Content;
 
 namespace MedicationMngApp.Droid
 {
@@ -27,8 +28,12 @@ namespace MedicationMngApp.Droid
             global::Xamarin.Forms.Forms.Init(this, savedInstanceState);
             global::XamEffects.Droid.Effects.Init();
             XF.Material.Droid.Material.Init(this, savedInstanceState);
+            #region Notifications
+            // Set the icon for notifications
             LocalNotificationsImplementation.NotificationIconId = Resource.Drawable.logo;
+            
 
+            #endregion // End Notifications
             LoadApplication(new App());
             //Keyboard overlap on input
             App.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust(WindowSoftInputModeAdjust.Resize);

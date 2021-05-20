@@ -89,6 +89,15 @@ public interface IService
         RequestFormat = WebMessageFormat.Json)]
     [return: MessageParameter(Name = "GetAccountLogsResult")]
     List<AccountLog> GetAccountLogs(string account_id);
+
+    [OperationContract]
+    [WebInvoke(Method = "GET",
+        UriTemplate = "/GetIntakeLogs/{account_id}",
+        BodyStyle = WebMessageBodyStyle.Wrapped,
+        ResponseFormat = WebMessageFormat.Json,
+        RequestFormat = WebMessageFormat.Json)]
+    [return: MessageParameter(Name = "GetIntakeLogsResult")]
+    List<IntakeLog> GetIntakeLogs(string account_id);
     #endregion //METHOD: GET
 
     #region METHOD: POST
@@ -496,4 +505,29 @@ public class Ratings_Recommendation: Account
         get { return date.ToDateWithTime(); }
         set { date = value.ToDateTime(); }
     }
+}
+
+[DataContract]
+public class IntakeLog
+{   
+    [DataMember]
+    public int Intake_Log_ID { get; set; }
+
+    [DataMember]
+    public int Account_ID { get; set; }
+
+    [DataMember]
+    public string Med_Name { get; set; }
+
+    [DataMember]
+    public int Dosage_Count { get; set; }
+
+    [DataMember]
+    public string Med_Type_Name { get; set; }
+
+    [DataMember]
+    public string Image { get; set; }
+
+    [DataMember]
+    public string Taken { get; set; }
 }

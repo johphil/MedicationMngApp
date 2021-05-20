@@ -610,13 +610,53 @@ public class Service : IService
                     command.Parameters.Add("med_take_schedule_id", SqlDbType.Int).Value = DBConvert.From(int.Parse(med_take_schedule_id));
                     connection.Open();
 
-                    return command.ExecuteNonQuery();
+                    return (int)command.ExecuteScalar();
                 }
             }
         }
         catch
         {
             return -1;
+        }
+    }
+
+    public List<IntakeLog> GetIntakeLogs(string account_id)
+    {
+        try
+        {
+            List<IntakeLog> collection = new List<IntakeLog>();
+            using (SqlConnection connection = new SqlConnection(conStr))
+            {
+                using (SqlCommand command = new SqlCommand("spGetIntakeLogs", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.Add("account_id", SqlDbType.Int).Value = DBConvert.From(int.Parse(account_id));
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            collection.Add(new IntakeLog
+                            {
+                                Intake_Log_ID = DBConvert.To<int>(reader[0]),
+                                Account_ID = DBConvert.To<int>(reader[1]),
+                                Med_Name = DBConvert.To<string>(reader[2]),
+                                Dosage_Count = DBConvert.To<int>(reader[3]),
+                                Med_Type_Name = DBConvert.To<string>(reader[4]),
+                                Image = DBConvert.To<string>(reader[5]),
+                                Taken = DBConvert.To<string>(reader.GetDateTime(6).ToDateWithTime())
+                            });
+                        }
+                    }
+                }
+            }
+            return collection;
+        }
+        catch
+        {
+            return null;
         }
     }
 }

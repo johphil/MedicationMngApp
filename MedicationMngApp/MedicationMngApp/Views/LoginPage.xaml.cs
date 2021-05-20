@@ -26,7 +26,7 @@ namespace MedicationMngApp.Views
 
         private void TapGestureRecognizer_Tapped_1(object sender, EventArgs e)
         {
-            Common.NavigateNewPage(new ForgotPasswordPage());
+            Common.NavigatePage(new ForgotPasswordPage());
         }
     }
 }

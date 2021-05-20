@@ -12,7 +12,6 @@
              NavigationPage.HasNavigationBar="True"
              Title="{Binding Title}" x:Name="pageMedicationDetails">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Logs" IconImageSource="icon_list" Command="{Binding SaveScheduleCommand}"/>
         <ToolbarItem Text="Save" IconImageSource="icon_check" Command="{Binding SaveScheduleCommand}"/>
     </ContentPage.ToolbarItems>
     <StackLayout>

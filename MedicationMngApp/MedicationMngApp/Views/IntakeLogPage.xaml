@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+             xmlns:material="clr-namespace:XF.Material.Forms.UI;assembly=XF.Material" 
+             xmlns:model="clr-namespace:MedicationMngApp.Models"
+             x:Class="MedicationMngApp.Views.IntakeLogPage"
+             Title="Intake Logs">
+    <ContentPage.Content>
+        <CollectionView ItemsSource="{Binding IntakeLogs}" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout x:DataType="model:Intake_Log">
+                        <material:MaterialCard Padding="10" Margin="2" HasShadow="False">
+                            <StackLayout HorizontalOptions="FillAndExpand">
+                                <StackLayout Orientation="Horizontal" HorizontalOptions="FillAndExpand">
+                                    <Image VerticalOptions="Center" WidthRequest="40" Source="{Binding Image}" Margin="0,0,5,0"/>
+                                    <StackLayout HorizontalOptions="FillAndExpand">
+                                        <StackLayout Orientation="Horizontal">
+                                            <material:MaterialLabel TypeScale="Overline" Text="{Binding Med_Name}" HorizontalOptions="StartAndExpand"/>
+                                            <material:MaterialLabel TypeScale="Overline" Text="{Binding GetTaken}" HorizontalOptions="End"/>
+                                        </StackLayout>
+                                        <material:MaterialChip BackgroundColor="{StaticResource Secondary}" HeightRequest="20" TextColor="White"
+                                                                       ActionImage="{Binding Image}" Text="{Binding Dosage_Count}" FontSize="9"/>
+                                    </StackLayout>
+                                </StackLayout>
+                            </StackLayout>
+                        </material:MaterialCard>
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </ContentPage.Content>
+</ContentPage>

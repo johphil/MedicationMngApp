@@ -51,6 +51,10 @@ namespace MedicationMngApp.Models
         {
             return SERVICE_ADDR_ENDPOINT + $"GetAccountLogs/{account_id}";
         }
+        public static string GET_GET_INTAKE_LOGS(int account_id)
+        {
+            return SERVICE_ADDR_ENDPOINT + $"GetIntakeLogs/{account_id}";
+        }
         public static string GET_GET_MED_TYPES = SERVICE_ADDR_ENDPOINT + "GetMedTypes";
         public static string PUT_UPDATE_ACCOUNT_PASSWORD = SERVICE_ADDR_ENDPOINT + "UpdateAccountPassword";
         public static string PUT_UPDATE_ACCOUNT_DETAILS = SERVICE_ADDR_ENDPOINT + "UpdateAccountDetails";
@@ -70,7 +74,7 @@ namespace MedicationMngApp.Models
         #endregion
 
         #region Asynchronous Tasks Message Popup & Navigation
-        public static MaterialLoadingDialogConfiguration loadingDialogConfig
+        public static MaterialLoadingDialogConfiguration LoadingDialogConfig
         {
             get
             {
@@ -85,7 +89,7 @@ namespace MedicationMngApp.Models
                 };
             }
         }
-        public static MaterialAlertDialogConfiguration alertDialogConfig = new MaterialAlertDialogConfiguration
+        public static MaterialAlertDialogConfiguration AlertDialogConfig = new MaterialAlertDialogConfiguration
         {
             BackgroundColor = XF.Material.Forms.Material.GetResource<Color>(MaterialConstants.Color.PRIMARY),
             CornerRadius = 4,
@@ -148,7 +152,7 @@ namespace MedicationMngApp.Models
 
         public static async Task<bool> ShowAlertConfirmation(string message)
         {
-            return (bool)await MaterialDialog.Instance.ConfirmAsync(message: message, configuration: alertDialogConfig);
+            return (bool)await MaterialDialog.Instance.ConfirmAsync(message: message, configuration: AlertDialogConfig);
         }
 
         public static async Task<bool> ShowAlertConfirmationWithButton(string message, string confirmText, string dismissText)
@@ -156,7 +160,7 @@ namespace MedicationMngApp.Models
             return (bool)await MaterialDialog.Instance.ConfirmAsync(message: message,
                                     confirmingText: confirmText,
                                     dismissiveText: dismissText, 
-                                    configuration: alertDialogConfig);
+                                    configuration: AlertDialogConfig);
         }
         //Navigation
         public static void NavigateNewPage(Page page)
@@ -177,7 +181,11 @@ namespace MedicationMngApp.Models
         //Notifications
         public static void ShowNotification(string title, string message)
         {
-            CrossLocalNotifications.Current.Show(title, message, 1, DateTime.Now.AddSeconds(15));
+            CrossLocalNotifications.Current.Show(title, message);
+        }
+        public static void SetNotification(string title, string message, int id, DateTime notifyTime)
+        {
+            CrossLocalNotifications.Current.Show(title, message, id, notifyTime);
         }
         #endregion
     }

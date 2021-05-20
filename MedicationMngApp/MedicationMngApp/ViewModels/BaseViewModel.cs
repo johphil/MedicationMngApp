@@ -1,5 +1,4 @@
 ﻿using MedicationMngApp.Models;
-using MedicationMngApp.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,7 +9,6 @@ namespace MedicationMngApp.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IServiceItem<Item> DataItem => DependencyService.Get<IServiceItem<Item>>();
 
         string errormessage = string.Empty;
         bool isBusy = false;

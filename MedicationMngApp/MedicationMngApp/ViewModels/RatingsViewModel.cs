@@ -68,7 +68,7 @@ namespace MedicationMngApp.ViewModels
                     {
                         if (NetworkStatus.IsInternet())
                         {
-                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Sending feedback...", configuration: Common.loadingDialogConfig))
+                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Sending feedback...", configuration: Common.LoadingDialogConfig))
                             {
                                 using (HttpClient client = new HttpClient())
                                 {

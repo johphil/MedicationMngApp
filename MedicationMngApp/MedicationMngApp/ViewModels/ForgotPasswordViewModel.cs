@@ -49,7 +49,7 @@ namespace MedicationMngApp.ViewModels
                     {
                         if (NetworkStatus.IsInternet())
                         {
-                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Retrieving account...", configuration: Common.loadingDialogConfig))
+                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Retrieving account...", configuration: Common.LoadingDialogConfig))
                             {
                                 using (HttpClient client = new HttpClient())
                                 {

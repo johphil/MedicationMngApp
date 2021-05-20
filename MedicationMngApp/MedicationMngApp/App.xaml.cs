@@ -1,5 +1,4 @@
 ﻿using MedicationMngApp.Models;
-using MedicationMngApp.Services;
 using MedicationMngApp.Views;
 using System;
 using Xamarin.Forms;
@@ -18,7 +17,6 @@ namespace MedicationMngApp
             XF.Material.Forms.Material.Init(this);
             XF.Material.Forms.Material.Use("Material.Configuration");
 
-            DependencyService.Register<ServiceItem>();
             Common.NavigateNewPage(new LoginPage());
         }
 

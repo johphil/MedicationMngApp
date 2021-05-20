@@ -50,48 +50,49 @@ namespace MedicationMngApp.ViewModels
             if (string.IsNullOrWhiteSpace(firstname))
             {
                 IsErrorFirstName = true;
-                ErrorMessage = "Please enter a valid first name.";
+                ErrorFirstName = "Please enter a valid first name.";
             }
             if (string.IsNullOrWhiteSpace(lastname))
             {
                 IsErrorLastName = true;
-                ErrorMessage = "Please enter a valid last name.";
+                ErrorLastName = "Please enter a valid last name.";
             }
             if (birthday == null)
             {
                 IsErrorBirthday = true;
-                ErrorMessage = "Please select a valid date of birth.";
+                ErrorBirthday = "Please select a valid date of birth.";
             }
             if (string.IsNullOrWhiteSpace(email))
             {
                 IsErrorEmail = true;
-                ErrorMessage = "Please enter a valid email.";
+                ErrorEmail = "Please enter a valid email.";
             }
             if (!(new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$").Match(email).Success))
             {
                 IsErrorEmail = true;
-                ErrorMessage = "Please enter a valid email format.";
+                ErrorEmail = "Please enter a valid email format.";
             }
             if (string.IsNullOrWhiteSpace(username))
             {
                 IsErrorUsername = true;
-                ErrorMessage = "Please enter a valid username.";
+                ErrorUsername = "Please enter a valid username.";
             }
             if (string.IsNullOrWhiteSpace(password))
             {
                 IsErrorPassword = true;
-                ErrorMessage = "Please enter a valid password.";
+                ErrorPassword = "Please enter a valid password.";
             }
             if (string.IsNullOrWhiteSpace(confirmpassword))
             {
                 IsErrorConfirmPassword = true;
-                ErrorMessage = "Please enter a valid confirm password.";
+                ErrorConfirmPassword = "Please enter a valid confirm password.";
             }
             if (!string.IsNullOrWhiteSpace(password) && !string.IsNullOrWhiteSpace(confirmpassword) && password != confirmpassword)
             {
                 IsErrorPassword = true;
                 IsErrorConfirmPassword = true;
-                ErrorMessage = "Passwords do not match.";
+                ErrorConfirmPassword = "Passwords do not match.";
+                ErrorPassword = "Passwords do not match.";
             }
         }
 
@@ -300,7 +301,7 @@ namespace MedicationMngApp.ViewModels
                     {
                         if (NetworkStatus.IsInternet())
                         {
-                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Signing you up...", configuration: Common.loadingDialogConfig))
+                            using (await MaterialDialog.Instance.LoadingDialogAsync(message: "Signing you up...", configuration: Common.LoadingDialogConfig))
                             {
                                 using (HttpClient client = new HttpClient())
                                 {
@@ -331,12 +332,16 @@ namespace MedicationMngApp.ViewModels
                                                     {
                                                         case -69://sql return value -69
                                                             {
-                                                                ErrorMessage = "Username already exists!";
+                                                                await Common.ShowAlertAsync("Error", "Username already exists!", "OK", true);
+                                                                IsErrorUsername = true;
+                                                                ErrorUsername = "Username already exists!";
                                                                 break;
                                                             }
                                                         case -70://sql return value -70
                                                             {
-                                                                ErrorMessage = "Email already exists!";
+                                                                await Common.ShowAlertAsync("Error", "Email already exists!", "OK", true);
+                                                                IsErrorEmail = true;
+                                                                ErrorEmail = "Email already exists!";
                                                                 break;
                                                             }
                                                         case 1://sql return value 1
