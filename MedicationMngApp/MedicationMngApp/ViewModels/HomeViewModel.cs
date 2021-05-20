@@ -57,6 +57,8 @@ namespace MedicationMngApp.ViewModels
                             {
                                 using (HttpClient client = new HttpClient())
                                 {
+                                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Common.SERVICE_CREDENTIALS));
+
                                     string v = Common.PUT_TAKE_MEDICINE(medtake.Med_Take_Schedule_ID, medtake.Med_Take_ID);
                                     using (HttpResponseMessage response = await client.PutAsync(Common.PUT_TAKE_MEDICINE(medtake.Med_Take_Schedule_ID, medtake.Med_Take_ID), null))
                                     {
@@ -122,6 +124,8 @@ namespace MedicationMngApp.ViewModels
                 {
                     using (HttpClient client = new HttpClient())
                     {
+                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Common.SERVICE_CREDENTIALS));
+
                         using (HttpResponseMessage response = await client.GetAsync(Common.GET_GET_MED_TAKE_TODAY(PersistentSettings.AccountID)))
                         {
                             if (response.IsSuccessStatusCode)

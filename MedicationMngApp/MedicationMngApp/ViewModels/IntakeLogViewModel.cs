@@ -32,6 +32,8 @@ namespace MedicationMngApp.ViewModels
                     {
                         using (HttpClient client = new HttpClient())
                         {
+                            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Common.SERVICE_CREDENTIALS));
+
                             using (HttpResponseMessage response = await client.GetAsync(Common.GET_GET_INTAKE_LOGS(PersistentSettings.AccountID)))
                             {
                                 if (response.IsSuccessStatusCode)

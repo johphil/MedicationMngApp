@@ -305,6 +305,8 @@ namespace MedicationMngApp.ViewModels
                             {
                                 using (HttpClient client = new HttpClient())
                                 {
+                                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Common.SERVICE_CREDENTIALS));
+
                                     AddAccountRequestObject accountObj = new AddAccountRequestObject
                                     {
                                         account = new Account

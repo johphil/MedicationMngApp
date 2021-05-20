@@ -18,6 +18,7 @@ namespace MedicationMngApp.Models
         #region Json URIs & Settings
         public static string HEADER_CONTENT_TYPE = "application/json";
         public static string SERVICE_IP = "192.168.1.4";
+        public static byte[] SERVICE_CREDENTIALS = Encoding.ASCII.GetBytes("johph:really");
         public static string SERVICE_ADDR_ENDPOINT = $"http://{ SERVICE_IP }/MedicationMngWebAppServices/Service.svc/";
         public static string POST_ADD_ACCOUNT = SERVICE_ADDR_ENDPOINT + "AddAccount";
         public static string POST_ADD_MED_TAKE = SERVICE_ADDR_ENDPOINT + "AddMedTake";

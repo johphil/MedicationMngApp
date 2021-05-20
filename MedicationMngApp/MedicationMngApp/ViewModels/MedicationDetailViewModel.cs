@@ -186,6 +186,8 @@ namespace MedicationMngApp.ViewModels
                     {
                         using (HttpClient client = new HttpClient())
                         {
+                            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Common.SERVICE_CREDENTIALS));
+
                             using (HttpResponseMessage response = await client.GetAsync(Common.GET_GET_MED_TAKE_SCHEDULES(selectedMedTake.Med_Take_ID)))
                             {
                                 if (response.IsSuccessStatusCode)
@@ -234,6 +236,8 @@ namespace MedicationMngApp.ViewModels
                             {
                                 using (HttpClient client = new HttpClient())
                                 {
+                                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Common.SERVICE_CREDENTIALS));
+
                                     using (HttpResponseMessage response = await client.DeleteAsync(Common.DELETE_DELETE_MED_TAKE(selectedMedTake.Med_Take_ID)))
                                     {
                                         if (response.IsSuccessStatusCode)
@@ -298,6 +302,8 @@ namespace MedicationMngApp.ViewModels
                 {
                     using (HttpClient client = new HttpClient())
                     {
+                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Common.SERVICE_CREDENTIALS));
+
                         using (HttpResponseMessage response = await client.GetAsync(Common.GET_GET_MED_TYPES))
                         {
                             if (response.IsSuccessStatusCode)
@@ -360,6 +366,8 @@ namespace MedicationMngApp.ViewModels
                                     UpdateSortSchedules();
                                     using (HttpClient client = new HttpClient())
                                     {
+                                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Common.SERVICE_CREDENTIALS));
+
                                         UpdateMedTakeRequestObject obj = new UpdateMedTakeRequestObject
                                         {
                                             medtake = selectedMedTake,
@@ -396,6 +404,8 @@ namespace MedicationMngApp.ViewModels
                                 {
                                     using (HttpClient client = new HttpClient())
                                     {
+                                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(Common.SERVICE_CREDENTIALS));
+
                                         AddMedTakeRequestObject obj = new AddMedTakeRequestObject
                                         {
                                             medtake = new Med_Take
