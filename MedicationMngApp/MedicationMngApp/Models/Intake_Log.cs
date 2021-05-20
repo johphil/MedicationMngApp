@@ -5,6 +5,9 @@ using System.Text;
 
 namespace MedicationMngApp.Models
 {
+    /// <summary>
+    /// Used to record information about the user's medication intake
+    /// </summary>
     public class Intake_Log
     {
         [JsonProperty(PropertyName = "Intake_Log_ID")]
@@ -37,9 +40,11 @@ namespace MedicationMngApp.Models
         }
     }
 
+    #region API Helpers
     public class GetIntakeLogsResult
     {
         [JsonProperty(PropertyName = nameof(GetIntakeLogsResult))]
         public List<Intake_Log> results { get; set; }
     }
+    #endregion //END API Helpers
 }

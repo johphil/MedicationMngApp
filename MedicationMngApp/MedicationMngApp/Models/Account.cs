@@ -5,6 +5,9 @@ using System.Text;
 
 namespace MedicationMngApp.Models
 {
+    /// <summary>
+    /// Used to store user's account information.
+    /// </summary>
     public class Account
     {
         [JsonProperty(PropertyName = "Account_ID")]
@@ -25,6 +28,7 @@ namespace MedicationMngApp.Models
         public DateTime Date_Registered { get; set; }
     }
 
+    #region API Helpers
     public class AddAccountRequestObject
     {
         [JsonProperty(PropertyName = "account")]
@@ -70,4 +74,5 @@ namespace MedicationMngApp.Models
         [JsonProperty(PropertyName = "GetAccountPasswordResult")]
         public string result { get; set; }
     }
+    #endregion //END API Helpers
 }

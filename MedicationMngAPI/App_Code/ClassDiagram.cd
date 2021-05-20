@@ -1,39 +1,102 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<ClassDiagram MajorVersion="1" MinorVersion="1">
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
   <Class Name="Account">
-    <Position X="3" Y="0.5" Width="1.5" />
+    <Position X="14" Y="4.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AgAAAEAAAChAAAAgAQCAAAkAAAAIAAACAAAAAgIAAAg=</HashCode>
       <FileName>App_Code\IService.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="MedTake">
-    <Position X="0.75" Y="5.25" Width="1.5" />
+  <Class Name="AccountLog">
+    <Position X="11.75" Y="2.5" Width="1.75" />
     <TypeIdentifier>
-      <HashCode>KAAAAAAAAEAAAAAAAAACAAgAAAAAAAAABAAACAAAAgA=</HashCode>
+      <HashCode>AAABACAAAAAgAAAAMACAAAAAAAAAAAABEAAAAAAAAAA=</HashCode>
+      <FileName>App_Code\IService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MedTake">
+    <Position X="3" Y="5.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAEAAAAAAEACCABgAAEAAAAAABAAAAAAAAgA=</HashCode>
+      <FileName>App_Code\IService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MedType">
+    <Position X="0.5" Y="6.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAACAAAAAAAAAAAAAFAAkABAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>App_Code\IService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MedTakeSchedule">
+    <Position X="5.5" Y="5.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAQBAAACkEAABBAAAAAAAAAAAEAAAAAABAAAAAAAAQA=</HashCode>
+      <FileName>App_Code\IService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MedTakeToday">
+    <Position X="8.25" Y="6.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAAAEAAAABAAAAAAAAAAAgA=</HashCode>
       <FileName>App_Code\IService.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Ratings_Recommendation">
-    <Position X="4.75" Y="5.25" Width="2.25" />
+    <Position X="10.5" Y="6" Width="2.5" />
+    <InheritanceLine Type="Account" ManuallyRouted="true">
+      <Path>
+        <Point X="14" Y="7.422" />
+        <Point X="13.5" Y="7.422" />
+        <Point X="13.5" Y="7.369" />
+        <Point X="13" Y="7.369" />
+      </Path>
+    </InheritanceLine>
     <TypeIdentifier>
       <HashCode>AAAAAAQAAAAAAAAAAgAAAAIAAAAAAAABAAABAQAAAQA=</HashCode>
       <FileName>App_Code\IService.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Service">
-    <Position X="4.75" Y="0.5" Width="2.25" />
+  <Class Name="IntakeLog">
+    <Position X="9.25" Y="2.75" Width="2" />
     <TypeIdentifier>
-      <HashCode>gQAAAAAAIAAAgAAAQAAgAAAAAAAIAQAAAAACAAABAgQ=</HashCode>
-      <FileName>App_Code\Service.cs</FileName>
-      <NewMemberFileName>App_Code\IService.cs</NewMemberFileName>
+      <HashCode>AAAAAAAAAAAABAAAAACAABAAAAAAABAAAAAAAAAAAwQ=</HashCode>
+      <FileName>App_Code\IService.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Service" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="0.5" Width="4" />
+    <TypeIdentifier>
+      <HashCode>gQACgIAAIAAAgAAAQAAgAAAQAAAIAQAAgAICAAAhAgA=</HashCode>
+      <FileName>App_Code\Service.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Converters">
+    <Position X="9" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAABAAAgBAAAAAAAAAAAQQAA=</HashCode>
+      <FileName>App_Code\Utils\Converters.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBConvert">
+    <Position X="14.25" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAAAAAAAAAAAAAAABAAAIAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>App_Code\Utils\DBConvert.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PassHash">
+    <Position X="11.75" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAABAAAEAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>App_Code\Utils\PassHash.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Interface Name="IService">
-    <Position X="0.5" Y="0.5" Width="2.25" />
+    <Position X="4.75" Y="0.5" Width="4" />
     <TypeIdentifier>
-      <HashCode>gQAAAAAAIAAAgAAAQAAAAAAAAAAIAQAAAAACAAABAgQ=</HashCode>
+      <HashCode>gQACgIAAIAAAgAAAQAAAAAAQAAAIAQAAgAICAAAhAgA=</HashCode>
       <FileName>App_Code\IService.cs</FileName>
     </TypeIdentifier>
   </Interface>

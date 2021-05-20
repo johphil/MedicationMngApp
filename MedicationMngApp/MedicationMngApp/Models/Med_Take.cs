@@ -6,6 +6,9 @@ using System.Text;
 
 namespace MedicationMngApp.Models
 {
+    /// <summary>
+    /// Used to store and get medications
+    /// </summary>
     public class Med_Take : Med_Type
     {
         [JsonProperty(PropertyName = "Med_Take_ID")]
@@ -47,6 +50,7 @@ namespace MedicationMngApp.Models
 
     }
 
+    #region API Helpers
     public class AddMedTakeRequestObject
     {
         [JsonProperty(PropertyName = nameof(medtake))]
@@ -79,6 +83,7 @@ namespace MedicationMngApp.Models
         [JsonProperty(PropertyName = nameof(UpdateMedTakeResult))]
         public int result { get; set; }
     }
+
     public class UpdateMedTakeEnableResult
     {
         [JsonProperty(PropertyName = nameof(UpdateMedTakeEnableResult))]
@@ -99,4 +104,5 @@ namespace MedicationMngApp.Models
         [JsonProperty(PropertyName = nameof(createmedtakeschedules))]
         public List<Med_Take_Schedule> createmedtakeschedules;
     }
+    #endregion //END API Helpers
 }

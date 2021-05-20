@@ -15,9 +15,15 @@ using System.Text;
 [AspNetCompatibilityRequirements(RequirementsMode = AspNetCompatibilityRequirementsMode.Allowed)]
 public class Service : IService
 {
+    //Database Conenction String
     protected string conStr = ConfigurationManager.ConnectionStrings["MEDMNG_DBF"].ConnectionString;
 
-    public Account GetAccountDetails(string id)
+    /// <summary>
+    /// Used to get the account information of the user
+    /// </summary>
+    /// <param name="account_id">ID assigned to the user's account</param>
+    /// <returns>Account object which contains the information</returns>
+    public Account GetAccountDetails(string account_id)
     {
         try
         {
@@ -26,7 +32,7 @@ public class Service : IService
                 using (SqlCommand command = new SqlCommand("spGetAccountDetails", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.Add("id", SqlDbType.Int).Value = DBConvert.From(int.Parse(id));
+                    command.Parameters.Add("id", SqlDbType.Int).Value = DBConvert.From(int.Parse(account_id));
                     connection.Open();
 
                     using (SqlDataReader reader = command.ExecuteReader())
@@ -55,6 +61,11 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to add a new user account after successfull registration
+    /// </summary>
+    /// <param name="account">Account object which contains the supplied information by the user</param>
+    /// <returns>Returns integer value -69 if username exists, -70 if email exists, -1 if failed, and 1 if success</returns>
     public int AddAccount(Account account)
     {
         try
@@ -82,6 +93,11 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to updated the user's account information to the database
+    /// </summary>
+    /// <param name="account">Account object which contains the supplied information by the user</param>
+    /// <returns>returns positive integer if success otherwise failed</returns>
     public int UpdateAccountDetails(Account account)
     {
         try
@@ -106,6 +122,12 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to activate or deactivate a medication
+    /// </summary>
+    /// <param name="med_take_id">ID assigned to the selected medication</param>
+    /// <param name="enabled">1 if true, 0 if false</param>
+    /// <returns>returns positive integer if success otherwise failed</returns>
     public int UpdateMedTakeEnable(string med_take_id, string enabled)
     {
         try
@@ -129,6 +151,13 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to update the user's account password
+    /// </summary>
+    /// <param name="account_id">ID assigned to the user's account</param>
+    /// <param name="old_password">Current password of the user</param>
+    /// <param name="new_password">New password supplied by the user</param>
+    /// <returns>returns positive integer if success otherwise failed</returns>
     public int UpdateAccountPassword(int account_id, string old_password, string new_password)
     {
         try
@@ -153,6 +182,12 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to authenticate the user credentials before accessing the main interface of the application
+    /// </summary>
+    /// <param name="username">Username of the user</param>
+    /// <param name="password">Password of the user</param>
+    /// <returns>returns the account id of the authenticated user</returns>
     public int LoginAccount(string username, string password)
     {
         try
@@ -176,6 +211,11 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to add the user's ratings and recommendation
+    /// </summary>
+    /// <param name="ratings">Ratings_Recommendation object which contains the ratings and feedback by the user</param>
+    /// <returns>returns positive integer if success otherwise failed</returns>
     public int AddRatingsRecommendation(Ratings_Recommendation ratings)
     {
         try
@@ -200,8 +240,12 @@ public class Service : IService
         }
     }
 
-    public Ratings_Recommendation GetRatingsRecommendation(string account_id) { return null; }
-
+    /// <summary>
+    /// Used to add a new medication from the user
+    /// </summary>
+    /// <param name="medtake">MedTake object</param>
+    /// <param name="medtakeschedules">Collection of MedTakeSchedule object</param>
+    /// <returns>returns positive integer if success otherwise failed</returns>
     public int AddMedTake(MedTake medtake, List<MedTakeSchedule> medtakeschedules)
     {
         try
@@ -259,6 +303,11 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to get all medications added by the user
+    /// </summary>
+    /// <param name="account_id">ID assigned to the user</param>
+    /// <returns>returns a collection of medications</returns>
     public List<MedTake> GetMedTakes(string account_id)
     {
         try
@@ -301,6 +350,14 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to update the information of the selected medication
+    /// </summary>
+    /// <param name="medtake">MedTake object</param>
+    /// <param name="deletemedtakeschedules">List of MedTakes that will be deleted</param>
+    /// <param name="updatemedtakeschedules">List of MedTakes that will be updated</param>
+    /// <param name="createmedtakeschedules">List of MedTakes that will be created</param>
+    /// <returns>returns positive integer if success otherwise failed</returns>
     public int UpdateMedTake(MedTake medtake, List<MedTakeSchedule> deletemedtakeschedules, List<MedTakeSchedule> updatemedtakeschedules, List<MedTakeSchedule> createmedtakeschedules)
     {
         try
@@ -395,6 +452,11 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to delete a medication
+    /// </summary>
+    /// <param name="med_take_id">ID assigned to the selected medication</param>
+    /// <returns>returns positive integer if success otherwise failed</returns>
     public int DeleteMedTake(string med_take_id)
     {
         try
@@ -417,6 +479,10 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to get all available types of medication from the database
+    /// </summary>
+    /// <returns>returns the list of medtypes</returns>
     public List<MedType> GetMedTypes()
     {
         try
@@ -452,6 +518,11 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to get the schedules of a medication
+    /// </summary>
+    /// <param name="med_take_id">ID of the selected medication</param>
+    /// <returns>returns a collection of MedTakeSchedule</returns>
     public List<MedTakeSchedule> GetMedTakeSchedules(string med_take_id)
     {
         try
@@ -489,6 +560,12 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to get the medications scheduled for the day
+    /// </summary>
+    /// <param name="account_id">ID assigned to the user</param>
+    /// <param name="day_of_week">Day of week in integer</param>
+    /// <returns>returns the list of medications to be taken for the day</returns>
     public List<MedTakeToday> GetMedTakeToday(string account_id, string day_of_week)
     {
         try
@@ -530,6 +607,11 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to get the password of a user
+    /// </summary>
+    /// <param name="email">Email of the user</param>
+    /// <returns>returns the decrypted password</returns>
     public string GetAccountPassword(string email)
     {
         try
@@ -559,6 +641,11 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to get the logs information of an account
+    /// </summary>
+    /// <param name="account_id">ID assigned to the user</param>
+    /// <returns>returns the list of AccountLog</returns>
     public List<AccountLog> GetAccountLogs(string account_id)
     {
         try
@@ -597,6 +684,12 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to set the status of the selected medication schedule as taken
+    /// </summary>
+    /// <param name="med_take_schedule_id">ID assigned to the medication schedule</param>
+    /// <param name="med_take_id">ID assigned to the medication</param>
+    /// <returns>returns positive integer if success otherwise failed</returns>
     public int TakeMedicine(string med_take_schedule_id, string med_take_id)
     {
         try
@@ -620,6 +713,11 @@ public class Service : IService
         }
     }
 
+    /// <summary>
+    /// Used to get the intake logs of a user
+    /// </summary>
+    /// <param name="account_id">ID assigned to the user</param>
+    /// <returns>returns the list of intake logs of a user</returns>
     public List<IntakeLog> GetIntakeLogs(string account_id)
     {
         try

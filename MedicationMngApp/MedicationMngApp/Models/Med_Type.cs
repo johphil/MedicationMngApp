@@ -5,6 +5,9 @@ using System.Text;
 
 namespace MedicationMngApp.Models
 {
+    /// <summary>
+    /// Used to store and identify the type of medication
+    /// </summary>
     public class Med_Type
     {
         [JsonProperty(PropertyName = "Med_Type_ID")]
@@ -21,9 +24,12 @@ namespace MedicationMngApp.Models
 
     }
 
+
+    #region API Helpers
     public class GetMedTypesResult
     {
         [JsonProperty(PropertyName = nameof(GetMedTypesResult))]
         public List<Med_Type> result { get; set; }
     }
+    #endregion //END API Helpers
 }

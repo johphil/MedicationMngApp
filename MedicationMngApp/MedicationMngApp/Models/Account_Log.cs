@@ -5,6 +5,9 @@ using System.Text;
 
 namespace MedicationMngApp.Models
 {
+    /// <summary>
+    /// Used to record information about the user's account activity 
+    /// </summary>
     public class Account_Log
     {
         [JsonProperty(PropertyName="Account_Log_ID")]
@@ -31,9 +34,11 @@ namespace MedicationMngApp.Models
         }
     }
 
+    #region API Helpers
     public class GetAccountLogsResult
     {
         [JsonProperty(PropertyName = nameof(GetAccountLogsResult))]
         public List<Account_Log> results { get; set; }
     }
+    #endregion //END API Helpers
 }

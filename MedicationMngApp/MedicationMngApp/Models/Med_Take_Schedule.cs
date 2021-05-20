@@ -6,6 +6,9 @@ using System.Text;
 
 namespace MedicationMngApp.Models
 {
+    /// <summary>
+    /// Used to store and get medication schedules set by the user
+    /// </summary>
     public class Med_Take_Schedule
     {
         [JsonProperty(PropertyName = "Med_Take_Schedule_ID")]
@@ -27,9 +30,11 @@ namespace MedicationMngApp.Models
         public DateTime? Last_Take { get; set; }
     }
 
+    #region API Helpers
     public class GetMedTakeSchedulesResult
     {
         [JsonProperty(PropertyName = nameof(GetMedTakeSchedulesResult))]
         public List<Med_Take_Schedule> results { get; set; }
     }
+    #endregion //END API Helpers
 }

@@ -11,12 +11,12 @@ public interface IService
     #region METHOD: GET
     [OperationContract]
     [WebInvoke(Method = "GET",
-        UriTemplate = "/GetAccountDetails/{id}",
+        UriTemplate = "/GetAccountDetails/{account_id}",
         BodyStyle = WebMessageBodyStyle.Wrapped,
         ResponseFormat = WebMessageFormat.Json,
         RequestFormat = WebMessageFormat.Json)]
     [return: MessageParameter(Name = "GetAccountDetailsResult")]
-    Account GetAccountDetails(string id);
+    Account GetAccountDetails(string account_id);
 
     [OperationContract]
     [WebInvoke(Method = "GET",
@@ -35,15 +35,6 @@ public interface IService
         RequestFormat = WebMessageFormat.Json)]
     [return: MessageParameter(Name = "GetMedTypesResult")]
     List<MedType> GetMedTypes();
-
-    [OperationContract]
-    [WebInvoke(Method = "GET",
-        UriTemplate = "/GetRatingsRecommendation/{account_id}",
-        BodyStyle = WebMessageBodyStyle.Wrapped,
-        ResponseFormat = WebMessageFormat.Json,
-        RequestFormat = WebMessageFormat.Json)]
-    [return: MessageParameter(Name = "GetRatingsRecommendationResult")]
-    Ratings_Recommendation GetRatingsRecommendation(string account_id);
 
     [OperationContract]
     [WebInvoke(Method = "GET",
@@ -191,6 +182,9 @@ public interface IService
     #endregion //METHOD: DELETE
 }
 
+/// <summary>
+/// Used to store user's account information.
+/// </summary>
 [DataContract]
 public class Account
 {
@@ -260,6 +254,9 @@ public class Account
     }
 }
 
+/// <summary>
+/// Used to record information about the user's account activity 
+/// </summary>
 [DataContract]
 public class AccountLog
 {
@@ -305,6 +302,9 @@ public class AccountLog
     }
 }
 
+/// <summary>
+/// Used to store and get medications
+/// </summary>
 [DataContract]
 public class MedTake : MedType
 {
@@ -358,6 +358,9 @@ public class MedTake : MedType
     }
 }
 
+/// <summary>
+/// Used to store and identify the type of medication
+/// </summary>
 [DataContract]
 public class MedType
 {
@@ -395,6 +398,9 @@ public class MedType
     }
 }
 
+/// <summary>
+/// Used to store and get medication schedules set by the user
+/// </summary>
 [DataContract]
 public class MedTakeSchedule
 {
@@ -448,6 +454,9 @@ public class MedTakeSchedule
     }
 }
 
+/// <summary>
+/// Used to store and get scheduled medications for the day
+/// </summary>
 [DataContract]
 public class MedTakeToday : MedTakeSchedule
 {
@@ -469,6 +478,9 @@ public class MedTakeToday : MedTakeSchedule
     }
 }
 
+/// <summary>
+/// Used to store and send the user's ratings and recommendation
+/// </summary>
 [DataContract]
 public class Ratings_Recommendation: Account
 {
@@ -507,6 +519,9 @@ public class Ratings_Recommendation: Account
     }
 }
 
+/// <summary>
+/// Used to record information about the user's medication intake
+/// </summary>
 [DataContract]
 public class IntakeLog
 {   

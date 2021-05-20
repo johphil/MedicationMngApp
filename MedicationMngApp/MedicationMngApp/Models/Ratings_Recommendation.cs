@@ -5,6 +5,9 @@ using System.Text;
 
 namespace MedicationMngApp.Models
 {
+    /// <summary>
+    /// Used to store and send the user's ratings and recommendation
+    /// </summary>
     public class Ratings_Recommendation
     {
         [JsonProperty(PropertyName = "Ratings_Recommendation_ID")]
@@ -19,6 +22,7 @@ namespace MedicationMngApp.Models
         public DateTime Date { get; set; }
     }
 
+    #region API Helpers
     public class AddRatingsRecommendationRequestObject
     {
         [JsonProperty(PropertyName = nameof(ratings))]
@@ -36,4 +40,5 @@ namespace MedicationMngApp.Models
         [JsonProperty(PropertyName = nameof(GetRatingsRecommendationResult))]
         public Ratings_Recommendation ratings { get; set; }
     }
+    #endregion //END API Helpers
 }

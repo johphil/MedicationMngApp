@@ -6,6 +6,9 @@ using System.Text;
 
 namespace MedicationMngApp.Models
 {
+    /// <summary>
+    /// Used to store and get scheduled medications for the day
+    /// </summary>
     public class Med_Take_Today : Med_Take_Schedule
     {
         [JsonProperty(PropertyName = "Med_Name")]
@@ -64,6 +67,7 @@ namespace MedicationMngApp.Models
         }
     }
 
+    #region API Helpers
     public class GetMedTakeTodayResult
     {
         [JsonProperty(PropertyName = nameof(GetMedTakeTodayResult))]
@@ -75,4 +79,5 @@ namespace MedicationMngApp.Models
         [JsonProperty(PropertyName = nameof(TakeMedicineResult))]
         public int result { get; set; }
     }
+    #endregion //END API Helpers
 }
