@@ -2,14 +2,15 @@
 A COE184P Project
 
 Tools:
-SQL Server Express 2019
-Visual Studio Community 2019
+1. SQL Server Express 2019
+2. Visual Studio Community 2019
+3. Android Phone
 
 Project Used:
-Xamarin Forms
+1. Xamarin Forms
 
 Database:
-Do It Yourself
+> Do It Yourself
 
 # Support
 Buy me a coffee☕: https://Ko-fi.com/johphil
